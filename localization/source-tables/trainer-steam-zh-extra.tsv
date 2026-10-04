@@ -1,0 +1,276 @@
+Classic Steam version detected automatically	已自动识别经典 Steam 版
+Steam version: unsupported feature	Steam 版：此功能尚未适配
+Steam spawner: open the pause menu first	请先按 Esc 暂停游戏，再启用载具生成器
+GTA SA Control Center Garage Editor - Vehicle Selection [	控制中心车库编辑器 - 选择载具 [
+This vehicle is already in the favorites list	此载具已在收藏列表中
+Error parsing Car Pictures	读取载具图片失败
+Error during Mod decoding.	解码改装数据失败。
+Error during Mod encoding	编码改装数据失败
+Coming soon...	尚未实现……
+GTASA CC	圣安地列斯控制中心
+Spawner Code-Injection Status: Injected	载具生成器状态：已启用
+Weapon Validation failed. Please check your entry	武器数据验证失败，请检查输入
+GTA SA Control Center [Initializing, please wait...]	圣安地列斯控制中心 [正在初始化，请稍候……]
+Initialisation Failed	初始化失败
+Initialisation Failed.	初始化失败。
+Initialisation failed	初始化失败
+Game Time: 	游戏时间：
+ / Day: 	 / 天数：
+ / Wd: 	 / 星期：
+Clock Speed : Stopped	时钟速度：已停止
+Clock Speed : Real-Time	时钟速度：现实时间
+Clock Speed : Real-time	时钟速度：现实时间
+Clock Speed : 	时钟速度：
+Game Speed : 	游戏速度：
+X Speed (	X 轴速度（
+Y Speed (	Y 轴速度（
+Z Speed (	Z 轴速度（
+Player Speed	玩家速度
+Player Direction	玩家朝向
+Player Start	玩家起步
+Locking Engine health has side effects in some missions (like car exploding during mission).	锁定引擎耐久会影响某些任务，例如任务要求车辆爆炸时。
+Please use Damage-Proof switch instead of locking the health.	这时请使用防撞损开关。
+Car Dynamics	载具运动
+Car Specs	载具特性
+Car Doors	车门
+Engine health (	引擎耐久（
+Car Weight: (	载具重量：（
+ Tons)	 吨）
+X Spin (	X 轴旋转（
+Y Spin (	Y 轴旋转（
+Z Spin (	Z 轴旋转（
+Flight Assistance (	飞行辅助（
+Car Dynamics Scroll	载具运动调节
+Major Color	主色
+Major Color Lock	锁定主色
+Minor Color	副色
+Minor Color Lock	锁定副色
+Command: Stop Car	命令：停止载具
+Car Direction Options	载具朝向选项
+Car Start Options	载具起步选项
+Command: Flip Car	命令：翻正载具
+Start GTA SA and load/start a game first.	请先启动游戏并载入存档或开始新游戏。
+Please start GTA SA and retry again.	请先启动游戏再重试。
+Spawner Code-Injection Status: Not Injected	载具生成器状态：未启用
+The Car Spawn ASM Code cannot be injected!!	无法启用载具生成器！Steam 版请先在游戏中按 Esc 暂停再重试。
+Your GTASA Executable is not original.	游戏代码与支持的版本不匹配，或当前不能安装修复。
+Please restore original exe and try again.	请核对游戏版本及其他插件后重试。
+Spawner Code-Injection Status: Not Injectable	载具生成器状态：当前不可用
+CarSpawn Code-Injection has been reverted to Original.	载具生成器已停用。
+CarSpawn related functions will not be available	载具生成功能将不可用，
+until you re-inject the code.	直到重新启用生成器。
+The Car Spawn ASM Code-Injection cannot be reverted!!	无法停用载具生成器！
+Please restore original gta_sa.exe.	请退出游戏后重新启动，并核对版本。
+Error during Code-Injection Check!!	检查载具生成器状态时出错！
+Command: Spawn Car	命令：生成载具
+One-Hit-Kill code can not be injected!!	无法启用一击必杀！
+Player Stats	玩家属性
+Average Weapon Proficiency: 	平均武器熟练度：
+Current Player: No Specialities	当前玩家：无特殊防护
+Current Player: 	当前玩家：
+Player Specs	玩家防护
+Please start GTA SA and load/start a game first!	请先启动游戏并载入存档或开始新游戏！
+Please select a cheat to apply changes	请选择要修改的秘籍
+Please insert a cheat string to apply changes	请输入秘籍代码后再应用修改
+Please select a folder to add this cheat	请选择存放此秘籍的文件夹
+Please insert a cheat string to add	请输入要添加的秘籍代码
+New Cheat: 	新秘籍：
+ (please edit this description)	（请编辑此说明）
+Please select a folder or a cheat to delete	请选择要删除的文件夹或秘籍
+You cannot delete the root folder	不能删除根文件夹
+Please select a folder to insert the new folder as subfolder.	请选择新建子文件夹的上级文件夹。
+Command: Cheats	命令：秘籍
+Please select a Location to apply changes	请选择要修改的地点
+#ERROR#	#错误#
+Please read location from GTA San Andreas to apply changes	请先读取游戏中的当前位置再应用修改
+Please select a folder to add this Location	请选择存放此地点的文件夹
+Please read location from GTA San Andreas to add	请先读取游戏中的当前位置再添加
+New Location (please edit this description)	新地点（请编辑此说明）
+Please select a valid Location to teleport	请选择有效的传送地点
+Please select a folder or a location to delete	请选择要删除的文件夹或地点
+Command: Locations	命令：地点
+Teleport to: 	传送至：
+Please select a shortcut to apply changes	请选择要修改的快捷键
+Please select a folder to insert this new shortcut	请选择存放新快捷键的文件夹
+Please select a folder or a shortcut to delete	请选择要删除的文件夹或快捷键
+Command: Shortcuts	命令：快捷键
+Commands Combo	命令选择
+ Tons	 吨
+ Degrees)	 度）
+Command Data Scroller	命令参数调节
+Shortcuts	快捷键
+Please wait a few seconds. Control Center will now resyncronize.	请稍候，控制中心正在重新同步。
+Keyboard Control Intervall: (	快捷键检测间隔：（
+Intervall scroller	检测间隔调节
+GTA SA is not running.	游戏尚未运行。
+Please start GTA SA, load/start a game,	请启动游戏并载入存档或开始新游戏，
+and then start the console	然后启动控制中心，
+for proper syncronization!	以便正确同步数据！
+This Message will be shown 	此提示还将显示 
+ more times.	 次。
+GTASA Control Center [Online - No Game in Progress]	圣安地列斯控制中心 [已连接，等待载入游戏]
+Coffee: Uncensored	咖啡小游戏：未屏蔽
+SCM Modded...	任务脚本功能不可用
+Current Car: No Specialities	当前载具：无特殊防护
+Current Car: 	当前载具：
+Hook Timer	游戏数据读取
+Find Car Timer	载具查找
+Console Timer	控制中心更新
+(None)	（无）
+Internal error in FillInCombo's	填充选项时发生内部错误
+Don't mess with ini file.	请检查配置文件格式。
+FillInShortcutDetails	读取快捷键详情
+Error parsing Keyboard Shortcuts	读取快捷键失败
+Error parsing cheat configuration.	读取秘籍配置失败。
+Error parsing Warp Locations	读取传送地点失败
+Error parsing Car ID's	读取载具编号失败
+GTASA Control Center [Error on retrieving Car Adresse]	圣安地列斯控制中心 [无法读取载具数据]
+GTASA Control Center [Player Controls 	圣安地列斯控制中心 [玩家正在控制 
+GTASA Control Center [Player in 	圣安地列斯控制中心 [玩家乘坐 
+GTASA Control Center [Player in NonRecognized Car]	圣安地列斯控制中心 [无法识别当前载具]
+GTASA Control Center [Player on Foot]	圣安地列斯控制中心 [玩家步行中]
+GetNode 	读取条目 
+FillInTreeviews 	填充树形列表 
+Zoom (	缩放（
+AddLocBox	添加地点标记
+No Cheat has been selected to move	请选择要移动的秘籍
+You cannot move Root Folder	不能移动根文件夹
+No Shortcut has been selected to move	请选择要移动的快捷键
+No Shortcut has been selected to 	请选择要操作的快捷键：
+activate	启用
+deactivate	停用
+No Location has been selected to move	请选择要移动的地点
+No Folder has been selected.	尚未选择文件夹。
+Your Mod Selection could not be encoded.	无法编码所选改装项目。
+Please read online garage again	请重新读取游戏中的车库
+Current Mods could not be initialised.	无法初始化当前改装项目。
+Error on ModEdit	改装编辑错误
+Click to Set Stat	点击设置属性
+Car colors not parsed.	未能读取载具颜色。
+Set Armor Level to:	设置护甲值：
+Auto-Fix Armor Level to:	自动保持护甲值：
+Auto-Fix Armor:	自动恢复护甲：
+Set Health Level to:	设置生命值：
+Auto-Fix Health Level to:	自动保持生命值：
+Auto-Fix Health:	自动恢复生命：
+Set Car Specialities to:	设置载具防护：
+Auto-Fix Car Specialities:	锁定载具防护：
+Set Car Doors to:	设置车门状态：
+Auto-Lock Car Doors:	锁定车门状态：
+Prevent Wheel Damage:	防止轮胎损坏：
+Set Engine Health To:	设置引擎耐久：
+Auto-Fix Engine Health:	锁定引擎耐久：
+Set Car Weight to:	设置载具重量：
+Auto-Fix Car Weight:	锁定载具重量：
+Paint My Car To:	设置载具颜色：
+Auto-Paint My Car:	锁定载具颜色：
+Stop Car Alarm:	关闭车辆警报：
+Set Car Direction to:	设置载具朝向：
+KickStart Car to:	设置载具起步：
+Flip Car back on 4 wheels:	翻正载具：
+Stop X Speed	停止 X 轴移动
+Stop Y Speed	停止 Y 轴移动
+Stop Z Speed	停止 Z 轴移动
+Stop X Spin	停止 X 轴旋转
+Stop Y Spin	停止 Y 轴旋转
+Stop Z Spin	停止 Z 轴旋转
+Stop All (Freeze Car)	停止所有运动（冻结载具）
+Set X Speed to:	设置 X 轴速度：
+Set Y Speed to:	设置 Y 轴速度：
+Set Z Speed to:	设置 Z 轴速度：
+Set X Spin to:	设置 X 轴旋转速度：
+Set Y Spin to:	设置 Y 轴旋转速度：
+Set Z Spin to:	设置 Z 轴旋转速度：
+Increase X Speed by:	增加 X 轴速度：
+Increase Y Speed by:	增加 Y 轴速度：
+Increase Z Speed by:	增加 Z 轴速度：
+Decrease X Speed by:	减少 X 轴速度：
+Decrease Y Speed by:	减少 Y 轴速度：
+Decrease Z Speed by:	减少 Z 轴速度：
+Increase X Spin by:	增加 X 轴旋转速度：
+Increase Y Spin by:	增加 Y 轴旋转速度：
+Increase Z Spin by:	增加 Z 轴旋转速度：
+Decrease X Spin by:	减少 X 轴旋转速度：
+Decrease Y Spin by:	减少 Y 轴旋转速度：
+Decrease Z Spin by:	减少 Z 轴旋转速度：
+Set Clock Speed to:	设置时钟速度：
+Increase Clock Speed	加快时钟
+Decrease Clock Speed	减慢时钟
+Clear Cheated Status	清除使用秘籍记录
+Set Clock Speed to Real Time	时钟改为现实时间速度
+Set Clock Speed to Normal Game Time	恢复正常游戏时钟速度
+Set Car Speed To:	设置载具速度：
+Increase Car Speed by:	增加载具速度：
+Flight Assistance:	飞行辅助：
+Flight Assistance Level:	飞行辅助强度：
+* not available any more	* 已不再提供
+Silent Mode (no Feedback):	静音模式（无提示音）：
+Stop Alarm of my car	关闭当前车辆警报
+Take me to my last car (only if on Foot)	传送到上一辆车（仅步行时）
+Bring my last car to me (only if on Foot)	将上一辆车移到身边（仅步行时）
+Remember my location as Markup Location 	将当前位置记为标记点 
+Take me to Markup Location 	传送到标记点 
+Take me to my previous car (only if on Foot)	传送到更早使用的车（仅步行时）
+Bring my previous car to me (only if on Foot)	将更早使用的车移到身边（仅步行时）
+Set Doors of my Preivous Car to:	设置上一辆车的车门：
+Turn My Car in Clock Direction by:	将载具顺时针旋转：
+Turn My Car in Counterclock Direction by:	将载具逆时针旋转：
+Torch my (last) car	点燃当前或上一辆车
+Torch my previous car	点燃更早使用的车
+Set Game Speed to:	设置游戏速度：
+Increase Game Speed	加快游戏
+Decrease Game Speed	减慢游戏
+Freeze Game Clock	冻结游戏时钟
+Thaw Game Clock	恢复游戏时钟
+Teleport to next Location	传送到下一个地点
+Teleport to previous Location	传送到上一个地点
+Prepare for Date with Denise	准备与 Denise 约会
+Prepare for Date with Michelle	准备与 Michelle 约会
+Prepare for Date with Helena	准备与 Helena 约会
+Prepare for Date with Katie	准备与 Katie 约会
+Prepare for Date with Barbara	准备与 Barbara 约会
+Prepare for Date with Millie	准备与 Millie 约会
+Toggle Never Wanted	切换永不通缉
+Toggle Never Get Hungry	切换永不饥饿
+Toggle Infinite Health	切换无限生命
+Toggle Infinite Oxygen	切换无限氧气
+Toggle Infinite Ammo	切换无限弹药
+Toggle Tank Mode	切换坦克模式
+Toggle Mega Punch	切换超级拳击
+Toggle Mega Jump	切换超级跳跃
+Toggle Infinite Run	切换无限奔跑
+Toggle Fireproof	切换防火
+Advance Game Time by 1 Hour	游戏时间前进一小时
+Revert Game Time by 1 Hour	游戏时间后退一小时
+Stop Ped X Speed	停止玩家 X 轴移动
+Stop Ped Y Speed	停止玩家 Y 轴移动
+Stop Ped Z Speed	停止玩家 Z 轴移动
+Set Ped X Speed to:	设置玩家 X 轴速度：
+Set Ped Y Speed to:	设置玩家 Y 轴速度：
+Set Ped Z Speed to:	设置玩家 Z 轴速度：
+Increase Ped X Speed by:	增加玩家 X 轴速度：
+Increase Ped Y Speed by:	增加玩家 Y 轴速度：
+Increase Ped Z Speed by:	增加玩家 Z 轴速度：
+Decrease Ped X Speed by:	减少玩家 X 轴速度：
+Decrease Ped Y Speed by:	减少玩家 Y 轴速度：
+Decrease Ped Z Speed by:	减少玩家 Z 轴速度：
+Set Ped Speed To:	设置玩家速度：
+Increase Ped Speed by:	增加玩家速度：
+Ped Flight Assistance:	玩家飞行辅助：
+Ped Flight Assistance Level:	玩家飞行辅助强度：
+Turn Ped in Clock Direction by:	将玩家顺时针旋转：
+Turn Ped in Counterclock Direction by:	将玩家逆时针旋转：
+Toggle Perfect Handling	切换完美操控
+Toggle Decreased Traffic	切换减少交通流量
+Toggle Huge Bunny Hop	切换自行车超级跳跃
+Toggle Cars have Nitro	切换所有车辆配备氮气
+Toggle Boats can Fly	切换船只飞行
+Toggle Cars can Fly	切换汽车飞行
+Spawn Car	生成载具
+Set Weather to:	设置天气：
+Toggle Weather Lock	切换锁定天气
+Toggle One Hit Kill	切换一击必杀
+Toggle Freeze Mission Timers	切换冻结任务计时器
+Give Weapon & Ammo	给予武器和弹药
+Remove Current Weapon	移除当前武器
+Clear All Weapons	移除所有武器

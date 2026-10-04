@@ -1,0 +1,24 @@
+# Downloaded tools, build products and machine-local state
+/.tools/
+/.work/
+/.artifacts/
+**/__pycache__/
+*.pyc
+*.twinproj
+*.vbw
+*.pdb
+*.obj
+*.exp
+*.lib
+*.exe
+GTASAConsole/*.dll
+GTASAConsole/*.ocx
+GTASAConsole/GTASAConsole.ini
+GTASAConsole/GTASAConfig.dat
+**/.env
+**/.env.*
+*.pem
+*.key
+*.dmp
+# Required project resources and pinned legacy runtime components are tracked.
+!vendor/vb6-controls/*.ocx

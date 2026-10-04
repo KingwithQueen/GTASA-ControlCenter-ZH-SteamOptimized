@@ -1,0 +1,1612 @@
+﻿GTA San Andreas Control Center	圣安地列斯控制中心
+GTASA Control Center	圣安地列斯控制中心
+GTA SA Control Center Garage Editor - Vehicle Selection	控制中心车库编辑器 - 选择载具
+GTA SA Control Center Mod Selection	控制中心 - 选择改装
+GTA SA Control Center - Weapon Stats	控制中心 - 武器熟练度
+Vehicle and Game Data	载具与游戏
+Player Data	玩家状态
+Garages	车库
+GTA SA Cheats	游戏秘籍
+Locations	传送地点
+Keyboard Shortcuts	快捷键
+Cancel	取消
+OK	确定
+Close	关闭
+Max	最大
+None	无
+NONE	无
+N/A	不适用
+Favorites	收藏
+Sports Cars	跑车
+Off-Road	越野
+Lowriders	低底盘车
+Convertibles	敞篷车
+Other Cars	其他汽车
+Industrial Vehicles	工业载具
+Public Service	公共服务载具
+Helicopters	直升机
+Planes	飞机
+Bikes	摩托车与自行车
+Boats	船只
+Unique Vehicles	特殊载具
+Remove from Favorites	移出收藏
+Add to Favorites	加入收藏
+Please wait... Loading Vehicle Pictures	正在加载载具图片，请稍候……
+Please wait... Saving Changes	正在保存修改，请稍候……
+Please wait... Parsing Vehicle Types	正在读取载具类型，请稍候……
+Please wait... Parsing Vehicle Descriptions	正在读取载具说明，请稍候……
+Error parsing car pictures.	读取载具图片失败。
+Current Pilot Stat  (0):	飞行技能（0）：
+Current Cycling Stat (0):	自行车技能（0）：
+Current Biking Stat (0):	摩托车技能（0）：
+Current Lung Capacity  (0):	肺活量（0）：
+Current Driving Stat  (0):	驾驶技能（0）：
+Current Armor Level  (0):	护甲（0）：
+Current Health Level (0):	生命值（0）：
+Current Fat Stat  (0):	脂肪（0）：
+Current Stamina Stat  (0):	耐力（0）：
+Current Muscle Stat  (0):	肌肉（0）：
+Current Gambling Stat  (0):	赌博技能（0）：
+Check to lock Pilot Stat (0 to 1000)	勾选锁定飞行技能（0 至 1000）
+Check to lock Cycling Stat (0 to 1000)	勾选锁定自行车技能（0 至 1000）
+Check to lock Bike Stat (0 to 1000)	勾选锁定摩托车技能（0 至 1000）
+Check to lock Underwater Stamina Level (0 to 1000)	勾选锁定肺活量（0 至 1000）
+Check to lock Driving Stat (0 to 1000)	勾选锁定驾驶技能（0 至 1000）
+Check to lock Armor Level	勾选锁定护甲
+Check to lock Health	勾选锁定生命值
+Check to lock Fat Level (0 to 1000)	勾选锁定脂肪（0 至 1000）
+Check to lock Stamina Level (0 to 1000)	勾选锁定耐力（0 至 1000）
+Check to lock Muscle Level (0 to 1000)	勾选锁定肌肉（0 至 1000）
+Check to lock Gambling Stat (0 to 1000)	勾选锁定赌博技能（0 至 1000）
+Check to lock weather	勾选锁定天气
+Click to apply selected License Plate	应用输入的车牌
+License Plate (Upper Case, 8 Characters)	车牌（8 个大写字符）
+Set License Plate to:	设置车牌：
+Check to lock License Plate for yout cars to the given value	勾选后将所用车辆的车牌锁定为指定内容
+Auto-inject Spawner Code if possible	自动启用载具生成
+Control also RC Vehicles	也控制遥控载具
+Check to treat Radio Controlled Vehicles as normal vehicles.	勾选后将遥控载具视为普通载具
+Click to Accept Weapon Changes	应用武器修改
+Brass Knuckles	指虎
+Set Clock to Normal Speed	恢复正常时间流速
+Real-time Clock	现实时间流速
+Stop Clock	停止时间
+Automatically restart car when stalled	车辆熄火后自动重新启动
+Check to automatically restart car when it is stalled	勾选后自动启动熄火的车辆
+Pick a weather so set game weather	选择游戏天气
+Pick	选择
+Pick a Vehicle to Spawn	选择要生成的载具
+Select a Vehicle to Spawn	选择要生成的载具
+Fireproof	防火
+Infinite Run	无限奔跑
+Cheap Cars	街上出现廉价车
+Fast Cars	街上出现跑车
+Max Sex Appeal	性感度最高
+Max Respect	威望最高
+Mega Jump	超级跳跃
+Mega Punch	超级拳击
+Tank Mode	坦克碰撞模式
+Infinite Ammo	无限弹药
+Infinite Oxygen	无限氧气
+Infinite Health	无限生命
+Never get Hungry	永不饥饿
+Never Wanted	永不通缉
+Auto-Clear Status after inserting cheats	使用秘籍后自动清除作弊标记
+Clear Cheated 	清除作弊标记
+Set Money	设置金钱
+Click to enter an amount of money to be set as current money.	输入要设置的金钱数额
+Show Detailed Weapon Proficiency Stats	查看各类武器的熟练度
+Re-sync to GTA SA	重新连接游戏
+Stop All Speed (Freeze Player)	停止所有移动（冻结玩家）
+Stop All Ped Speed	停止玩家所有移动
+Stop	停止
+Stop Z Speed (Up-Down Dimension)	停止竖直方向移动
+Stop Y Speed (East-West Dimension)	停止 Y 方向移动
+Stop X Speed (North-South Dimension)	停止 X 方向移动
+do not Explode	禁止爆炸
+do not Burn	禁止燃烧
+Auto-Repair Damage if car is burning	车辆着火时自动修复
+Stop All Spin	停止所有旋转
+Stop All Spins	停止所有旋转
+Stop All Speed	停止所有移动
+Stop All Speeds	停止所有移动
+Freeze Car	冻结车辆
+Stop All movement of the car	停止车辆的一切运动
+Flip over	翻正车辆
+Flip car over (on to 4 wheels and back)	翻转车辆
+Kick Start:	起步速度：
+Place Car to selected Direction	将车辆转向所选方向
+Explosion	爆炸
+Explosion-proof	防爆
+Prevent Player taking damage from:	玩家伤害防护：
+Check to Lock selected Ped Specialities	锁定所选玩家防护状态
+Collision	碰撞
+Damage-proof	防碰撞
+Bullet	子弹
+Bullet-proof	防弹
+Fire	火焰
+Flame-proof	防火
+Prevent Wheel Damage (Car and Trailer)	车轮防损坏（车辆及拖车）
+Check to lock Radio Station	锁定电台
+Engine health (100%):	引擎状况（100%）：
+Check to lock Engine Damage	锁定引擎状况
+Doubleclick to change	双击修改
+Lock Major color	锁定主颜色
+Car Color:	车辆颜色：
+Lock Minor color	锁定副颜色
+open	解锁
+locked	锁定
+Select to unlock car doors	解锁车门
+Select to lock car doors	锁定车门
+Car Doors:	车门：
+Check to Auto-lock/unlock car doors	自动锁定或解锁车门
+Prevent Car taking damage from:	车辆伤害防护：
+Check to Lock selected Car Specialities	锁定所选车辆防护状态
+Automatically stop car-alarms	自动关闭车辆警报
+Flight Assistance (0%)	飞行辅助（0%）
+SCM is NOT modded	使用原版任务脚本
+GTA SA Version	游戏版本
+Armor	护甲
+Health	生命值
+Wanted	通缉等级
+Weapons	武器
+Weather	天气
+Colors	颜色
+Directions	方向
+OFF	关
+ON	开
+Carry	携带
+Ammo:	弹药：
+Give:	给予：
+Select Vehicle:	选择载具：
+No Additional Data is needed.	无需附加参数。
+Minor:	副色：
+Major:	主色：
+In-Game Feedback Messages	游戏内反馈消息
+Apply changes	应用修改
+Apply changes to the selected Shortcut	应用到所选快捷键
+Insert as new Shortcut	新增快捷键
+Delete selected	删除所选项
+Insert New Group	新建分组
+Read Shortcuts from Config File	读取快捷键配置
+Save Shortcuts to Config File	保存快捷键配置
+Center Map	地图居中
+Angle (0 to 359)	朝向（0 至 359 度）
+Save to Config	保存配置
+Read from Config	读取配置
+New Group	新建分组
+Delete Selected	删除所选项
+Insert as new	新增
+Teleport	传送
+Teleport to the selected Location	传送到所选地点
+Read from GTASA	读取游戏位置
+Show on Map	在地图上显示
+Read from Map	从地图选取
+Angle:	朝向：
+Zoom (100%):	缩放（100%）：
+X Coord:	X 坐标：
+Y Coord:	Y 坐标：
+Z Coord:	Z 坐标：
+Location	位置
+You are here	当前位置
+Manually selected Location	手动选择的位置
+Insert as a new Cheat	新增秘籍
+Delete selected (cheat or folder)	删除所选秘籍或分组
+Insert new Folder	新建分组
+Read Cheats from Config File	读取秘籍配置
+Save Cheats to Config File	保存秘籍配置
+Write Garages to INI	保存车库配置
+Read Garages from INI	读取车库配置
+Write Garages to GTA SA	将车库写入游戏
+Read Garages from GTA SA	读取游戏车库
+Los Santos	洛圣都
+San Fierro	圣辉洛
+Las Venturas	拉斯文加斯
+Bone County	骨郡
+Parked Car:	停放车辆：
+Garage:	车库：
+Mods:	改装：
+Ped Direction:	玩家朝向：
+Car Weight: (50 Tons)	车辆重量（50 吨）
+Check to lock Car-weight	锁定车辆重量
+Perfect Handling	完美操控
+Decreased Traffic	减少交通流量
+Huge Bunny Hop	自行车超级跳跃
+Cars have Nitro	所有汽车配备氮气
+Boats can Fly	船只飞行
+Cars can Fly	汽车飞行
+One Hit Kill	一击必杀
+Freeze Timers	冻结任务计时
+(reserved)	（预留）
+Ammo	弹药
+Current Weather:	当前天气：
+Vehicle Selection:	选择载具：
+Z Speed (0%):	Z 速度（0%）：
+Y Speed (0%):	Y 速度（0%）：
+X Speed (0%):	X 速度（0%）：
+Current Player: 	当前玩家：
+Average Weapon Proficiency: 0%	平均武器熟练度：0%
+Clock Speed: (unknown yet)	时间流速：（未知）
+Adjust:	调整：
+Game Time: (unknown yet)	游戏时间：（未知）
+X Spin (0%):	X 旋转（0%）：
+Y Spin (0%):	Y 旋转（0%）：
+Z Spin (0%):	Z 旋转（0%）：
+Current Car: 	当前载具：
+Game Speed: (unknown yet)	游戏速度：（未知）
+GTASA Version:	游戏版本：
+Teleport Locations:	传送地点：
+Keyboard Control Intervall: (500 ms).	快捷键检测间隔：（500 毫秒）
+Shortcut:	快捷键：
+Control Center Commands:	控制中心命令：
+GTASA internal Cheats:	游戏内置秘籍：
+Cheat string:	秘籍代码：
+Coffee: Censored	隐藏内容：关闭
+Edit Label	编辑名称
+Move to Folder	移至分组
+Activate	启用
+Deactivate	停用
+Read Coordinates	读取坐标
+Read Online Coordinates	读取游戏坐标
+Hide Locations	隐藏地点
+Map Zoom	地图缩放
+Location Boxes	地点标记大小
+Pick a Folder to Move selected item to	选择目标分组
+Machine Pistol:	自动手枪：
+Combat Shotgun:	战斗霰弹枪：
+Sawn-off Shotgun:	短管霰弹枪：
+Shotgun:	霰弹枪：
+Desert Eagle:	沙漠之鹰：
+Silenced Pistol:	消音手枪：
+Pistol:	手枪：
+Select a car to Park in this Garage/Parkplace	选择停入此车库或车位的载具
+Garage Caption:	车库名称：
+Lock settings for this garage	锁定此车库设置
+Check to lock selected cheat state	锁定所选秘籍状态
+Set Direction	设置朝向
+Nort-East	东北
+East	东
+South-East	东南
+South-West	西南
+West	西
+North-West	西北
+North	北
+South	南
+Car Direction:	车辆朝向：
+Pick vehicle from extended Car Selection Form	打开完整载具选择列表
+Edit Mods	编辑改装
+Edit mods of this parked vehicle	修改停放车辆的改装部件
+Clear Mods	清除改装
+Clear all mods of this parked vehicle	清除停放车辆的所有改装
+All-Proof	全伤害防护
+Always Park these Cars to this garage	始终在此车库停放这些车辆
+There are no mods available for this vehicle.	此载具没有可用的改装部件。
+Modded	已改装
+Not Modded	未改装
+Click to Lock Stat	点击锁定数值
+Check to Lock Stat	勾选锁定数值
+Current Level  (0):	当前数值（0）：
+Steam layout is not supported yet. Memory writes have been disabled.	尚未完成此 Steam 版本的地址适配，已禁止写入游戏内存。
+Unsupported game layout	不支持的游戏版本
+(0 Degrees)	（0 度）
+(25,5 Tons)	（25.5 吨）
+(Note that not all cars are avaliable for all Parking locations)	（部分车位只能停放特定载具）
+Ammo: Amount Loaded to Weapon	弹匣内的弹药量
+Ammo: Total amount carried	携带的弹药总量
+Apply changes to the selected GTA3 cheat	应用到所选秘籍
+Auto-inject ASM Code if Code-injection is possible	允许时自动注入生成器代码
+Autoincrease Z Speed (100% = 0.01 g)	自动增加竖直速度（100% = 0.01 g）
+Available Car colors:	可选车辆颜色：
+Available Keys as Shortcut	可用的快捷键
+Bas Boost	低音增强
+CarDynamics	车辆运动
+CarList	载具列表
+CarWeight	车辆重量
+Cheat Caption	秘籍名称
+Cheat Tooltip	秘籍说明
+Check this to receive On-Screen Feedback Messages from Admin-Console	在游戏画面显示控制中心的操作反馈
+Check to Lock Loaded Ammo (avoid reload sequences)	锁定弹匣弹药（无需换弹）
+Check to Lock Total Ammo	锁定弹药总量
+Check to carry this weapon	携带此武器
+Check to give Player Brass Knuckles, and Lock	给予玩家指虎并锁定
+Click to assign new Location Data for selected Teleport-Location	更新所选传送地点的坐标
+Click to insert this location data as a new entry to treeview	将当前坐标保存为新地点
+Click to read position data from GTASA	读取游戏中的当前位置
+Click to toggle 'Freeze All Mission Timers' On and Off (uses code injection)	开关所有任务计时器的冻结（需要代码注入）
+Click to toggle 'HotCoffee' On and Off (ie. Censored and Uncensored)	开关隐藏的约会内容
+Click to toggle 'One Hit Kill' On and Off (uses code injection)	开关一击必杀（需要代码注入）
+Click to toggle 'Safe Cheats' On and Off (ie. clear 'cheated' status of game after inserting cheats)	开关秘籍使用后的作弊标记清除
+CriminalsKilled	击杀罪犯数
+Delete a Location Group (all Locations within group will be assigned to parent group)	删除地点分组，并将其中的地点移至上一级分组
+Delete selected entry from Shortcut list	删除所选快捷键
+Delete the selected cheat from list	删除所选秘籍
+EP/DP/BP/FP	防爆/防碰撞/防弹/防火
+EngineDamage	引擎状况
+GTASA Admin-Console internal commands. (Wait for new version for additional commands)	控制中心内置命令
+GTASA cheat-string to auto-insert	自动输入的秘籍代码
+Height Placement of Player in relevance to zero point	相对零点的玩家高度
+Hydraulics	液压悬挂
+Injection ASM Code © Jacob	生成器代码作者：Jacob
+Insert New Location Group as Sibling to Selected Group	在当前层级创建地点分组
+Insert a new group under the selected group	在所选分组内创建子分组
+Insert this cheat string as a new GTA SA cheat (you can combine cheats as well)	添加新秘籍（可组合多个秘籍代码）
+Insert your Shortcut settings as a new entry to the list	将当前设置添加为新快捷键
+Lock Burn Timer to 0, so that car can burn, but not explode	锁定燃烧倒计时，使车辆着火后不会爆炸
+MarkLocations	标记地点
+Melee Weapons do not have Ammo	近战武器无需弹药
+Misc:	其他：
+Miscellaneous:	其他：
+MissionTime	任务时间
+No Nitro	无氮气
+No Paint Job (Paint Jobs are available only for Street Racers and Lowriders)	无喷漆（只有街头赛车和低底盘车支持喷漆）
+ON/OFF	开/关
+Paint Job 4 (Please use only if you use a custom car with 1+4 skin packs)	喷漆 4（仅适用于另带四套涂装的自定义载具）
+Paint Jobs	车身喷漆
+Paintjob 4*	喷漆 4*
+Place Ped to selected Direction	将玩家转向所选方向
+Placement of Player in East-West Dimension	玩家的东西方向位置
+Placement of Player in North-South Dimension	玩家的南北方向位置
+Read from Manual Location on Map	读取地图上手动选取的位置
+Read from config file and re-initialise Treeview	读取配置并刷新列表
+Save changes on treeview to config file	将列表中的修改保存到配置文件
+Select Special Item Amount	选择特殊物品数量
+Selection list of GTASA cheats, as in Page 	游戏秘籍列表，对应页面：
+Selection of Warp Locations, as in Page 	传送地点列表，对应页面：
+Set Car direction and kickstart with selected speed.	设置车辆朝向并按所选速度起步
+Set Ped direction and kickstart with selected speed.	设置玩家朝向并按所选速度移动
+Show Manual Location on Map	显示手动选取的位置
+Spawn selected Vehicle (by Jacob)	生成所选载具（作者 Jacob）
+Spawn selected Vehicle (© Jacob)	生成所选载具（作者 Jacob）
+Spawner Code-Injection Status: (unknown)	载具生成器状态：（未知）
+Stop X Spin (North-South Dimension)	停止绕 X 轴旋转
+Stop Y Spin (East-West Dimension)	停止绕 Y 轴旋转
+Stop Z Spin (Clock-Counterclock Dimension)	停止绕 Z 轴旋转
+This is confirmation that Console can write to SCM Memory block	确认允许控制中心修改原版任务脚本的内存
+TurnCar	转动车辆
+WeaponSpecs	武器属性
+interval in which the GTASA Admin Console checks for keys during gameplay	游戏过程中检测快捷键的时间间隔
+open/locked	解锁/锁定
+Select Gift	选择礼物
+Check to lock selected Gift	锁定所选礼物
+Enter Ammo Amount for Gift	输入弹药量：礼物
+Enter Amount for Gift	输入数量：礼物
+Select Handgun	选择手枪
+Check to lock selected Handgun	锁定所选手枪
+Enter Ammo Amount for Handgun	输入弹药量：手枪
+Enter Amount for Handgun	输入数量：手枪
+Select Heavy Weapon	选择重型武器
+Check to lock selected Heavy Weapon	锁定所选重型武器
+Enter Ammo Amount for Heavy Weapon	输入弹药量：重型武器
+Enter Amount for Heavy Weapon	输入数量：重型武器
+Select Machinegun	选择突击步枪
+Check to lock selected Machinegun	锁定所选突击步枪
+Enter Ammo Amount for Machinegun	输入弹药量：突击步枪
+Enter Amount for Machinegun	输入数量：突击步枪
+Select Melee Weapon	选择近战武器
+Check to lock selected Melee Weapon	锁定所选近战武器
+Enter Ammo Amount for Melee Weapon	输入弹药量：近战武器
+Enter Amount for Melee Weapon	输入数量：近战武器
+Select Projectile	选择投掷物
+Check to lock selected Projectile	锁定所选投掷物
+Enter Ammo Amount for Projectile	输入弹药量：投掷物
+Enter Amount for Projectile	输入数量：投掷物
+Select Rifle	选择步枪
+Check to lock selected Rifle	锁定所选步枪
+Enter Ammo Amount for Rifle	输入弹药量：步枪
+Enter Amount for Rifle	输入数量：步枪
+Select Shotgun	选择霰弹枪
+Check to lock selected Shotgun	锁定所选霰弹枪
+Enter Ammo Amount for Shotgun	输入弹药量：霰弹枪
+Enter Amount for Shotgun	输入数量：霰弹枪
+Select Special Item	选择特殊物品
+Check to lock selected Special Item	锁定所选特殊物品
+Enter Ammo Amount for Special Item	输入弹药量：特殊物品
+Enter Amount for Special Item	输入数量：特殊物品
+Select Special Item2	选择特殊物品 2
+Check to lock selected Special Item2	锁定所选特殊物品 2
+Enter Ammo Amount for Special Item2	输入弹药量：特殊物品 2
+Enter Amount for Special Item2	输入数量：特殊物品 2
+Select Sub-Machinegun	选择冲锋枪
+Check to lock selected Sub-Machinegun	锁定所选冲锋枪
+Enter Ammo Amount for Sub-Machinegun	输入弹药量：冲锋枪
+Enter Amount for Sub-Machinegun	输入数量：冲锋枪
+Chr. Arches	镀铬轮拱
+Chromer Arches	镀铬轮拱
+Chr. Flames	镀铬火焰饰件
+Chromer Flames	镀铬火焰饰件
+Chr. Lights	镀铬灯饰
+Chrome Lights	镀铬灯饰
+Chr. Trims	镀铬饰条
+Chromer Trims	镀铬饰条
+Chrome Bars	镀铬横杠
+Chrome Grill	镀铬格栅
+Chrome Strips	镀铬饰条
+Rear Bullbas	后防撞杠
+Round Fog	圆形雾灯
+Square Fog	方形雾灯
+No Misc. 	无附加饰件
+Available Mods for Standard Cars:	普通汽车可用改装：
+Fog Lights:	雾灯：
+Square Fog Lights	方形 雾灯
+Round Fog Lights	圆形 雾灯
+No Fog Lights	无雾灯
+Side Skirt	侧裙
+Generic Side Skirts	通用 侧裙
+Roof Scoop:	车顶进气口：
+Champ Roof Scoops	Champ 车顶进气口
+Fury Roof Scoop	Fury 车顶进气口
+No Roof Scoops	无车顶进气口
+Generic	通用
+Generic Roof Scoops	通用 车顶进气口
+Exhaust:	排气管：
+Upswept	上翘
+Upswept Exhaust	上翘 排气管
+Twin	双管
+Twin Exhaust	双管 排气管
+Large	大型
+Large Exhaust	大型 排气管
+Medium	中型
+Medium Exhaust	中型 排气管
+Small	小型
+Small Exhaust	小型 排气管
+Standard	标准
+Standard Exhaust	标准 排气管
+Hood Vent:	引擎盖通风口：
+Square	方形
+Square Hood Vents	方形 引擎盖通风口
+Oval	椭圆形
+Oval Hood Vents	椭圆形 引擎盖通风口
+No Hood Vents	无引擎盖通风口
+Hood Scoop:	引擎盖进气口：
+Race Hood Scoop	Race 引擎盖进气口
+Worx Hood Scoop	Worx 引擎盖进气口
+No Hood Scoops	无引擎盖进气口
+Spoiler:	尾翼：
+Win Spoiler	Win 尾翼
+Worx Spoiler	Worx 尾翼
+Race Spoiler	Race 尾翼
+Pro Spoiler	Pro 尾翼
+Fury Spoiler	Fury 尾翼
+Drag Spoiler	Drag 尾翼
+Champ Spoiler	Champ 尾翼
+Alpha Spoiler	Alpha 尾翼
+No Spoiler	无尾翼
+Available Mods for Elegy:	Elegy 可用改装：
+Side Skirt:	侧裙：
+No Side Skirt	无侧裙
+Alien Side Skirt	Alien 侧裙
+X-Flow Side Skirt	X-Flow 侧裙
+Alien Spoiler	Alien 尾翼
+X-Flow Spoiler	X-Flow 尾翼
+Rear Bumper:	后保险杠：
+X-Flow Rear Bumper	X-Flow 后保险杠
+Alien Rear Bumper	Alien 后保险杠
+Standard Rear Bumper	标准 后保险杠
+Roof Vent:	车顶通风口：
+X-Flow Roof Vent	X-Flow 车顶通风口
+Alien Roof Vent	Alien 车顶通风口
+No Roof Vent	无车顶通风口
+Front Bumper:	前保险杠：
+X-Flow Front Bumper	X-Flow 前保险杠
+Alien Front Bumper	Alien 前保险杠
+Standard Front Bumper	标准 前保险杠
+X-Flow Exhaust	X-Flow 排气管
+Alien Exhaust	Alien 排气管
+Available Mods for Stratum:	Stratum 可用改装：
+Available Mods for Sultan:	Sultan 可用改装：
+Available Mods for Jester:	Jester 可用改装：
+Available Mods for Uranus:	Uranus 可用改装：
+Available Mods for Remington:	Remington 可用改装：
+No Side Skirts	无侧裙
+Slamin	低趴
+Slamin Rear Bumpers	低趴 后保险杠
+Chromer	镀铬
+Chromer Rear Bumpers	镀铬 后保险杠
+Standard Rear Bumpers	标准 后保险杠
+Slamin Front Bumpers	低趴 前保险杠
+Chromer Front Bumpers	镀铬 前保险杠
+Standard Front Bumpers	标准 前保险杠
+Slamin Exhaust	低趴 排气管
+Chromer Exhaust	镀铬 排气管
+Available Mods for Slamvan:	Slamvan 可用改装：
+Chromer Front Bumper	镀铬 前保险杠
+Slamin Rear Bullbar	低趴 后防撞杠
+Chromer Rear Bullbar	镀铬 后防撞杠
+No Rear Bullbars	无后防撞杠
+Wheelcovers	轮毂盖
+Front Bullbar:	前防撞杠：
+Slamin Front Bullbar	低趴 前防撞杠
+Chromer Front Bullbar	镀铬 前防撞杠
+No Front Bullbars	无前防撞杠
+Available Mods for Blade:	Blade 可用改装：
+Slamin Front Bumper	低趴 前保险杠
+Roof:	车顶：
+Vinly Hardtop	乙烯基硬顶
+Vinly Hardtop Roof	乙烯基硬顶 车顶
+Convertible	敞篷
+Convertible Roof	敞篷 车顶
+Chromer Rear Bumper	镀铬 后保险杠
+Slamin Rear Bumper	低趴 后保险杠
+Chromer Side Skirt	镀铬 侧裙
+Available Mods for Savannah:	Savannah 可用改装：
+Hardtop	硬顶
+Hardtop Roof	硬顶 车顶
+Softtop	软顶
+Softtop Roof	软顶 车顶
+Available Mods for Tornado:	Tornado 可用改装：
+Available Mods for Broadway:	Broadway 可用改装：
+2 x Nitro	2 次氮气加速
+5 x Nitro	5 次氮气加速
+10 x Nitro	10 次氮气加速
+Paintjob 3	喷漆 3
+Paint Job 3	喷漆 3
+Paintjob 2	喷漆 2
+Paint Job 2	喷漆 2
+Paintjob 1	喷漆 1
+Paint Job 1	喷漆 1
+Wheels:	轮毂：
+Street Racer Wheels	街头赛车 轮毂
+Off-Road Wheels	越野 轮毂
+Lowrider Wheels	低底盘 轮毂
+Generic Wheels	通用 轮毂
+Standard Wheels	标准 轮毂
+Available Mods for Flash:	Flash 可用改装：
+Set to  50 %	设置为 50 %
+Set to 100%	设置为 100%
+Set to 150%	设置为 150%
+Set to 200%	设置为 200%
+Set to 300%	设置为 300%
+Set to 400%	设置为 400%
+Classic Steam version detected automatically	已自动识别经典 Steam 版
+Steam version: unsupported feature	Steam 版：此功能尚未适配
+Steam spawner: open the pause menu first	请先按 Esc 暂停游戏，再启用载具生成器
+GTA SA Control Center Garage Editor - Vehicle Selection [	控制中心车库编辑器 - 选择载具 [
+This vehicle is already in the favorites list	此载具已在收藏列表中
+Error parsing Car Pictures	读取载具图片失败
+Error during Mod decoding.	解码改装数据失败。
+Error during Mod encoding	编码改装数据失败
+Coming soon...	尚未实现……
+GTASA CC	圣安地列斯控制中心
+Spawner Code-Injection Status: Injected	载具生成器状态：已启用
+Weapon Validation failed. Please check your entry	武器数据验证失败，请检查输入
+GTA SA Control Center [Initializing, please wait...]	圣安地列斯控制中心 [正在初始化，请稍候……]
+Initialisation Failed	初始化失败
+Initialisation Failed.	初始化失败。
+Initialisation failed	初始化失败
+Game Time: 	游戏时间：
+ / Day: 	 / 天数：
+ / Wd: 	 / 星期：
+Clock Speed : Stopped	时钟速度：已停止
+Clock Speed : Real-Time	时钟速度：现实时间
+Clock Speed : Real-time	时钟速度：现实时间
+Clock Speed : 	时钟速度：
+Game Speed : 	游戏速度：
+X Speed (	X 轴速度（
+Y Speed (	Y 轴速度（
+Z Speed (	Z 轴速度（
+Player Speed	玩家速度
+Player Direction	玩家朝向
+Player Start	玩家起步
+Locking Engine health has side effects in some missions (like car exploding during mission).	锁定引擎耐久会影响某些任务，例如任务要求车辆爆炸时。
+Please use Damage-Proof switch instead of locking the health.	这时请使用防撞损开关。
+Car Dynamics	载具运动
+Car Specs	载具特性
+Car Doors	车门
+Engine health (	引擎耐久（
+Car Weight: (	载具重量：（
+ Tons)	 吨）
+X Spin (	X 轴旋转（
+Y Spin (	Y 轴旋转（
+Z Spin (	Z 轴旋转（
+Flight Assistance (	飞行辅助（
+Car Dynamics Scroll	载具运动调节
+Major Color	主色
+Major Color Lock	锁定主色
+Minor Color	副色
+Minor Color Lock	锁定副色
+Command: Stop Car	命令：停止载具
+Car Direction Options	载具朝向选项
+Car Start Options	载具起步选项
+Command: Flip Car	命令：翻正载具
+Start GTA SA and load/start a game first.	请先启动游戏并载入存档或开始新游戏。
+Please start GTA SA and retry again.	请先启动游戏再重试。
+Spawner Code-Injection Status: Not Injected	载具生成器状态：未启用
+The Car Spawn ASM Code cannot be injected!!	无法启用载具生成器！Steam 版请先在游戏中按 Esc 暂停再重试。
+Your GTASA Executable is not original.	游戏代码与支持的版本不匹配，或当前不能安装修复。
+Please restore original exe and try again.	请核对游戏版本及其他插件后重试。
+Spawner Code-Injection Status: Not Injectable	载具生成器状态：当前不可用
+CarSpawn Code-Injection has been reverted to Original.	载具生成器已停用。
+CarSpawn related functions will not be available	载具生成功能将不可用，
+until you re-inject the code.	直到重新启用生成器。
+The Car Spawn ASM Code-Injection cannot be reverted!!	无法停用载具生成器！
+Please restore original gta_sa.exe.	请退出游戏后重新启动，并核对版本。
+Error during Code-Injection Check!!	检查载具生成器状态时出错！
+Command: Spawn Car	命令：生成载具
+One-Hit-Kill code can not be injected!!	无法启用一击必杀！
+Player Stats	玩家属性
+Average Weapon Proficiency: 	平均武器熟练度：
+Current Player: No Specialities	当前玩家：无特殊防护
+Player Specs	玩家防护
+Please start GTA SA and load/start a game first!	请先启动游戏并载入存档或开始新游戏！
+Please select a cheat to apply changes	请选择要修改的秘籍
+Please insert a cheat string to apply changes	请输入秘籍代码后再应用修改
+Please select a folder to add this cheat	请选择存放此秘籍的文件夹
+Please insert a cheat string to add	请输入要添加的秘籍代码
+New Cheat: 	新秘籍：
+ (please edit this description)	（请编辑此说明）
+Please select a folder or a cheat to delete	请选择要删除的文件夹或秘籍
+You cannot delete the root folder	不能删除根文件夹
+Please select a folder to insert the new folder as subfolder.	请选择新建子文件夹的上级文件夹。
+Command: Cheats	命令：秘籍
+Please select a Location to apply changes	请选择要修改的地点
+#ERROR#	#错误#
+Please read location from GTA San Andreas to apply changes	请先读取游戏中的当前位置再应用修改
+Please select a folder to add this Location	请选择存放此地点的文件夹
+Please read location from GTA San Andreas to add	请先读取游戏中的当前位置再添加
+New Location (please edit this description)	新地点（请编辑此说明）
+Please select a valid Location to teleport	请选择有效的传送地点
+Please select a folder or a location to delete	请选择要删除的文件夹或地点
+Command: Locations	命令：地点
+Teleport to: 	传送至：
+Please select a shortcut to apply changes	请选择要修改的快捷键
+Please select a folder to insert this new shortcut	请选择存放新快捷键的文件夹
+Please select a folder or a shortcut to delete	请选择要删除的文件夹或快捷键
+Command: Shortcuts	命令：快捷键
+Commands Combo	命令选择
+ Tons	 吨
+ Degrees)	 度）
+Command Data Scroller	命令参数调节
+Shortcuts	快捷键
+Please wait a few seconds. Control Center will now resyncronize.	请稍候，控制中心正在重新同步。
+Keyboard Control Intervall: (	快捷键检测间隔：（
+Intervall scroller	检测间隔调节
+GTA SA is not running.	游戏尚未运行。
+Please start GTA SA, load/start a game,	请启动游戏并载入存档或开始新游戏，
+and then start the console	然后启动控制中心，
+for proper syncronization!	以便正确同步数据！
+This Message will be shown 	此提示还将显示 
+ more times.	 次。
+GTASA Control Center [Online - No Game in Progress]	圣安地列斯控制中心 [已连接，等待载入游戏]
+Coffee: Uncensored	咖啡小游戏：未屏蔽
+SCM Modded...	任务脚本功能不可用
+Current Car: No Specialities	当前载具：无特殊防护
+Hook Timer	游戏数据读取
+Find Car Timer	载具查找
+Console Timer	控制中心更新
+(None)	（无）
+Internal error in FillInCombo's	填充选项时发生内部错误
+Don't mess with ini file.	请检查配置文件格式。
+FillInShortcutDetails	读取快捷键详情
+Error parsing Keyboard Shortcuts	读取快捷键失败
+Error parsing cheat configuration.	读取秘籍配置失败。
+Error parsing Warp Locations	读取传送地点失败
+Error parsing Car ID's	读取载具编号失败
+GTASA Control Center [Error on retrieving Car Adresse]	圣安地列斯控制中心 [无法读取载具数据]
+GTASA Control Center [Player Controls 	圣安地列斯控制中心 [玩家正在控制 
+GTASA Control Center [Player in 	圣安地列斯控制中心 [玩家乘坐 
+GTASA Control Center [Player in NonRecognized Car]	圣安地列斯控制中心 [无法识别当前载具]
+GTASA Control Center [Player on Foot]	圣安地列斯控制中心 [玩家步行中]
+GetNode 	读取条目 
+FillInTreeviews 	填充树形列表 
+Zoom (	缩放（
+AddLocBox	添加地点标记
+No Cheat has been selected to move	请选择要移动的秘籍
+You cannot move Root Folder	不能移动根文件夹
+No Shortcut has been selected to move	请选择要移动的快捷键
+No Shortcut has been selected to 	请选择要操作的快捷键：
+activate	启用
+deactivate	停用
+No Location has been selected to move	请选择要移动的地点
+No Folder has been selected.	尚未选择文件夹。
+Your Mod Selection could not be encoded.	无法编码所选改装项目。
+Please read online garage again	请重新读取游戏中的车库
+Current Mods could not be initialised.	无法初始化当前改装项目。
+Error on ModEdit	改装编辑错误
+Click to Set Stat	点击设置属性
+Car colors not parsed.	未能读取载具颜色。
+Set Armor Level to:	设置护甲值：
+Auto-Fix Armor Level to:	自动保持护甲值：
+Auto-Fix Armor:	自动恢复护甲：
+Set Health Level to:	设置生命值：
+Auto-Fix Health Level to:	自动保持生命值：
+Auto-Fix Health:	自动恢复生命：
+Set Car Specialities to:	设置载具防护：
+Auto-Fix Car Specialities:	锁定载具防护：
+Set Car Doors to:	设置车门：
+Auto-Lock Car Doors:	锁定车门状态：
+Prevent Wheel Damage:	防止轮胎损坏：
+Set Engine Health To:	设置引擎耐久：
+Auto-Fix Engine Health:	锁定引擎耐久：
+Set Car Weight to:	设置车辆重量：
+Auto-Fix Car Weight:	锁定载具重量：
+Paint My Car To:	车辆喷漆：
+Auto-Paint My Car:	锁定载具颜色：
+Stop Car Alarm:	关闭车辆警报：
+Set Car Direction to:	设置载具朝向：
+KickStart Car to:	设置载具起步：
+Flip Car back on 4 wheels:	将车辆翻正：
+Stop X Speed	停止 X 轴移动
+Stop Y Speed	停止 Y 轴移动
+Stop Z Speed	停止 Z 轴移动
+Stop X Spin	停止 X 轴旋转
+Stop Y Spin	停止 Y 轴旋转
+Stop Z Spin	停止 Z 轴旋转
+Stop All (Freeze Car)	停止所有移动（冻结车辆）
+Set X Speed to:	设置 X 轴速度：
+Set Y Speed to:	设置 Y 轴速度：
+Set Z Speed to:	设置 Z 轴速度：
+Set X Spin to:	设置 X 轴旋转速度：
+Set Y Spin to:	设置 Y 轴旋转速度：
+Set Z Spin to:	设置 Z 轴旋转速度：
+Increase X Speed by:	增加 X 轴速度：
+Increase Y Speed by:	增加 Y 轴速度：
+Increase Z Speed by:	增加 Z 轴速度：
+Decrease X Speed by:	减少 X 轴速度：
+Decrease Y Speed by:	减少 Y 轴速度：
+Decrease Z Speed by:	减少 Z 轴速度：
+Increase X Spin by:	增加 X 轴旋转速度：
+Increase Y Spin by:	增加 Y 轴旋转速度：
+Increase Z Spin by:	增加 Z 轴旋转速度：
+Decrease X Spin by:	减少 X 轴旋转速度：
+Decrease Y Spin by:	减少 Y 轴旋转速度：
+Decrease Z Spin by:	减少 Z 轴旋转速度：
+Set Clock Speed to:	设置时钟速度：
+Increase Clock Speed	加快时钟
+Decrease Clock Speed	减慢时钟
+Clear Cheated Status	清除使用秘籍记录
+Set Clock Speed to Real Time	时钟改为现实时间速度
+Set Clock Speed to Normal Game Time	恢复正常游戏时钟速度
+Set Car Speed To:	设置载具速度：
+Increase Car Speed by:	增加车速：
+Flight Assistance:	飞行辅助：
+Flight Assistance Level:	飞行辅助强度：
+* not available any more	* 已不再提供
+Silent Mode (no Feedback):	静音模式（无提示音）：
+Stop Alarm of my car	关闭当前车辆警报
+Take me to my last car (only if on Foot)	传送至上一辆车（仅步行时）
+Bring my last car to me (only if on Foot)	将上一辆车移到身边（仅步行时）
+Remember my location as Markup Location 	将当前位置记为标记点 
+Take me to Markup Location 	传送到标记点 
+Take me to my previous car (only if on Foot)	传送到更早使用的车（仅步行时）
+Bring my previous car to me (only if on Foot)	将更早使用的车移到身边（仅步行时）
+Set Doors of my Preivous Car to:	设置上一辆车的车门：
+Turn My Car in Clock Direction by:	将车辆顺时针旋转：
+Turn My Car in Counterclock Direction by:	将车辆逆时针旋转：
+Torch my (last) car	点燃上一辆车
+Torch my previous car	点燃更早使用的车
+Set Game Speed to:	设置游戏速度：
+Increase Game Speed	加快游戏
+Decrease Game Speed	减慢游戏
+Freeze Game Clock	冻结游戏时钟
+Thaw Game Clock	恢复游戏时钟
+Teleport to next Location	传送至下一个地点
+Teleport to previous Location	传送至上一个地点
+Prepare for Date with Denise	准备与 Denise 约会
+Prepare for Date with Michelle	准备与 Michelle 约会
+Prepare for Date with Helena	准备与 Helena 约会
+Prepare for Date with Katie	准备与 Katie 约会
+Prepare for Date with Barbara	准备与 Barbara 约会
+Prepare for Date with Millie	准备与 Millie 约会
+Toggle Never Wanted	切换永不通缉
+Toggle Never Get Hungry	切换永不饥饿
+Toggle Infinite Health	切换无限生命
+Toggle Infinite Oxygen	切换无限氧气
+Toggle Infinite Ammo	切换无限弹药
+Toggle Tank Mode	切换坦克模式
+Toggle Mega Punch	切换超级拳击
+Toggle Mega Jump	切换超级跳跃
+Toggle Infinite Run	切换无限奔跑
+Toggle Fireproof	切换防火
+Advance Game Time by 1 Hour	游戏时间前进一小时
+Revert Game Time by 1 Hour	游戏时间后退一小时
+Stop Ped X Speed	停止玩家 X 轴移动
+Stop Ped Y Speed	停止玩家 Y 轴移动
+Stop Ped Z Speed	停止玩家 Z 轴移动
+Set Ped X Speed to:	设置玩家 X 轴速度：
+Set Ped Y Speed to:	设置玩家 Y 轴速度：
+Set Ped Z Speed to:	设置玩家 Z 轴速度：
+Increase Ped X Speed by:	增加玩家 X 轴速度：
+Increase Ped Y Speed by:	增加玩家 Y 轴速度：
+Increase Ped Z Speed by:	增加玩家 Z 轴速度：
+Decrease Ped X Speed by:	减少玩家 X 轴速度：
+Decrease Ped Y Speed by:	减少玩家 Y 轴速度：
+Decrease Ped Z Speed by:	减少玩家 Z 轴速度：
+Set Ped Speed To:	设置玩家速度：
+Increase Ped Speed by:	增加玩家速度：
+Ped Flight Assistance:	玩家飞行辅助：
+Ped Flight Assistance Level:	玩家飞行辅助强度：
+Turn Ped in Clock Direction by:	将玩家顺时针旋转：
+Turn Ped in Counterclock Direction by:	将玩家逆时针旋转：
+Toggle Perfect Handling	切换完美操控
+Toggle Decreased Traffic	切换减少交通流量
+Toggle Huge Bunny Hop	切换自行车超级跳跃
+Toggle Cars have Nitro	切换所有车辆配备氮气
+Toggle Boats can Fly	切换船只飞行
+Toggle Cars can Fly	切换汽车飞行
+Spawn Car	生成载具
+Set Weather to:	设置天气：
+Toggle Weather Lock	切换锁定天气
+Toggle One Hit Kill	切换一击必杀
+Toggle Freeze Mission Timers	切换冻结任务计时器
+Give Weapon & Ammo	给予武器和弹药
+Remove Current Weapon	移除当前武器
+Clear All Weapons	移除所有武器
+Denise Progress (	Denise 好感度（
+Michelle Progress (	Michelle 好感度（
+Helena Progress (	Helena 好感度（
+Katie Progress (	Katie 好感度（
+Barbara Progress (	Barbara 好感度（
+Millie Progress (	Millie 好感度（
+Steam (automatic)	Steam（自动识别）
+Spawn selected Vehicle (?Jacob)	生成所选载具（作者 Jacob）
+Clear Cheated "Status" and "Count"	清除作弊标记和次数
+Current Fat Stat ([N]):	脂肪（[N]）：
+Current Health Level ([N]):	生命值（[N]）：
+Current Armor Level ([N]):	护甲（[N]）：
+Current Stamina Stat ([N]):	耐力（[N]）：
+Current Muscle Stat ([N]):	肌肉（[N]）：
+Current Lung Capacity ([N]):	肺活量（[N]）：
+Current Gambling Stat ([N]):	赌博技巧（[N]）：
+Current Driving Stat ([N]):	驾驶技巧（[N]）：
+Current Biking Stat ([N]):	摩托车技巧（[N]）：
+Current Cycling Stat ([N]):	自行车技巧（[N]）：
+Current Pilot Stat ([N]):	飞行技巧（[N]）：
+Ped Flight Assistance ([N] %):	玩家飞行辅助（[N]%）：
+Denise Progress ([N]%):	丹妮丝好感度（[N]%）：
+Michelle Progress ([N]%):	米歇尔好感度（[N]%）：
+Helena Progress ([N]%):	海伦娜好感度（[N]%）：
+Katie Progress ([N]%):	凯蒂好感度（[N]%）：
+Barbara Progress ([N]%):	芭芭拉好感度（[N]%）：
+Millie Progress ([N]%):	米莉好感度（[N]%）：
+Blow Up All Cars	炸毁所有车辆
+Health Armor $250k	补满生命和护甲并获得 25 万美元
+Recruit Anyone (9mm)	招募任何人（手枪）
+Recruit Anyone (Rockets)	招募任何人（火箭筒）
+All Cars Have Nitro	所有汽车配备氮气
+Boats Fly	船只飞行
+Boats fly	船只飞行
+Cars Float Away When Hit	车辆碰撞后飘走
+Cars Fly	汽车飞行
+Invisible cars (only wheels)	隐形车辆（仅显示车轮）
+Adrenaline Mode	肾上腺素模式
+Chaos Mode	混乱模式
+Suicide	自杀
+Slut Magnet	吸引女性
+Smash n' Boom	撞击引爆车辆
+Beach Party	海滩派对
+Country Vehicles and Peds Get Born 2 Truck Outfit	乡村车辆和行人、卡车司机服装
+Elvis is Everywhere	行人变成猫王
+Everyone is armed	所有行人持有武器
+Faster Clock	加快时钟
+Faster Gameplay	加快游戏速度
+Funhouse Theme	游乐场主题
+Gang Members Everywhere	到处都是帮派成员
+Gangs Control the Streets	帮派控制街道
+Ninja Theme	忍者主题
+Peds Attack Each Other Get Golf Club	行人互相攻击、获得高尔夫球杆
+Peds Attack You With Weapons Rocket Launcher	行人持武器攻击玩家
+Riot Mode	暴动模式
+Slower Gameplay	减慢游戏速度
+Aggressive Drivers	疯狂司机
+All green lights	交通灯全绿
+Black traffic	黑色交通车辆
+Pink traffic	粉色交通车辆
+Reduced Traffic	减少交通车辆
+Traffic is Cheap Cars	交通车辆变成廉价车
+Traffic is Country Vehicles	交通车辆变成乡村车辆
+Traffic is Fast Cars	交通车辆变成跑车
+Fat Player	玩家变胖
+Hitman In All Weapon Stats	所有武器技巧达到杀手级
+Max All Vehicle Skill Stats	所有驾驶技巧最高
+Max Muscle	肌肉最大
+Max Stamina	耐力最大
+Never Get Hungry	永不饥饿
+Skinny Player	玩家变瘦
+Have Jetpack	获得喷气背包
+Have Parachute	获得降落伞
+Clear Wanted Level	清除通缉等级
+Have a bounty on your head	玩家被悬赏
+Increase Wanted Level Two Stars	增加两星通缉
+Six Star Wanted Level	六星通缉
+Full Weapon Aiming While Driving	驾驶时自由瞄准
+Infinite Ammo No Reload	无限弹药、无需装填
+Weapon Set 1 Thug's Tools	武器套装 1：暴徒
+Weapon Set 2 Professional Tools	武器套装 2：专业
+Weapon Set 3 Nutter Tools	武器套装 3：狂人
+Always Midnight	始终午夜
+Foggy Weather	雾天
+Orange Sky 21:00	橙色天空、时间 21:00
+Overcast Weather	阴天
+Rainy Weather	雨天
+Sandstorm	沙尘暴
+Sunny Weather	晴天
+Thunderstorm	雷暴
+Very Sunny Weather	艳阳天
+GTA SA Locations	传送地点
+GTA SA Shortcuts	快捷键
+Gameplay	游戏玩法
+Related to Cars	车辆相关
+Player	玩家
+Driving Help	驾驶辅助
+Steam: pause the game with Esc before enabling vehicle spawning.	请先在游戏中按 Esc 进入菜单，再启用载具生成。
+Steam: vehicle spawning could not be enabled. Another modification may use this location.	无法启用载具生成，相关位置可能已被其他模组修改。
+Steam vehicle spawning: enabled	Steam 载具生成：已启用
+Steam vehicle spawning: disabled	Steam 载具生成：未启用
+Johnson House:	约翰逊家：
+El Corona:	科罗娜：
+Santa Maria Beach:	圣玛丽亚海滩：
+Mulholland:	穆赫兰：
+Palomino Creek:	帕洛米诺溪：
+Dillimore:	迪利莫：
+Fort Carson:	卡森堡：
+Verdant Meadows:	翠绿草原：
+Verdant M. Hangar:	翠绿草原机库：
+Prickle Pine:	刺松：
+Whitewood Estates:	白木庄园：
+Redsands West:	红沙西区：
+Rockshore West:	岩岸西区：
+Calton Heights:	卡尔顿高地：
+Paradiso:	天堂区：
+Doherty:	多尔蒂：
+Hashbury:	哈什伯里：
+Spawn Bloodring Banger	生成 Bloodring Banger
+Spawn Racecar	生成 Racecar
+Spawn Rancher	生成 Rancher
+Spawn Romero	生成 Romero
+Spawn Stretch	生成 Stretch
+Spawn Hunter	生成 Hunter
+Spawn Hydra	生成 Hydra
+Spawn Stunt Plane	生成 Stunt Plane
+Spawn Caddy	生成 Caddy
+Spawn Quad	生成 Quad
+Spawn Rhino	生成 Rhino
+Spawn Vortex Hovercraft	生成 Vortex Hovercraft
+Spawn Dozer	生成 Dozer
+Spawn Monster	生成 Monster
+Spawn Tanker Truck	生成 Tanker Truck
+Spawn Trashmaster	生成 Trashmaster
+Kickstart	快速起步
+Sunday	星期日
+Monday	星期一
+Tuesday	星期二
+Wednesday	星期三
+Thursday	星期四
+Friday	星期五
+Saturday	星期六
+Blue, Partly cloudy	蓝天、局部多云
+Storming	暴风雨
+Cloudy and Foggy	多云、有雾
+Clear Blue Sky	晴朗蓝天
+Scorching Hot (LS Heat waves)	酷热（洛圣都热浪）
+Very dull, Colorless, Hazy	昏暗、灰白、薄雾
+Dull, Cloudy, Rainy	昏暗、多云、有雨
+Scorching Hot	酷热
+extended: Foggy, Greenish	扩展：雾天、浅绿
+extended: Very dark, Purple	扩展：极暗、紫色
+extended: Very dark, Green	扩展：极暗、绿色
+extended: Pale Orange	扩展：浅橙色
+extended: Fresh Blue	扩展：清新蓝色
+extended: Dark, Cloudy, Teal	扩展：昏暗、多云、青绿
+extended: Dark, Cloudy, Brown	扩展：昏暗、多云、棕色
+extended: Blue/Purple, Regular	扩展：蓝紫色、普通
+extended: Dull brown	扩展：暗棕色
+extended: Bright, Foggy, Orange	扩展：明亮、有雾、橙色
+extended: Extremely bright	扩展：极亮
+extended: Blue/Purple cloudy	扩展：蓝紫色、多云
+extended: Dark toxic clouds	扩展：暗色毒云
+extended: Black/White sky	扩展：黑白天空
+extended: Black/Purple sky	扩展：黑紫天空
+Blue, Partly cloudy 1	蓝天、局部多云 1
+Blue, Partly cloudy 2	蓝天、局部多云 2
+Blue, Partly cloudy 3	蓝天、局部多云 3
+Blue, Partly cloudy 4	蓝天、局部多云 4
+Blue, Partly cloudy 5	蓝天、局部多云 5
+Blue, Partly cloudy 6	蓝天、局部多云 6
+Blue, Partly cloudy 7	蓝天、局部多云 7
+Blue, Partly cloudy 8	蓝天、局部多云 8
+Very dull, Colorless, Hazy 1	昏暗、灰白、薄雾 1
+Very dull, Colorless, Hazy 2	昏暗、灰白、薄雾 2
+Very dull, Colorless, Hazy 3	昏暗、灰白、薄雾 3
+Very dull, Colorless, Hazy 4	昏暗、灰白、薄雾 4
+Scorching Hot 1	酷热 1
+Scorching Hot 2	酷热 2
+extended: Pale Orange 1	扩展：浅橙色 1
+extended: Pale Orange 2	扩展：浅橙色 2
+extended: Pale Orange 3	扩展：浅橙色 3
+extended: Pale Orange 4	扩展：浅橙色 4
+extended: Fresh Blue 1	扩展：清新蓝色 1
+extended: Fresh Blue 2	扩展：清新蓝色 2
+extended: Fresh Blue 3	扩展：清新蓝色 3
+extended: Dark, Cloudy, Teal 1	扩展：昏暗、多云、青绿 1
+extended: Dark, Cloudy, Teal 2	扩展：昏暗、多云、青绿 2
+extended: Dark, Cloudy, Teal 3	扩展：昏暗、多云、青绿 3
+extended: Bright, Foggy, Orange 1	扩展：明亮、有雾、橙色 1
+extended: Bright, Foggy, Orange 2	扩展：明亮、有雾、橙色 2
+extended: Bright, Foggy, Orange 3	扩展：明亮、有雾、橙色 3
+extended: Blue/Purple cloudy 1	扩展：蓝紫色、多云 1
+extended: Blue/Purple cloudy 2	扩展：蓝紫色、多云 2
+extended: Blue/Purple cloudy 3	扩展：蓝紫色、多云 3
+Flowers	鲜花
+Flower	鲜花
+Girlfriends	女友
+GF Barbara	女友：芭芭拉
+GF Denise	女友：丹妮丝
+GF Helena	女友：海伦娜
+GF Katie	女友：凯蒂
+GF Michelle	女友：米歇尔
+GF Millie	女友：米莉
+Horseshoes	马蹄铁
+Horseshoe	马蹄铁
+Misc	其他
+Bomb Workshop	炸弹改装店
+Liberty City (Step 1) (Go inside Ganton Gym first)	自由城（步骤 1，先进入甘顿健身房）
+Liberty City (Step 2)	自由城（步骤 2）
+Odd Jobs	支线活动
+Challenges	挑战
+BMX Challenge	BMX 挑战
+Chiliad Challenge	千年山挑战
+NRG-500 Challenge	NRG-500 挑战
+Courier Missions	送货任务
+Burger Shot (Las Venturas)	汉堡店（拉斯云祖华）
+Hippy Shopper (San Fierro)	嬉皮购物店（圣辉洛）
+Roboi's Food Mart (Los Santos)	罗伯伊食品店（洛圣都）
+Gym Moves	健身房招式
+Las Venturas (Kickboxing)	拉斯云祖华（踢拳）
+Los Santos (Boxing)	洛圣都（拳击）
+San Fierro (Martial Arts)	圣辉洛（武术）
+Race Tournaments	竞速锦标赛
+Las Venturas Airport Race Tournament	拉斯云祖华机场竞速
+Las Venturas Race Tournament	拉斯云祖华竞速
+Los Santos Race Tournament	洛圣都竞速
+San Fierro race Tournament	圣辉洛竞速
+Schools	学校
+Bike School (Las Venturas)	摩托车学校（拉斯云祖华）
+Boat School (Desert)	船舶学校（沙漠）
+Driving School (San Fierro)	驾驶学校（圣辉洛）
+Flying School (Desert)	飞行学校（沙漠）
+Stadium Events	体育场赛事
+8-Track	八字赛道
+Blood Bowl	血环竞技场
+Dirt Track (Mon and Tue only)	泥地赛道（仅周一、周二）
+Triathlon (Sat and Sun only)	铁人三项（仅周六、周日）
+Triathlon Fisher's Lagoon	铁人三项：渔夫泻湖
+Triathlon Santa Maria Beach	铁人三项：圣玛丽亚海滩
+Trucking	货运任务
+Valet Parking	代客泊车
+Vehicle Missions	载具任务
+Burglarmobil	入室盗窃用车
+Freight Train	货运列车
+Pimpmobile	皮条客任务用车
+Oysters	牡蛎
+Oyster	牡蛎
+Photos	拍照地点
+Photo	拍照地点
+Race Helper	竞速辅助
+Chiliad Challenge 1: Scotch Bonnet Yellow Run	千年山挑战 1：黄帽赛道
+Chiliad Challenge 2: Birdseye Winder	千年山挑战 2：鸟瞰弯道
+Chiliad Challenge 3: Cobra Run	千年山挑战 3：眼镜蛇赛道
+Checkpoint	检查点
+Safehouses	安全屋
+Countryside	乡村
+Angel Pine	天使松
+Blueberry	蓝莓镇
+Dillimore	迪利莫
+Fern Ridge	蕨岭
+Palomino Creek	帕洛米诺溪
+Whetstone	磨石郡
+Desert	沙漠
+El Quebrados	艾尔奎布拉多斯
+Fort Carson	卡森堡
+Tierra Robada	蒂埃拉罗巴达
+Verdant Meadows	翠绿草原
+Camel's Toe	骆驼趾赌场
+Clown's Pocket	小丑口袋赌场
+Creek	溪流区
+Four Dragons Casino	四龙赌场
+Old Venturas Strip	云祖华旧城区
+Prickle Pine	刺松
+Redsands West	红沙西区
+Rockshore West	岩岸西区
+The Pirates in Men's Pants	海盗赌场
+Whitewood Estates	白木庄园
+Ganton (Johnson House)	甘顿（约翰逊家）
+Jefferson	杰斐逊
+Mulholland	穆赫兰
+Santa Maria Beach	圣玛丽亚海滩
+Verdant Bluffs (El Corona)	翠绿悬崖（科罗娜）
+Verona Beach	维罗纳海滩
+Willowfield	柳田区
+Calton Heights	卡尔顿高地
+Chinatown	唐人街
+Doherty (Driving School)	多尔蒂（驾驶学校）
+Doherty (Garage)	多尔蒂（车库）
+Hashbury	哈什伯里
+Paradiso	天堂区
+Queens	皇后区
+Tags	涂鸦
+Tag	涂鸦
+Done by Storyline	剧情已完成
+Unique Jumps	独特跳跃
+Unique Jump	独特跳跃
+Related to Peds	行人相关
+Themes	主题
+Traffic	交通
+Spawning	生成载具
+Cars	汽车
+Heli's and Planes	直升机和飞机
+Other	其他
+Trucks	卡车
+Wanted Levels	通缉等级
+PedFlight	玩家飞行
+Remember my location as Markup Location	将当前位置记为标记点
+Take me to Markup Location	传送至标记点
+Teleport to:	传送至：
+Prepare for Date with	准备约会：
+Tons	吨
+Degrees	度
+Loc:	地点：
+Flower 01	鲜花 01
+Flower 02	鲜花 02
+Flower 03	鲜花 03
+Flower 04	鲜花 04
+Flower 05	鲜花 05
+Flower 06	鲜花 06
+Flower 07	鲜花 07
+Flower 08	鲜花 08
+Flower 09	鲜花 09
+Flower 10	鲜花 10
+Flower 11	鲜花 11
+Flower 12	鲜花 12
+Flower 13	鲜花 13
+Flower 14	鲜花 14
+Flower 15	鲜花 15
+Flower 16	鲜花 16
+Flower 17	鲜花 17
+Flower 18	鲜花 18
+Flower 19	鲜花 19
+Flower 20	鲜花 20
+Flower 21	鲜花 21
+Flower 22	鲜花 22
+Flower 23	鲜花 23
+Flower 24	鲜花 24
+Flower 25	鲜花 25
+Flower 26	鲜花 26
+Flower 27	鲜花 27
+Flower 28	鲜花 28
+Flower 29	鲜花 29
+Flower 30	鲜花 30
+Flower 31	鲜花 31
+Flower 32	鲜花 32
+Flower 33	鲜花 33
+Flower 34	鲜花 34
+Flower 35	鲜花 35
+Flower 36	鲜花 36
+Flower 37	鲜花 37
+Flower 38	鲜花 38
+Flower 39	鲜花 39
+Horseshoe 01	马蹄铁 01
+Horseshoe 02	马蹄铁 02
+Horseshoe 03	马蹄铁 03
+Horseshoe 04	马蹄铁 04
+Horseshoe 05	马蹄铁 05
+Horseshoe 06	马蹄铁 06
+Horseshoe 07	马蹄铁 07
+Horseshoe 08	马蹄铁 08
+Horseshoe 09	马蹄铁 09
+Horseshoe 10	马蹄铁 10
+Horseshoe 11	马蹄铁 11
+Horseshoe 12	马蹄铁 12
+Horseshoe 13	马蹄铁 13
+Horseshoe 14	马蹄铁 14
+Horseshoe 15	马蹄铁 15
+Horseshoe 16	马蹄铁 16
+Horseshoe 17	马蹄铁 17
+Horseshoe 18	马蹄铁 18
+Horseshoe 19	马蹄铁 19
+Horseshoe 20	马蹄铁 20
+Horseshoe 21	马蹄铁 21
+Horseshoe 22	马蹄铁 22
+Horseshoe 23	马蹄铁 23
+Horseshoe 24	马蹄铁 24
+Horseshoe 25	马蹄铁 25
+Horseshoe 26	马蹄铁 26
+Horseshoe 27	马蹄铁 27
+Horseshoe 28	马蹄铁 28
+Horseshoe 29	马蹄铁 29
+Horseshoe 30	马蹄铁 30
+Horseshoe 31	马蹄铁 31
+Horseshoe 32	马蹄铁 32
+Horseshoe 33	马蹄铁 33
+Horseshoe 34	马蹄铁 34
+Horseshoe 35	马蹄铁 35
+Horseshoe 36	马蹄铁 36
+Horseshoe 37	马蹄铁 37
+Horseshoe 38	马蹄铁 38
+Horseshoe 39	马蹄铁 39
+Horseshoe 40	马蹄铁 40
+Horseshoe 41	马蹄铁 41
+Horseshoe 42	马蹄铁 42
+Horseshoe 43	马蹄铁 43
+Horseshoe 44	马蹄铁 44
+Horseshoe 45	马蹄铁 45
+Horseshoe 46	马蹄铁 46
+Horseshoe 47	马蹄铁 47
+Horseshoe 48	马蹄铁 48
+Horseshoe 49	马蹄铁 49
+Horseshoe 50	马蹄铁 50
+Oyster 01	牡蛎 01
+Oyster 02	牡蛎 02
+Oyster 03	牡蛎 03
+Oyster 04	牡蛎 04
+Oyster 05	牡蛎 05
+Oyster 06	牡蛎 06
+Oyster 07	牡蛎 07
+Oyster 08	牡蛎 08
+Oyster 09	牡蛎 09
+Oyster 10	牡蛎 10
+Oyster 11	牡蛎 11
+Oyster 12	牡蛎 12
+Oyster 13	牡蛎 13
+Oyster 14	牡蛎 14
+Oyster 15	牡蛎 15
+Oyster 16	牡蛎 16
+Oyster 17	牡蛎 17
+Oyster 18	牡蛎 18
+Oyster 19	牡蛎 19
+Oyster 20	牡蛎 20
+Oyster 21	牡蛎 21
+Oyster 22	牡蛎 22
+Oyster 23	牡蛎 23
+Oyster 24	牡蛎 24
+Oyster 25	牡蛎 25
+Oyster 26	牡蛎 26
+Oyster 27	牡蛎 27
+Oyster 28	牡蛎 28
+Oyster 29	牡蛎 29
+Oyster 30	牡蛎 30
+Oyster 31	牡蛎 31
+Oyster 32	牡蛎 32
+Oyster 33	牡蛎 33
+Oyster 34	牡蛎 34
+Oyster 35	牡蛎 35
+Oyster 36	牡蛎 36
+Oyster 37	牡蛎 37
+Oyster 38	牡蛎 38
+Oyster 39	牡蛎 39
+Oyster 40	牡蛎 40
+Oyster 41	牡蛎 41
+Oyster 42	牡蛎 42
+Oyster 43	牡蛎 43
+Oyster 44	牡蛎 44
+Oyster 45	牡蛎 45
+Oyster 46	牡蛎 46
+Oyster 47	牡蛎 47
+Oyster 48	牡蛎 48
+Oyster 49	牡蛎 49
+Oyster 50	牡蛎 50
+Photo 01	拍照地点 01
+Photo 02	拍照地点 02
+Photo 03	拍照地点 03
+Photo 04	拍照地点 04
+Photo 05	拍照地点 05
+Photo 06	拍照地点 06
+Photo 07	拍照地点 07
+Photo 08	拍照地点 08
+Photo 09	拍照地点 09
+Photo 10	拍照地点 10
+Photo 11	拍照地点 11
+Photo 12	拍照地点 12
+Photo 13	拍照地点 13
+Photo 14	拍照地点 14
+Photo 15	拍照地点 15
+Photo 16	拍照地点 16
+Photo 17	拍照地点 17
+Photo 18	拍照地点 18
+Photo 19	拍照地点 19
+Photo 20	拍照地点 20
+Photo 21	拍照地点 21
+Photo 22	拍照地点 22
+Photo 23	拍照地点 23
+Photo 24	拍照地点 24
+Photo 25	拍照地点 25
+Photo 26	拍照地点 26
+Photo 27	拍照地点 27
+Photo 28	拍照地点 28
+Photo 29	拍照地点 29
+Photo 30	拍照地点 30
+Photo 31	拍照地点 31
+Photo 32	拍照地点 32
+Photo 33	拍照地点 33
+Photo 34	拍照地点 34
+Photo 35	拍照地点 35
+Photo 36	拍照地点 36
+Photo 37	拍照地点 37
+Photo 38	拍照地点 38
+Photo 39	拍照地点 39
+Photo 40	拍照地点 40
+Photo 41	拍照地点 41
+Photo 42	拍照地点 42
+Photo 43	拍照地点 43
+Photo 44	拍照地点 44
+Photo 45	拍照地点 45
+Photo 46	拍照地点 46
+Photo 47	拍照地点 47
+Photo 48	拍照地点 48
+Photo 49	拍照地点 49
+Photo 50	拍照地点 50
+Checkpoint 01	检查点 01
+Checkpoint 02	检查点 02
+Checkpoint 03	检查点 03
+Checkpoint 04	检查点 04
+Checkpoint 05	检查点 05
+Checkpoint 06	检查点 06
+Checkpoint 07	检查点 07
+Checkpoint 08	检查点 08
+Checkpoint 09	检查点 09
+Checkpoint 10	检查点 10
+Checkpoint 11	检查点 11
+Checkpoint 12	检查点 12
+Checkpoint 13	检查点 13
+Checkpoint 14	检查点 14
+Checkpoint 15	检查点 15
+Checkpoint 16	检查点 16
+Checkpoint 17	检查点 17
+Checkpoint 18	检查点 18
+Checkpoint 19	检查点 19
+Checkpoint 20	检查点 20
+Checkpoint 21	检查点 21
+Checkpoint 22	检查点 22
+Checkpoint 23	检查点 23
+Checkpoint 24	检查点 24
+Checkpoint 25	检查点 25
+Checkpoint 26	检查点 26
+Checkpoint 27	检查点 27
+Checkpoint 28	检查点 28
+Checkpoint 29	检查点 29
+Checkpoint 30	检查点 30
+Checkpoint 31	检查点 31
+Angel Pine 1	天使松 1
+Angel Pine 2	天使松 2
+Tierra Robada 1	蒂埃拉罗巴达 1
+Tierra Robada 2	蒂埃拉罗巴达 2
+Mulholland 1	穆赫兰 1
+Mulholland 2	穆赫兰 2
+Tag 001 (Done by Storyline)	涂鸦 001（剧情已完成）
+Tag 002 (Done by Storyline)	涂鸦 002（剧情已完成）
+Tag 003 (Done by Storyline)	涂鸦 003（剧情已完成）
+Tag 004 (Done by Storyline)	涂鸦 004（剧情已完成）
+Tag 005 (Done by Storyline)	涂鸦 005（剧情已完成）
+Tag 006 (Done by Storyline)	涂鸦 006（剧情已完成）
+Tag 007	涂鸦 007
+Tag 008	涂鸦 008
+Tag 009	涂鸦 009
+Tag 010	涂鸦 010
+Tag 011	涂鸦 011
+Tag 012	涂鸦 012
+Tag 013	涂鸦 013
+Tag 014	涂鸦 014
+Tag 015	涂鸦 015
+Tag 016	涂鸦 016
+Tag 017	涂鸦 017
+Tag 018	涂鸦 018
+Tag 019	涂鸦 019
+Tag 020	涂鸦 020
+Tag 021	涂鸦 021
+Tag 022	涂鸦 022
+Tag 023	涂鸦 023
+Tag 024	涂鸦 024
+Tag 025	涂鸦 025
+Tag 026	涂鸦 026
+Tag 027	涂鸦 027
+Tag 028	涂鸦 028
+Tag 029	涂鸦 029
+Tag 030	涂鸦 030
+Tag 031	涂鸦 031
+Tag 032	涂鸦 032
+Tag 033	涂鸦 033
+Tag 034	涂鸦 034
+Tag 035	涂鸦 035
+Tag 036	涂鸦 036
+Tag 037	涂鸦 037
+Tag 038	涂鸦 038
+Tag 039	涂鸦 039
+Tag 040	涂鸦 040
+Tag 041	涂鸦 041
+Tag 042	涂鸦 042
+Tag 043	涂鸦 043
+Tag 044	涂鸦 044
+Tag 045	涂鸦 045
+Tag 046	涂鸦 046
+Tag 047	涂鸦 047
+Tag 048	涂鸦 048
+Tag 049	涂鸦 049
+Tag 050	涂鸦 050
+Tag 051	涂鸦 051
+Tag 052	涂鸦 052
+Tag 053	涂鸦 053
+Tag 054	涂鸦 054
+Tag 055	涂鸦 055
+Tag 056	涂鸦 056
+Tag 057	涂鸦 057
+Tag 058	涂鸦 058
+Tag 059	涂鸦 059
+Tag 060	涂鸦 060
+Tag 061	涂鸦 061
+Tag 062	涂鸦 062
+Tag 063	涂鸦 063
+Tag 064	涂鸦 064
+Tag 065	涂鸦 065
+Tag 066	涂鸦 066
+Tag 067	涂鸦 067
+Tag 068	涂鸦 068
+Tag 069	涂鸦 069
+Tag 070	涂鸦 070
+Tag 071	涂鸦 071
+Tag 072	涂鸦 072
+Tag 073	涂鸦 073
+Tag 074	涂鸦 074
+Tag 075	涂鸦 075
+Tag 076	涂鸦 076
+Tag 077	涂鸦 077
+Tag 078	涂鸦 078
+Tag 079	涂鸦 079
+Tag 080	涂鸦 080
+Tag 081	涂鸦 081
+Tag 082	涂鸦 082
+Tag 083	涂鸦 083
+Tag 084	涂鸦 084
+Tag 085	涂鸦 085
+Tag 086	涂鸦 086
+Tag 087	涂鸦 087
+Tag 088	涂鸦 088
+Tag 089	涂鸦 089
+Tag 090	涂鸦 090
+Tag 091	涂鸦 091
+Tag 092	涂鸦 092
+Tag 093	涂鸦 093
+Tag 094	涂鸦 094
+Tag 095	涂鸦 095
+Tag 096	涂鸦 096
+Tag 097	涂鸦 097
+Tag 098	涂鸦 098
+Tag 099	涂鸦 099
+Tag 100	涂鸦 100
+Unique Jump 01	独特跳跃 01
+Unique Jump 02	独特跳跃 02
+Unique Jump 03	独特跳跃 03
+Unique Jump 04	独特跳跃 04
+Unique Jump 05	独特跳跃 05
+Unique Jump 06	独特跳跃 06
+Unique Jump 07	独特跳跃 07
+Unique Jump 08	独特跳跃 08
+Unique Jump 09	独特跳跃 09
+Unique Jump 10	独特跳跃 10
+Unique Jump 11	独特跳跃 11
+Unique Jump 12	独特跳跃 12
+Unique Jump 13	独特跳跃 13
+Unique Jump 14	独特跳跃 14
+Unique Jump 15	独特跳跃 15
+Unique Jump 16	独特跳跃 16
+Unique Jump 17	独特跳跃 17
+Unique Jump 18	独特跳跃 18
+Unique Jump 19	独特跳跃 19
+Unique Jump 20	独特跳跃 20
+Unique Jump 21	独特跳跃 21
+Unique Jump 22	独特跳跃 22
+Unique Jump 23	独特跳跃 23
+Unique Jump 24	独特跳跃 24
+Unique Jump 25	独特跳跃 25
+Unique Jump 26	独特跳跃 26
+Unique Jump 27	独特跳跃 27
+Unique Jump 28	独特跳跃 28
+Unique Jump 29	独特跳跃 29
+Unique Jump 30	独特跳跃 30
+Unique Jump 31	独特跳跃 31
+Unique Jump 32	独特跳跃 32
+Unique Jump 33	独特跳跃 33
+Unique Jump 34	独特跳跃 34
+Unique Jump 35	独特跳跃 35
+Unique Jump 36	独特跳跃 36
+Unique Jump 37	独特跳跃 37
+Unique Jump 38	独特跳跃 38
+Unique Jump 39	独特跳跃 39
+Unique Jump 40	独特跳跃 40
+Unique Jump 41	独特跳跃 41
+Unique Jump 42	独特跳跃 42
+Unique Jump 43	独特跳跃 43
+Unique Jump 44	独特跳跃 44
+Unique Jump 45	独特跳跃 45
+Unique Jump 46	独特跳跃 46
+Unique Jump 47	独特跳跃 47
+Unique Jump 48	独特跳跃 48
+Unique Jump 49	独特跳跃 49
+Unique Jump 50	独特跳跃 50
+Unique Jump 51	独特跳跃 51
+Unique Jump 52	独特跳跃 52
+Unique Jump 53	独特跳跃 53
+Unique Jump 54	独特跳跃 54
+Unique Jump 55	独特跳跃 55
+Unique Jump 56	独特跳跃 56
+Unique Jump 57	独特跳跃 57
+Unique Jump 58	独特跳跃 58
+Unique Jump 59	独特跳跃 59
+Unique Jump 60	独特跳跃 60
+Unique Jump 61	独特跳跃 61
+Unique Jump 62	独特跳跃 62
+Unique Jump 63	独特跳跃 63
+Unique Jump 64	独特跳跃 64
+Unique Jump 65	独特跳跃 65
+Unique Jump 66	独特跳跃 66
+Unique Jump 67	独特跳跃 67
+Unique Jump 68	独特跳跃 68
+Unique Jump 69	独特跳跃 69
+Unique Jump 70	独特跳跃 70
+1 Flight Assistance: (ON)	1 飞行辅助： （开）
+2 Flight Assistance: (OFF)	2 飞行辅助： （关）
+ALT+ENTER Set Car Doors to: (open)	ALT+ENTER 设置车门： (解锁)
+ALT+F11 Set Car Weight to: 400.0 Tons	ALT+F11 设置车辆重量： 400.0 吨
+END Stop All (Freeze Car)	END 停止所有移动（冻结车辆）
+NUM * Stop All (Freeze Car)	NUM * 停止所有移动（冻结车辆）
+NUM + Set Z Speed to: (20%)	NUM + 设置 Z 轴速度： (20%)
+NUM - Set Z Speed to: (-10%)	NUM - 设置 Z 轴速度： (-10%)
+NUM / Increase Car Speed by: (5%)	NUM / 增加车速： (5%)
+NUM 7 Turn My Car in Clock Direction by: (10 Degrees)	NUM 7 将车辆顺时针旋转： (10 度）
+NUM 9 Turn My Car in Counterclock Direction by: (10 Degrees)	NUM 9 将车辆逆时针旋转： (10 度）
+NUM COMMA Set Car Doors to: (locked)	NUM COMMA 设置车门： (锁定)
+R Flip Car back on 4 wheels:	R 将车辆翻正：
+SHIFT  Increase Car Speed by: (5%)	SHIFT  增加车速： (5%)
+ALT+B Prepare for Date with Barbara	ALT+B 准备与 Barbara 约会
+ALT+D Prepare for Date with Denise	ALT+D 准备与 Denise 约会
+ALT+H Prepare for Date with Helena	ALT+H 准备与 Helena 约会
+ALT+K Prepare for Date with Katie	ALT+K 准备与 Katie 约会
+ALT+M Prepare for Date with Michelle	ALT+M 准备与 Michelle 约会
+CTRL+M Prepare for Date with Millie	CTRL+M 准备与 Millie 约会
+ALT+E Have Parachute	ALT+E 获得降落伞
+ALT+F12 Torch my (last) car	ALT+F12 点燃上一辆车
+ALT+H Paint My Car To: (Major:pastel alabaster / Minor:pastel alabaster)	ALT+H 车辆喷漆： (主色：pastel alabaster / 副色：pastel alabaster)
+ALT+J Have Jetpack	ALT+J 获得喷气背包
+ALT+NUM + Advance Game Time by 1 Hour	ALT+NUM + 游戏时间前进一小时
+ALT+NUM - Revert Game Time by 1 Hour	ALT+NUM - 游戏时间后退一小时
+ALT+P Spawn Tanker Truck	ALT+P 生成 Tanker Truck
+ALT+S Paint My Car To: (Major:black / Minor:black)	ALT+S 车辆喷漆： (主色：black / 副色：black)
+ALT+T Spawn Car (Artic Trailer 3)	ALT+T 生成载具 (Artic Trailer 3)
+CTRL+A Spawn Car (Artic Trailer 1)	CTRL+A 生成载具 (Artic Trailer 1)
+CTRL+B Spawn Car (Bullet)	CTRL+B 生成载具 (Bullet)
+CTRL+C Spawn Car (Copcar SF)	CTRL+C 生成载具 (Copcar SF)
+CTRL+F Toggle Freeze Mission Timers	CTRL+F 切换冻结任务计时器
+CTRL+G Paint My Car To: (Major:silver stone poly / Minor:silver stone poly)	CTRL+G 车辆喷漆： (主色：silver stone poly / 副色：silver stone poly)
+CTRL+H Spawn Car (Hydra)	CTRL+H 生成载具 (Hydra)
+CTRL+K Paint My Car To: (Major:cherry red / Minor:cherry red)	CTRL+K 车辆喷漆： (主色：cherry red / 副色：cherry red)
+CTRL+M Paint My Car To: (Major:police car blue / Minor:police car blue)	CTRL+M 车辆喷漆： (主色：police car blue / 副色：police car blue)
+CTRL+P Paint My Car To: (Major:6 pink / Minor:6 pink)	CTRL+P 车辆喷漆： (主色：6 pink / 副色：6 pink)
+CTRL+P Spawn Car (Pcj600)	CTRL+P 生成载具 (Pcj600)
+CTRL+S Paint My Car To: (Major:taxi yellow / Minor:taxi yellow)	CTRL+S 车辆喷漆： (主色：taxi yellow / 副色：taxi yellow)
+CTRL+T Spawn Car (Linerunner)	CTRL+T 生成载具 (Linerunner)
+CTRL+W Set Weather to: Clear Blue Sky	CTRL+W 设置天气： 晴朗蓝天
+CTRL+Y Blow Up All Cars	CTRL+Y 炸毁所有车辆
+CTRL+Y Paint My Car To: (Major:green / Minor:green)	CTRL+Y 车辆喷漆： (主色：green / 副色：green)
+CTRL+1 Ped Flight Assistance: (ON)	CTRL+1 玩家飞行辅助： （开）
+CTRL+2 Ped Flight Assistance: (OFF)	CTRL+2 玩家飞行辅助： （关）
+CTRL+NUM * Stop All Ped Speed	CTRL+NUM * 停止玩家所有移动
+CTRL+NUM + Set Ped Z Speed to: (20%)	CTRL+NUM + 设置玩家 Z 轴速度： (20%)
+CTRL+NUM - Set Ped Z Speed to: (-20%)	CTRL+NUM - 设置玩家 Z 轴速度： (-20%)
+CTRL+NUM / Increase Ped Speed by: (5%)	CTRL+NUM / 增加玩家速度： (5%)
+CTRL+NUM 7 Turn Ped in Clock Direction by: (10 Degrees)	CTRL+NUM 7 将玩家顺时针旋转： (10 度）
+CTRL+NUM 9 Turn Ped in Counterclock Direction by: (10 Degrees)	CTRL+NUM 9 将玩家逆时针旋转： (10 度）
+7 Take me to my last car (only if on Foot)	7 传送至上一辆车（仅步行时）
+8 Bring my last car to me (only if on Foot)	8 将上一辆车移到身边（仅步行时）
+ALT+N Teleport to next Location	ALT+N 传送至下一个地点
+ALT+NUM 1 Remember my location as Markup Location (Loc: 1)	ALT+NUM 1 将当前位置记为标记点 (地点： 1)
+ALT+NUM 2 Remember my location as Markup Location (Loc: 2)	ALT+NUM 2 将当前位置记为标记点 (地点： 2)
+ALT+NUM 3 Remember my location as Markup Location (Loc: 3)	ALT+NUM 3 将当前位置记为标记点 (地点： 3)
+CTRL+N Teleport to previous Location	CTRL+N 传送至上一个地点
+CTRL+NUM 1 Take me to Markup Location (Loc: 1)	CTRL+NUM 1 传送到标记点 (地点： 1)
+CTRL+NUM 2 Take me to Markup Location (Loc: 2)	CTRL+NUM 2 传送到标记点 (地点： 2)
+CTRL+NUM 3 Take me to Markup Location (Loc: 3)	CTRL+NUM 3 传送到标记点 (地点： 3)
+CTRL+S Teleport to: Doherty (Garage)	CTRL+S 传送至：多尔蒂（车库）
+CTRL+4 Clear All Weapons	CTRL+4 移除所有武器
+CTRL+4 Give Weapon & Ammo (MP5. Ammo: 1000)	CTRL+4 给予武器和弹药 (MP5. 弹药： 1000)
+CTRL+4 Give Weapon & Ammo (Minigun. Ammo: 20000)	CTRL+4 给予武器和弹药 (Minigun. 弹药： 20000)
+CTRL+4 Give Weapon & Ammo (Silenced Pistol. Ammo: 1000)	CTRL+4 给予武器和弹药 (Silenced Pistol. 弹药： 1000)
+CTRL+5 Remove Current Weapon	CTRL+5 移除当前武器
+CTRL+6 Clear All Weapons	CTRL+6 移除所有武器

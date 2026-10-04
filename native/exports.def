@@ -1,0 +1,7 @@
+LIBRARY GTASASteam
+EXPORTS
+ SteamAttach=_SteamAttach@4
+ SteamStatus=_SteamStatus@0
+ TrainerCloseHandle=_TrainerCloseHandle@4
+ TrainerReadMemory=_TrainerReadMemory@20
+ TrainerWriteMemory=_TrainerWriteMemory@20

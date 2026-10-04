@@ -1,0 +1,23 @@
+* -text
+*.md text eol=lf
+*.json text eol=lf
+*.py text eol=lf
+*.mjs text eol=lf
+*.cmd text eol=crlf
+*.rc text eol=crlf
+*.bmp binary
+*.ico binary
+*.gif binary
+*.frx binary
+*.ctx binary
+*.res binary
+*.ocx binary
+*.chm binary
+# VB6 sources retain original single-byte encoding and original line endings.
+*.frm -text
+*.ctl -text
+*.bas -text
+*.cls -text
+*.vbp -text
+*.tsv -text
+*.dat -text

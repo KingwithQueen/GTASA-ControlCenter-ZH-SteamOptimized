@@ -1,0 +1,2019 @@
+{
+  "release": "LegacyPerf_20261004",
+  "original_exe_sha256": "76954b8b6763b9832fb9f201d3ffdf241f03825a0f61cff9da6b7e2845e737d7",
+  "files": [
+    {
+      "path": "GTASAConsole/app-local-controls.manifest",
+      "source_area": "formal-release",
+      "source_relative": "app-local-controls.manifest",
+      "sha256": "c13018c447b9eef6073da7f2b7d868ab875bede6015761f9276d4a4a79bc7ab5"
+    },
+    {
+      "path": "GTASAConsole/CarPics/400.bmp",
+      "source_area": "formal-release",
+      "source_relative": "CarPics/400.bmp",
+      "sha256": "b4630cf8d841e5a576a9e5bc1555d97ac154f0c1cb9d32a4aa17227ba12af247"
+    },
+    {
+      "path": "GTASAConsole/CarPics/401.bmp",
+      "source_area": "formal-release",
+      "source_relative": "CarPics/401.bmp",
+      "sha256": "79da6ab339773bc82c3de1f49d80ba1c44076097087fae81cb0f894210a52afe"
+    },
+    {
+      "path": "GTASAConsole/CarPics/402.bmp",
+      "source_area": "formal-release",
+      "source_relative": "CarPics/402.bmp",
+      "sha256": "e5f8ff15db40e65bbecc5a9876c4eea5b597171964c4e158c0cdedfb962e5637"
+    },
+    {
+      "path": "GTASAConsole/CarPics/403.bmp",
+      "source_area": "formal-release",
+      "source_relative": "CarPics/403.bmp",
+      "sha256": "0dd48b9f741bccd4ce547d53bea0fb6de49bb436e0f42dd75b0701b66a78bc8b"
+    },
+    {
+      "path": "GTASAConsole/CarPics/404.bmp",
+      "source_area": "formal-release",
+      "source_relative": "CarPics/404.bmp",
+      "sha256": "3cfc59435fbfd5fac5d8e83ff6d9fcf5c5f9fb264fd514f23142f0f4d53fbcdf"
+    },
+    {
+      "path": "GTASAConsole/CarPics/405.bmp",
+      "source_area": "formal-release",
+      "source_relative": "CarPics/405.bmp",
+      "sha256": "e98f6bbd9aa52b584e5ace2b0b45646853ecb93f1314a39b2e76cf9af7fe88bf"
+    },
+    {
+      "path": "GTASAConsole/CarPics/406.bmp",
+      "source_area": "formal-release",
+      "source_relative": "CarPics/406.bmp",
+      "sha256": "a01a8a2a5f7a977c2aa9b3a98040b88664087cd7cf2322f64a1f2ae360002619"
+    },
+    {
+      "path": "GTASAConsole/CarPics/407.bmp",
+      "source_area": "formal-release",
+      "source_relative": "CarPics/407.bmp",
+      "sha256": "ec16bbed32f5ba1ae03e6ab17730b2d27b1234fa47e7353e5543a1f614bd2fa5"
+    },
+    {
+      "path": "GTASAConsole/CarPics/408.bmp",
+      "source_area": "formal-release",
+      "source_relative": "CarPics/408.bmp",
+      "sha256": "9660fd0c8936296b158e8031b7fc6464b8eaf761bcc5bb10efb1e4b638570d67"
+    },
+    {
+      "path": "GTASAConsole/CarPics/409.bmp",
+      "source_area": "formal-release",
+      "source_relative": "CarPics/409.bmp",
+      "sha256": "b366da581f738a025c10b028e063afa2c536c1278605ee951d6514fc9d849c12"
+    },
+    {
+      "path": "GTASAConsole/CarPics/410.bmp",
+      "source_area": "formal-release",
+      "source_relative": "CarPics/410.bmp",
+      "sha256": "f6ff8ddb056989270a9c3908bdfa9146d51f20e8d193d064d88c25bd0dba484e"
+    },
+    {
+      "path": "GTASAConsole/CarPics/411.bmp",
+      "source_area": "formal-release",
+      "source_relative": "CarPics/411.bmp",
+      "sha256": "d8a46a4c346251c75e6652fb501925f912abc68b1c901ebc82d8e300482cc0fa"
+    },
+    {
+      "path": "GTASAConsole/CarPics/412.bmp",
+      "source_area": "formal-release",
+      "source_relative": "CarPics/412.bmp",
+      "sha256": "358930c01f49e15a23a1f045b909c99da00e8900cc01958e2d448b52c3b96a5d"
+    },
+    {
+      "path": "GTASAConsole/CarPics/413.bmp",
+      "source_area": "formal-release",
+      "source_relative": "CarPics/413.bmp",
+      "sha256": "e7374bc7e54036efc420e4151a03050918ed6598f44192890be9cc33ac7c1239"
+    },
+    {
+      "path": "GTASAConsole/CarPics/414.bmp",
+      "source_area": "formal-release",
+      "source_relative": "CarPics/414.bmp",
+      "sha256": "46e1f039910561eafb61865cc0749dbb5f226628730347153e9c01955bffed5b"
+    },
+    {
+      "path": "GTASAConsole/CarPics/415.bmp",
+      "source_area": "formal-release",
+      "source_relative": "CarPics/415.bmp",
+      "sha256": "80202833b8185bd492518546907f4f8c30c8a2b227fe0e5a8c6015b5739d40b0"
+    },
+    {
+      "path": "GTASAConsole/CarPics/416.bmp",
+      "source_area": "formal-release",
+      "source_relative": "CarPics/416.bmp",
+      "sha256": "40e36d4e315a077fbed73ce7764cf3ee20136ff704d5e8f7b9b30bfe1d6e359f"
+    },
+    {
+      "path": "GTASAConsole/CarPics/417.bmp",
+      "source_area": "formal-release",
+      "source_relative": "CarPics/417.bmp",
+      "sha256": "91f840e0eddab1c704036661639f9b0f9e7c0114535ded29a17a5f3789f8daa5"
+    },
+    {
+      "path": "GTASAConsole/CarPics/418.bmp",
+      "source_area": "formal-release",
+      "source_relative": "CarPics/418.bmp",
+      "sha256": "579c89ac394bde7503f29608625306bc8225cf47dafcc6369366ee1474e44c53"
+    },
+    {
+      "path": "GTASAConsole/CarPics/419.bmp",
+      "source_area": "formal-release",
+      "source_relative": "CarPics/419.bmp",
+      "sha256": "a93253ee419cc90656d734ee9dd02f8af47ab29c046c26b0e80cd054724e9411"
+    },
+    {
+      "path": "GTASAConsole/CarPics/420.bmp",
+      "source_area": "formal-release",
+      "source_relative": "CarPics/420.bmp",
+      "sha256": "fce6d1552e341c73572780bfa7a2a240e566ff34e9f4f31d1fc47aa876a49263"
+    },
+    {
+      "path": "GTASAConsole/CarPics/421.bmp",
+      "source_area": "formal-release",
+      "source_relative": "CarPics/421.bmp",
+      "sha256": "5a9408809bd813cf7449f71586ea7c25e89a0738c537832a6ee4bf320f149147"
+    },
+    {
+      "path": "GTASAConsole/CarPics/422.bmp",
+      "source_area": "formal-release",
+      "source_relative": "CarPics/422.bmp",
+      "sha256": "e44666b8e5889f8188c2eb962aa99b1594d3226ab733bb80b32c0e55b41b69b2"
+    },
+    {
+      "path": "GTASAConsole/CarPics/423.bmp",
+      "source_area": "formal-release",
+      "source_relative": "CarPics/423.bmp",
+      "sha256": "1d41a329812cbc70d9b64fef3f41a7481f9d4d6fb7985e0a4109d19a2ef7fd76"
+    },
+    {
+      "path": "GTASAConsole/CarPics/424.bmp",
+      "source_area": "formal-release",
+      "source_relative": "CarPics/424.bmp",
+      "sha256": "d69b2d316ec8c23a9b8c4ca22f4955c9502542b2e62dfc9cbe75a9cd442ec31d"
+    },
+    {
+      "path": "GTASAConsole/CarPics/425.bmp",
+      "source_area": "formal-release",
+      "source_relative": "CarPics/425.bmp",
+      "sha256": "2077301245a8174d55b1605743fd98ed994eed8178f02c6a1f6b5b6217345059"
+    },
+    {
+      "path": "GTASAConsole/CarPics/426.bmp",
+      "source_area": "formal-release",
+      "source_relative": "CarPics/426.bmp",
+      "sha256": "ced43a48bb28ff725ebb00cfd3c17aec92a5ee9bfdcaac95d5615c2a6863b635"
+    },
+    {
+      "path": "GTASAConsole/CarPics/427.bmp",
+      "source_area": "formal-release",
+      "source_relative": "CarPics/427.bmp",
+      "sha256": "874977936acd14db08c21df09e89bd0b3d227bb73bfe8f5db7168521b14034b8"
+    },
+    {
+      "path": "GTASAConsole/CarPics/428.bmp",
+      "source_area": "formal-release",
+      "source_relative": "CarPics/428.bmp",
+      "sha256": "70e81e6a7b983304a7e0eaba2634ec8858ace5241526f78f3bf0db05d5c7aca4"
+    },
+    {
+      "path": "GTASAConsole/CarPics/429.bmp",
+      "source_area": "formal-release",
+      "source_relative": "CarPics/429.bmp",
+      "sha256": "3641cba9292553f1a203337864fc7881c3a0b11c58b72cd8078ca91bd79d541e"
+    },
+    {
+      "path": "GTASAConsole/CarPics/430.bmp",
+      "source_area": "formal-release",
+      "source_relative": "CarPics/430.bmp",
+      "sha256": "cc924fbbbdcf05b6a0e4ede03aa5fa27e551c1a427ada47950f9d4a852a08aac"
+    },
+    {
+      "path": "GTASAConsole/CarPics/431.bmp",
+      "source_area": "formal-release",
+      "source_relative": "CarPics/431.bmp",
+      "sha256": "fdc1db136481cd0a21165e5c19cff518870de763acddde6e24823602864478d8"
+    },
+    {
+      "path": "GTASAConsole/CarPics/432.bmp",
+      "source_area": "formal-release",
+      "source_relative": "CarPics/432.bmp",
+      "sha256": "1f277a256eb133fa719799840f7993d0513e12bb199eff6ee108c710e8ac7a69"
+    },
+    {
+      "path": "GTASAConsole/CarPics/433.bmp",
+      "source_area": "formal-release",
+      "source_relative": "CarPics/433.bmp",
+      "sha256": "8abc93be4a6ed8d59c72164979004741279b329ef1378966e076530d0d47299f"
+    },
+    {
+      "path": "GTASAConsole/CarPics/434.bmp",
+      "source_area": "formal-release",
+      "source_relative": "CarPics/434.bmp",
+      "sha256": "c498eec9f971b2dca71544e68bd3cda9ef79c29deb74bf6a77ed962646743796"
+    },
+    {
+      "path": "GTASAConsole/CarPics/435.bmp",
+      "source_area": "formal-release",
+      "source_relative": "CarPics/435.bmp",
+      "sha256": "358e8360ea251ca89a99d77a577de88632b549b120423f8d6debfe0bf421624d"
+    },
+    {
+      "path": "GTASAConsole/CarPics/436.bmp",
+      "source_area": "formal-release",
+      "source_relative": "CarPics/436.bmp",
+      "sha256": "01a26bd3485db92f66d2f0b87ab2e17c46e41d9dba10b9db229212bbc9a55926"
+    },
+    {
+      "path": "GTASAConsole/CarPics/437.bmp",
+      "source_area": "formal-release",
+      "source_relative": "CarPics/437.bmp",
+      "sha256": "c3ded3b543d445e0854d7d27381c54100b72a12baf160222c020611b5faf93cd"
+    },
+    {
+      "path": "GTASAConsole/CarPics/438.bmp",
+      "source_area": "formal-release",
+      "source_relative": "CarPics/438.bmp",
+      "sha256": "a0cca719a7f69ff89949df571652c4769013967b664b49164ed29fc9ab62249c"
+    },
+    {
+      "path": "GTASAConsole/CarPics/439.bmp",
+      "source_area": "formal-release",
+      "source_relative": "CarPics/439.bmp",
+      "sha256": "f06ec10a64e4e61f9d32bb4f6fea52874e250b454af58e57ca686f941a0b9faa"
+    },
+    {
+      "path": "GTASAConsole/CarPics/440.bmp",
+      "source_area": "formal-release",
+      "source_relative": "CarPics/440.bmp",
+      "sha256": "bfe523e73fd9b2ec306fee23ef58786f256f14226b4de8b1cd6372f3ed75ed1f"
+    },
+    {
+      "path": "GTASAConsole/CarPics/442.bmp",
+      "source_area": "formal-release",
+      "source_relative": "CarPics/442.bmp",
+      "sha256": "b9fb99d76ba8eb663d2aaa85619dfc742a49d9b684e38f37f2ae4be9884e4bd3"
+    },
+    {
+      "path": "GTASAConsole/CarPics/443.bmp",
+      "source_area": "formal-release",
+      "source_relative": "CarPics/443.bmp",
+      "sha256": "b8e3afa513b03df63464076dd76c97b1317eecbc26519550b21a99372284b182"
+    },
+    {
+      "path": "GTASAConsole/CarPics/444.bmp",
+      "source_area": "formal-release",
+      "source_relative": "CarPics/444.bmp",
+      "sha256": "48c3a3764df179152cb1030287d619ad0ea76d742fd44cfc3f31333ae511d5ec"
+    },
+    {
+      "path": "GTASAConsole/CarPics/445.bmp",
+      "source_area": "formal-release",
+      "source_relative": "CarPics/445.bmp",
+      "sha256": "134cc2304d1853c3bd189518ccedd3ffc2d8dbd67300aaacdb41b140b896f67b"
+    },
+    {
+      "path": "GTASAConsole/CarPics/446.bmp",
+      "source_area": "formal-release",
+      "source_relative": "CarPics/446.bmp",
+      "sha256": "142ece30477a60eca7885c85f84ed98960623eae98777602c015fa270500322b"
+    },
+    {
+      "path": "GTASAConsole/CarPics/447.bmp",
+      "source_area": "formal-release",
+      "source_relative": "CarPics/447.bmp",
+      "sha256": "f0836e84f4de31f7585426d25b28d7c91b22e43844e17537e0bbbad16c0bf05c"
+    },
+    {
+      "path": "GTASAConsole/CarPics/448.bmp",
+      "source_area": "formal-release",
+      "source_relative": "CarPics/448.bmp",
+      "sha256": "93ca938ae86830ff5811416471bfaac274a6ebedaadabe559845e50aee8f8985"
+    },
+    {
+      "path": "GTASAConsole/CarPics/450.bmp",
+      "source_area": "formal-release",
+      "source_relative": "CarPics/450.bmp",
+      "sha256": "94020bb2180009becd3582ceb58b90dbc93e88679e23a4d929d91e190141224f"
+    },
+    {
+      "path": "GTASAConsole/CarPics/451.bmp",
+      "source_area": "formal-release",
+      "source_relative": "CarPics/451.bmp",
+      "sha256": "dce4ba8fbb2e0616463c2320e95f12720117a8d38fb6bc1af18405460b78a63e"
+    },
+    {
+      "path": "GTASAConsole/CarPics/452.bmp",
+      "source_area": "formal-release",
+      "source_relative": "CarPics/452.bmp",
+      "sha256": "db8d0df0848f865acf24dd17633d5f85611bda15ada063ef04b54f8f205b49ee"
+    },
+    {
+      "path": "GTASAConsole/CarPics/453.bmp",
+      "source_area": "formal-release",
+      "source_relative": "CarPics/453.bmp",
+      "sha256": "30cb8e29b9e3bd747e1f1b16ce7245df880d3171a62b9f0d4f600d862e39691c"
+    },
+    {
+      "path": "GTASAConsole/CarPics/454.bmp",
+      "source_area": "formal-release",
+      "source_relative": "CarPics/454.bmp",
+      "sha256": "71e39a075135c7f9b9e3c0ac751a1fdef0c52c05060e6933892be9d95283566f"
+    },
+    {
+      "path": "GTASAConsole/CarPics/455.bmp",
+      "source_area": "formal-release",
+      "source_relative": "CarPics/455.bmp",
+      "sha256": "e6be282a1e8944196edd5f536992c7cfb6c6fea56bcfe8869672237e66c2a158"
+    },
+    {
+      "path": "GTASAConsole/CarPics/456.bmp",
+      "source_area": "formal-release",
+      "source_relative": "CarPics/456.bmp",
+      "sha256": "bd9aaac8df11968bf4b6ae8b209612fd9690d97b1742ace5ced26a9887566df1"
+    },
+    {
+      "path": "GTASAConsole/CarPics/457.bmp",
+      "source_area": "formal-release",
+      "source_relative": "CarPics/457.bmp",
+      "sha256": "65ab04fd8b136a06049063a71a200457a586b33f8ba3a817db479db2747b7b2d"
+    },
+    {
+      "path": "GTASAConsole/CarPics/458.bmp",
+      "source_area": "formal-release",
+      "source_relative": "CarPics/458.bmp",
+      "sha256": "d30a6bd57be243b3716930fe26c504c73f49603e1a3a5e5f10faa3cc18c00404"
+    },
+    {
+      "path": "GTASAConsole/CarPics/459.bmp",
+      "source_area": "formal-release",
+      "source_relative": "CarPics/459.bmp",
+      "sha256": "f0ef98dbaacc257bb6d5916a0593c283f3ca732f2b703a8e0ee50f4ffb7470c3"
+    },
+    {
+      "path": "GTASAConsole/CarPics/460.bmp",
+      "source_area": "formal-release",
+      "source_relative": "CarPics/460.bmp",
+      "sha256": "c0f036900851b3f14c950b6b378543e5280fa79125ef7d197d427eece5633d80"
+    },
+    {
+      "path": "GTASAConsole/CarPics/461.bmp",
+      "source_area": "formal-release",
+      "source_relative": "CarPics/461.bmp",
+      "sha256": "fea8e64ccbe85fdef64e6221b9c5acb96bbd0d05c02fb8fc44a8355a642ac3b2"
+    },
+    {
+      "path": "GTASAConsole/CarPics/462.bmp",
+      "source_area": "formal-release",
+      "source_relative": "CarPics/462.bmp",
+      "sha256": "90ea1a841ccd10bee0be95d72f4ed72ede9408c412e1112b33a103379a1bf169"
+    },
+    {
+      "path": "GTASAConsole/CarPics/463.bmp",
+      "source_area": "formal-release",
+      "source_relative": "CarPics/463.bmp",
+      "sha256": "5a0ee9c78c190eb6301b48408da4420b538a8d10d6681d7dcd5c8e35793c9b40"
+    },
+    {
+      "path": "GTASAConsole/CarPics/466.bmp",
+      "source_area": "formal-release",
+      "source_relative": "CarPics/466.bmp",
+      "sha256": "398ae89cb058508a387dcfe012a06e4a7dc230156f5097ac0ec10785427e51d6"
+    },
+    {
+      "path": "GTASAConsole/CarPics/467.bmp",
+      "source_area": "formal-release",
+      "source_relative": "CarPics/467.bmp",
+      "sha256": "566a16820e3c7252aa767c984a00f976d02c95ced73a889ef838f1981d11db98"
+    },
+    {
+      "path": "GTASAConsole/CarPics/468.bmp",
+      "source_area": "formal-release",
+      "source_relative": "CarPics/468.bmp",
+      "sha256": "d703301b4a360bafa7b9d959e273f3b71008db6c581225a88956e934d3469964"
+    },
+    {
+      "path": "GTASAConsole/CarPics/469.bmp",
+      "source_area": "formal-release",
+      "source_relative": "CarPics/469.bmp",
+      "sha256": "f12bcf51ca5423c2625f351701ac7a4030daa09aca7ce6aa2c23472e7a6b779c"
+    },
+    {
+      "path": "GTASAConsole/CarPics/470.bmp",
+      "source_area": "formal-release",
+      "source_relative": "CarPics/470.bmp",
+      "sha256": "543c5957847ca7b7dc1cc1bbd0d8530bf60c5f34f4298015282fd1e3f3272bee"
+    },
+    {
+      "path": "GTASAConsole/CarPics/471.bmp",
+      "source_area": "formal-release",
+      "source_relative": "CarPics/471.bmp",
+      "sha256": "b58a8f725bdcef7d358b4b25eb761ccf7e5babf09c0c1b13be71207cc6eb53c7"
+    },
+    {
+      "path": "GTASAConsole/CarPics/472.bmp",
+      "source_area": "formal-release",
+      "source_relative": "CarPics/472.bmp",
+      "sha256": "c5a0da0f47aa78634b778c1b740caaa1ce5b4f80afe13e9fee0cbf7ef9b0ff1b"
+    },
+    {
+      "path": "GTASAConsole/CarPics/473.bmp",
+      "source_area": "formal-release",
+      "source_relative": "CarPics/473.bmp",
+      "sha256": "98c9b196f6fe196c3c3c2475c80403a31ac5b791f16f16a96fab5cf9dd831afd"
+    },
+    {
+      "path": "GTASAConsole/CarPics/474.bmp",
+      "source_area": "formal-release",
+      "source_relative": "CarPics/474.bmp",
+      "sha256": "c366dbe8a6db5134cef4e4c6bd91e98845995c16b99420d022710bd1bd2411a3"
+    },
+    {
+      "path": "GTASAConsole/CarPics/475.bmp",
+      "source_area": "formal-release",
+      "source_relative": "CarPics/475.bmp",
+      "sha256": "dcd6f0f6874f10b09bb78f00690899a8fcdf34e2fe3a07e7b66860921fc27e63"
+    },
+    {
+      "path": "GTASAConsole/CarPics/476.bmp",
+      "source_area": "formal-release",
+      "source_relative": "CarPics/476.bmp",
+      "sha256": "c12be8231a92b1f68961ca4d9d5a271244a1d637477d0ae633deb64ccf8e89d8"
+    },
+    {
+      "path": "GTASAConsole/CarPics/477.bmp",
+      "source_area": "formal-release",
+      "source_relative": "CarPics/477.bmp",
+      "sha256": "3e8bde9695b5ce28ad37869254a19c4b403a982e4da5e29cf6c88eeefcaf88eb"
+    },
+    {
+      "path": "GTASAConsole/CarPics/478.bmp",
+      "source_area": "formal-release",
+      "source_relative": "CarPics/478.bmp",
+      "sha256": "cdd4de7f6f3a5fb27649067639686ae1cac5947dc098c05e54def872a3f623c8"
+    },
+    {
+      "path": "GTASAConsole/CarPics/479.bmp",
+      "source_area": "formal-release",
+      "source_relative": "CarPics/479.bmp",
+      "sha256": "5475b0cb8bd0f1a34b9b368a0eb15394a5704ae2c6c9a692a8d8c6209bbc6274"
+    },
+    {
+      "path": "GTASAConsole/CarPics/480.bmp",
+      "source_area": "formal-release",
+      "source_relative": "CarPics/480.bmp",
+      "sha256": "596d8281381fcf3779362844bfac19a29d42642387ac763ea3adff00becea91a"
+    },
+    {
+      "path": "GTASAConsole/CarPics/481.bmp",
+      "source_area": "formal-release",
+      "source_relative": "CarPics/481.bmp",
+      "sha256": "3fb382048936d1dd35595fff4ea05a0e991b7e44ae52b5fa4ccd3cb4b0fe3313"
+    },
+    {
+      "path": "GTASAConsole/CarPics/482.bmp",
+      "source_area": "formal-release",
+      "source_relative": "CarPics/482.bmp",
+      "sha256": "33638e0311e117711564477b9bfd4d6c63990a89ba6a9895d1e9cfae6bf82d1a"
+    },
+    {
+      "path": "GTASAConsole/CarPics/483.bmp",
+      "source_area": "formal-release",
+      "source_relative": "CarPics/483.bmp",
+      "sha256": "cb6179fc1ecda96f60765882c47d08f4cd38d9259ed5d22186246875096e67bd"
+    },
+    {
+      "path": "GTASAConsole/CarPics/484.bmp",
+      "source_area": "formal-release",
+      "source_relative": "CarPics/484.bmp",
+      "sha256": "ebec5e7bc7c94a16bd3b4dcd5ebd41d4f88aa17965feb5f55f9c379b05252e26"
+    },
+    {
+      "path": "GTASAConsole/CarPics/485.bmp",
+      "source_area": "formal-release",
+      "source_relative": "CarPics/485.bmp",
+      "sha256": "cff06b45c97c7013f6f7c1fd8b57ce4ed42db82557479e3438b283f079a4cbbf"
+    },
+    {
+      "path": "GTASAConsole/CarPics/486.bmp",
+      "source_area": "formal-release",
+      "source_relative": "CarPics/486.bmp",
+      "sha256": "6347b4c0f0b938f4139a55603edc833116ce4300040ae48098ae801f443672e5"
+    },
+    {
+      "path": "GTASAConsole/CarPics/487.bmp",
+      "source_area": "formal-release",
+      "source_relative": "CarPics/487.bmp",
+      "sha256": "4fc6c236a920a1f9df21430c824088df37733acdb4dc378ee07c8ddcd405222e"
+    },
+    {
+      "path": "GTASAConsole/CarPics/488.bmp",
+      "source_area": "formal-release",
+      "source_relative": "CarPics/488.bmp",
+      "sha256": "f1d2d3fa86bc3cc738ca4d8e355269d39bbd04a9c8ccaebeaf690460f3dee764"
+    },
+    {
+      "path": "GTASAConsole/CarPics/489.bmp",
+      "source_area": "formal-release",
+      "source_relative": "CarPics/489.bmp",
+      "sha256": "a248edeb49fbf6b56f8ec6ffc65481b6b657beeb306296bc3fdd0c5217e3e5b2"
+    },
+    {
+      "path": "GTASAConsole/CarPics/490.bmp",
+      "source_area": "formal-release",
+      "source_relative": "CarPics/490.bmp",
+      "sha256": "56048ad1e156ffd21c7a164630364b0eb67f2b8d603b1377901a90e80c70609d"
+    },
+    {
+      "path": "GTASAConsole/CarPics/491.bmp",
+      "source_area": "formal-release",
+      "source_relative": "CarPics/491.bmp",
+      "sha256": "ceb19fdc653ceb9aafa58dfcfcd2ee6c55ec4ad865323b354468ea67c43899b3"
+    },
+    {
+      "path": "GTASAConsole/CarPics/492.bmp",
+      "source_area": "formal-release",
+      "source_relative": "CarPics/492.bmp",
+      "sha256": "7d7dd4012dc85249ff4cd7b61e92a6cf31cb40857b807f9969bc898d0f2982ea"
+    },
+    {
+      "path": "GTASAConsole/CarPics/493.bmp",
+      "source_area": "formal-release",
+      "source_relative": "CarPics/493.bmp",
+      "sha256": "51e36704bbd1a9eee156f705981377a281ac1d8833b173eae3c0938c46fba0c1"
+    },
+    {
+      "path": "GTASAConsole/CarPics/494.bmp",
+      "source_area": "formal-release",
+      "source_relative": "CarPics/494.bmp",
+      "sha256": "1ccb64777a2d0645a595574149f7b516bc84f8c73bbdba6d65e78064ccf5be56"
+    },
+    {
+      "path": "GTASAConsole/CarPics/495.bmp",
+      "source_area": "formal-release",
+      "source_relative": "CarPics/495.bmp",
+      "sha256": "a928eeade2c7bb81c9f01b41576e77c145a79efd2a956ad21b3e1d1cd0c34643"
+    },
+    {
+      "path": "GTASAConsole/CarPics/496.bmp",
+      "source_area": "formal-release",
+      "source_relative": "CarPics/496.bmp",
+      "sha256": "9507762bd06400a7d22f8624a673883cda8def2b159053140713a634d1a72bed"
+    },
+    {
+      "path": "GTASAConsole/CarPics/497.bmp",
+      "source_area": "formal-release",
+      "source_relative": "CarPics/497.bmp",
+      "sha256": "607c7e0e39f6782e6842893cef4e851605ae5cae64388bf9d10fe42855bb8157"
+    },
+    {
+      "path": "GTASAConsole/CarPics/498.bmp",
+      "source_area": "formal-release",
+      "source_relative": "CarPics/498.bmp",
+      "sha256": "8245b52e0522265549d927353a5010a2ef2e0110971e99946d23922edd22e7d9"
+    },
+    {
+      "path": "GTASAConsole/CarPics/499.bmp",
+      "source_area": "formal-release",
+      "source_relative": "CarPics/499.bmp",
+      "sha256": "92e700dd5ce2247a3ab9b92e6ceaad461bd1f5463ea8cd11238ae5062d07a3c7"
+    },
+    {
+      "path": "GTASAConsole/CarPics/500.bmp",
+      "source_area": "formal-release",
+      "source_relative": "CarPics/500.bmp",
+      "sha256": "0bfbb9839235f492c0271d637b7765b1776eeb5acd66c568f4d648eb1e64e95a"
+    },
+    {
+      "path": "GTASAConsole/CarPics/502.bmp",
+      "source_area": "formal-release",
+      "source_relative": "CarPics/502.bmp",
+      "sha256": "9a2ddc66776fe6d43f947eb29a2266bcf6834584b476f2e4787d16a0c53ee659"
+    },
+    {
+      "path": "GTASAConsole/CarPics/503.bmp",
+      "source_area": "formal-release",
+      "source_relative": "CarPics/503.bmp",
+      "sha256": "65c3d9ae33184cc4bd3dd471a612835b6a99ea5fd610142e09c6751157a5f82d"
+    },
+    {
+      "path": "GTASAConsole/CarPics/504.bmp",
+      "source_area": "formal-release",
+      "source_relative": "CarPics/504.bmp",
+      "sha256": "e7a84e5178645031e5d7d8417ea4fad356810bf07b4276bb48f9554d869de25b"
+    },
+    {
+      "path": "GTASAConsole/CarPics/505.bmp",
+      "source_area": "formal-release",
+      "source_relative": "CarPics/505.bmp",
+      "sha256": "2c52ed8b89bd3b9dd6208e374d67bc5dd0d73db20272fe5d07a97b3df089aef9"
+    },
+    {
+      "path": "GTASAConsole/CarPics/506.bmp",
+      "source_area": "formal-release",
+      "source_relative": "CarPics/506.bmp",
+      "sha256": "ebedf481cbab2220c03539d8292ab568e03b4e408361a7880f6cd955a4346a85"
+    },
+    {
+      "path": "GTASAConsole/CarPics/507.bmp",
+      "source_area": "formal-release",
+      "source_relative": "CarPics/507.bmp",
+      "sha256": "0ab89bed0401db140245d158315977896cc9e7f4777acd7267750cf1270efa94"
+    },
+    {
+      "path": "GTASAConsole/CarPics/508.bmp",
+      "source_area": "formal-release",
+      "source_relative": "CarPics/508.bmp",
+      "sha256": "c6f5207b560d4f69c102c5c0e32dfec3f4e67426d9d0ac085fcc13be0ef497e0"
+    },
+    {
+      "path": "GTASAConsole/CarPics/509.bmp",
+      "source_area": "formal-release",
+      "source_relative": "CarPics/509.bmp",
+      "sha256": "b37bed0f858beb4aa5d16bf8e5947883b7c9061619e543de9bdeffd3a4e6a517"
+    },
+    {
+      "path": "GTASAConsole/CarPics/510.bmp",
+      "source_area": "formal-release",
+      "source_relative": "CarPics/510.bmp",
+      "sha256": "8663e3fe04b9570ba90e9fe9859192919fddf3f8c45ce9baae07e3a6ee724e03"
+    },
+    {
+      "path": "GTASAConsole/CarPics/511.bmp",
+      "source_area": "formal-release",
+      "source_relative": "CarPics/511.bmp",
+      "sha256": "e961897605fdf6c8b4ee80161897db675c81df15dad7b68eea79e0d2015c99ef"
+    },
+    {
+      "path": "GTASAConsole/CarPics/512.bmp",
+      "source_area": "formal-release",
+      "source_relative": "CarPics/512.bmp",
+      "sha256": "81156e44edb4cf1e3dcd624e0e2669c0155a0c0c648d8c897136a6559e3f9482"
+    },
+    {
+      "path": "GTASAConsole/CarPics/513.bmp",
+      "source_area": "formal-release",
+      "source_relative": "CarPics/513.bmp",
+      "sha256": "c43ff6f2501862e590d9c0a159ed5c0914b20ba91f2c90cd459a1f2d18cdd5fb"
+    },
+    {
+      "path": "GTASAConsole/CarPics/514.bmp",
+      "source_area": "formal-release",
+      "source_relative": "CarPics/514.bmp",
+      "sha256": "cddad4e7c01ccac603295914c0962fc779daf03bcfdae2b8607baffa9fe6680d"
+    },
+    {
+      "path": "GTASAConsole/CarPics/515.bmp",
+      "source_area": "formal-release",
+      "source_relative": "CarPics/515.bmp",
+      "sha256": "1c1655607a7edbf5132fa1d20f7eb571a36e3b5cc593132919e4cd134d248e4e"
+    },
+    {
+      "path": "GTASAConsole/CarPics/516.bmp",
+      "source_area": "formal-release",
+      "source_relative": "CarPics/516.bmp",
+      "sha256": "94f9cc552149657d9614c9ec1443dce783d789a4f476f5e83c27e228c04d4f84"
+    },
+    {
+      "path": "GTASAConsole/CarPics/517.bmp",
+      "source_area": "formal-release",
+      "source_relative": "CarPics/517.bmp",
+      "sha256": "fe19c6fec1d1854ea4d14016d54d777dc7913da8e4a63f9c888687426a506f85"
+    },
+    {
+      "path": "GTASAConsole/CarPics/518.bmp",
+      "source_area": "formal-release",
+      "source_relative": "CarPics/518.bmp",
+      "sha256": "3629af9654affab0bee30dc4b2876a96ea3ac46ee76af40bf2b982541ab3e83d"
+    },
+    {
+      "path": "GTASAConsole/CarPics/519.bmp",
+      "source_area": "formal-release",
+      "source_relative": "CarPics/519.bmp",
+      "sha256": "bc673ae3a1280ae6079a333918aa7b36d6d98f6fc9f42317d249ba0086112b24"
+    },
+    {
+      "path": "GTASAConsole/CarPics/520.bmp",
+      "source_area": "formal-release",
+      "source_relative": "CarPics/520.bmp",
+      "sha256": "25d794fab74a94c325d36af8cb53566b6a1131de0bf1b1edbf9e53802ffbe0ab"
+    },
+    {
+      "path": "GTASAConsole/CarPics/521.bmp",
+      "source_area": "formal-release",
+      "source_relative": "CarPics/521.bmp",
+      "sha256": "3e0314e249197586bb3a74798a25c9d720f62b4173dbe6601cbb3903e00c5895"
+    },
+    {
+      "path": "GTASAConsole/CarPics/522.bmp",
+      "source_area": "formal-release",
+      "source_relative": "CarPics/522.bmp",
+      "sha256": "e79806cd97d21d9fc6d5112b9372b1f1d08125c59b8572d1394ce3528e8ca440"
+    },
+    {
+      "path": "GTASAConsole/CarPics/523.bmp",
+      "source_area": "formal-release",
+      "source_relative": "CarPics/523.bmp",
+      "sha256": "778a5bc0d96fb393d75e6c1f0a9a121190bce833f94835a0114cb684c64d0a1a"
+    },
+    {
+      "path": "GTASAConsole/CarPics/524.bmp",
+      "source_area": "formal-release",
+      "source_relative": "CarPics/524.bmp",
+      "sha256": "49509472ed8d9857a216226deda2b7f24607e44ffcb9a472f22102d2445bb143"
+    },
+    {
+      "path": "GTASAConsole/CarPics/525.bmp",
+      "source_area": "formal-release",
+      "source_relative": "CarPics/525.bmp",
+      "sha256": "ac9627339105fff468fabf9b18d59d2e5ea3b8a1ddfbe12a1ec66619d7342333"
+    },
+    {
+      "path": "GTASAConsole/CarPics/526.bmp",
+      "source_area": "formal-release",
+      "source_relative": "CarPics/526.bmp",
+      "sha256": "bafb437db28194718ae95db48ffd8bdc1d7921d8574d1fb38ffe2f781f93dc85"
+    },
+    {
+      "path": "GTASAConsole/CarPics/527.bmp",
+      "source_area": "formal-release",
+      "source_relative": "CarPics/527.bmp",
+      "sha256": "aec58cd5fdfd584f8a0b72784c5150893e0d5709282bf05430e02c1d62459a56"
+    },
+    {
+      "path": "GTASAConsole/CarPics/528.bmp",
+      "source_area": "formal-release",
+      "source_relative": "CarPics/528.bmp",
+      "sha256": "30e42171732373134a1b23470c306de9a90192f238f0c19020686f9b8de4be7c"
+    },
+    {
+      "path": "GTASAConsole/CarPics/529.bmp",
+      "source_area": "formal-release",
+      "source_relative": "CarPics/529.bmp",
+      "sha256": "574a1b6a6cd476396b837a4db92256645b67e32af12610010539124e8a166be1"
+    },
+    {
+      "path": "GTASAConsole/CarPics/530.bmp",
+      "source_area": "formal-release",
+      "source_relative": "CarPics/530.bmp",
+      "sha256": "cab016240818e859b7c4f987870b41f4e4ad06676e761728411a7d5c07ef2ccb"
+    },
+    {
+      "path": "GTASAConsole/CarPics/531.bmp",
+      "source_area": "formal-release",
+      "source_relative": "CarPics/531.bmp",
+      "sha256": "728553b909e3813d48712271b54fd7104be6c82ca8c61a1c7278cd07e89d875a"
+    },
+    {
+      "path": "GTASAConsole/CarPics/532.bmp",
+      "source_area": "formal-release",
+      "source_relative": "CarPics/532.bmp",
+      "sha256": "37fd868a694c6af8553d0d70511d46cf6f7fb384b3a0a672e29fa2aaae81442c"
+    },
+    {
+      "path": "GTASAConsole/CarPics/533.bmp",
+      "source_area": "formal-release",
+      "source_relative": "CarPics/533.bmp",
+      "sha256": "c63f9c1fa39efb499823aa64523bb9d329c1c66d5a73cad10c0c5074f7439d73"
+    },
+    {
+      "path": "GTASAConsole/CarPics/534.bmp",
+      "source_area": "formal-release",
+      "source_relative": "CarPics/534.bmp",
+      "sha256": "51e41f3c10be4f77d5c36ed9184c62f7e5cc8beffe5eee52c42730c22df42651"
+    },
+    {
+      "path": "GTASAConsole/CarPics/535.bmp",
+      "source_area": "formal-release",
+      "source_relative": "CarPics/535.bmp",
+      "sha256": "b2772620ea9980776756e595dd1437d2cd331b32b0ee8f6eb78e57da6ef4b3e5"
+    },
+    {
+      "path": "GTASAConsole/CarPics/536.bmp",
+      "source_area": "formal-release",
+      "source_relative": "CarPics/536.bmp",
+      "sha256": "db2c7e9e2d2dc543e64f3cb2dd4f8596ce669787bf022cf5763c192a3b59f4a9"
+    },
+    {
+      "path": "GTASAConsole/CarPics/539.bmp",
+      "source_area": "formal-release",
+      "source_relative": "CarPics/539.bmp",
+      "sha256": "2bfd887926c919a1e625b9261915a96608c7b3f290b4edc55bc6a25e8e758eba"
+    },
+    {
+      "path": "GTASAConsole/CarPics/540.bmp",
+      "source_area": "formal-release",
+      "source_relative": "CarPics/540.bmp",
+      "sha256": "f2526e7144dab0466c8616c2286068da45606a1156a21546d1e23c7f4e90898a"
+    },
+    {
+      "path": "GTASAConsole/CarPics/541.bmp",
+      "source_area": "formal-release",
+      "source_relative": "CarPics/541.bmp",
+      "sha256": "e636ee607e7d1f6f42e4785ec2e643ba05f7e855cd56070357cacbb4caf72e32"
+    },
+    {
+      "path": "GTASAConsole/CarPics/542.bmp",
+      "source_area": "formal-release",
+      "source_relative": "CarPics/542.bmp",
+      "sha256": "d6d7878db8b1ab8f76d3fecb0a8404587c93933341d923fb9dc685e7c0e16f84"
+    },
+    {
+      "path": "GTASAConsole/CarPics/543.bmp",
+      "source_area": "formal-release",
+      "source_relative": "CarPics/543.bmp",
+      "sha256": "de8dfdcf19ec782ca52f384cea1cf64d78597109ccf3b2dbe9fe248bbe61080b"
+    },
+    {
+      "path": "GTASAConsole/CarPics/544.bmp",
+      "source_area": "formal-release",
+      "source_relative": "CarPics/544.bmp",
+      "sha256": "cc69b35af5c1fe66e782512842893b15ead53886b0eb440c85182abad9e5bd94"
+    },
+    {
+      "path": "GTASAConsole/CarPics/545.bmp",
+      "source_area": "formal-release",
+      "source_relative": "CarPics/545.bmp",
+      "sha256": "00845ef3f0101eabc231e1eb52e2fd4e52f317f234aa8ddda4739e4a90399f11"
+    },
+    {
+      "path": "GTASAConsole/CarPics/546.bmp",
+      "source_area": "formal-release",
+      "source_relative": "CarPics/546.bmp",
+      "sha256": "e672bd8d3992047ced10209b2bad8aab61b024dd44c427f9aeec6a30649cb764"
+    },
+    {
+      "path": "GTASAConsole/CarPics/547.bmp",
+      "source_area": "formal-release",
+      "source_relative": "CarPics/547.bmp",
+      "sha256": "86134f021544811b39d09427758fbc3a922aa4b78f0cc90b09c3e5d9e3bc2445"
+    },
+    {
+      "path": "GTASAConsole/CarPics/548.bmp",
+      "source_area": "formal-release",
+      "source_relative": "CarPics/548.bmp",
+      "sha256": "5b841916fb4fcef829ee2676032ba4453f89672c9b9884a96d9aa0ca8888a332"
+    },
+    {
+      "path": "GTASAConsole/CarPics/549.bmp",
+      "source_area": "formal-release",
+      "source_relative": "CarPics/549.bmp",
+      "sha256": "8658cfdf1a00daf7e0fc5edf7b11b1d231303b36fbba590c12ea1dd7e2476f35"
+    },
+    {
+      "path": "GTASAConsole/CarPics/550.bmp",
+      "source_area": "formal-release",
+      "source_relative": "CarPics/550.bmp",
+      "sha256": "f82c2331a891df0e8c18ac81cad3cc8442d81c908ffd97b8724507f2c9758c7e"
+    },
+    {
+      "path": "GTASAConsole/CarPics/551.bmp",
+      "source_area": "formal-release",
+      "source_relative": "CarPics/551.bmp",
+      "sha256": "1363cee57be1a46f2177739ab6dc786ab2dff1599fb98f616ee8b0b811d60f77"
+    },
+    {
+      "path": "GTASAConsole/CarPics/552.bmp",
+      "source_area": "formal-release",
+      "source_relative": "CarPics/552.bmp",
+      "sha256": "6ab05b93d5d466520dd3b4aa2ab9f6bf6986693a42f57a18ad1dacd63a2a0f44"
+    },
+    {
+      "path": "GTASAConsole/CarPics/553.bmp",
+      "source_area": "formal-release",
+      "source_relative": "CarPics/553.bmp",
+      "sha256": "dce93dfbcb62fd6fe5841bad7c2463bb92d5499c1eccecd132f39c216c5030d8"
+    },
+    {
+      "path": "GTASAConsole/CarPics/554.bmp",
+      "source_area": "formal-release",
+      "source_relative": "CarPics/554.bmp",
+      "sha256": "722ee223c62d70782ffc43b53169fdec891d8634e93808f5a0ce07f9865c292c"
+    },
+    {
+      "path": "GTASAConsole/CarPics/555.bmp",
+      "source_area": "formal-release",
+      "source_relative": "CarPics/555.bmp",
+      "sha256": "6bf931483a811096ee05f08fb32c6773980849225974ab636a64b0a8d480e4bb"
+    },
+    {
+      "path": "GTASAConsole/CarPics/556.bmp",
+      "source_area": "formal-release",
+      "source_relative": "CarPics/556.bmp",
+      "sha256": "48c3a3764df179152cb1030287d619ad0ea76d742fd44cfc3f31333ae511d5ec"
+    },
+    {
+      "path": "GTASAConsole/CarPics/557.bmp",
+      "source_area": "formal-release",
+      "source_relative": "CarPics/557.bmp",
+      "sha256": "e8452698881eb5947477b350172a37426115ada53224caf84c15e5f9919b9dd6"
+    },
+    {
+      "path": "GTASAConsole/CarPics/558.bmp",
+      "source_area": "formal-release",
+      "source_relative": "CarPics/558.bmp",
+      "sha256": "e90e65622c7abac69b67624e7f81ee336b8b820fbae9a5b3bed6142e4afba80b"
+    },
+    {
+      "path": "GTASAConsole/CarPics/559.bmp",
+      "source_area": "formal-release",
+      "source_relative": "CarPics/559.bmp",
+      "sha256": "2e8e26296ce82f5c3c062bb04f817e5dec5ae8346ea1ea14c48e1f0a957c7155"
+    },
+    {
+      "path": "GTASAConsole/CarPics/560.bmp",
+      "source_area": "formal-release",
+      "source_relative": "CarPics/560.bmp",
+      "sha256": "8c64a10c9010d0e594d3d97e1023993a620662efcf3047be4168509dcd8b6be1"
+    },
+    {
+      "path": "GTASAConsole/CarPics/561.bmp",
+      "source_area": "formal-release",
+      "source_relative": "CarPics/561.bmp",
+      "sha256": "fbbdac51d544a39f1db5f3f4beef4df7541715acf6d220fb73670f57e3dc310c"
+    },
+    {
+      "path": "GTASAConsole/CarPics/562.bmp",
+      "source_area": "formal-release",
+      "source_relative": "CarPics/562.bmp",
+      "sha256": "c5d1d6a5a78ecb1187a39438b6d713515d122af5d14290f21b31106889154a4b"
+    },
+    {
+      "path": "GTASAConsole/CarPics/563.bmp",
+      "source_area": "formal-release",
+      "source_relative": "CarPics/563.bmp",
+      "sha256": "3957c8ae9fe447100ea338853b391d84b29e520bddeb7888ce950cd98536a1e0"
+    },
+    {
+      "path": "GTASAConsole/CarPics/565.bmp",
+      "source_area": "formal-release",
+      "source_relative": "CarPics/565.bmp",
+      "sha256": "0b514c6dd04d68b525bb6d8abe9b08b0d6cb882b18ae5ad98367f305b86420fb"
+    },
+    {
+      "path": "GTASAConsole/CarPics/566.bmp",
+      "source_area": "formal-release",
+      "source_relative": "CarPics/566.bmp",
+      "sha256": "33d901363cd0fd8b1356ff0248b61357f87ecfcdffa4ea1e066e01d02e65de4c"
+    },
+    {
+      "path": "GTASAConsole/CarPics/567.bmp",
+      "source_area": "formal-release",
+      "source_relative": "CarPics/567.bmp",
+      "sha256": "447c6fe9f1822c93667a500b42c1b46bd4b7b27c9b5d0286e2d3aa96cb2cae8b"
+    },
+    {
+      "path": "GTASAConsole/CarPics/568.bmp",
+      "source_area": "formal-release",
+      "source_relative": "CarPics/568.bmp",
+      "sha256": "dbbc504ed3c93397f59aad26af07cc5401d20490caf142a0413e0bbf058e4391"
+    },
+    {
+      "path": "GTASAConsole/CarPics/571.bmp",
+      "source_area": "formal-release",
+      "source_relative": "CarPics/571.bmp",
+      "sha256": "4a0f5616c54e60dc16be878a6371b6fffba0d8d605673a6277ff9a4d94794730"
+    },
+    {
+      "path": "GTASAConsole/CarPics/572.bmp",
+      "source_area": "formal-release",
+      "source_relative": "CarPics/572.bmp",
+      "sha256": "064af33e90831c24f5d376619bee3fc8b76e619266adfedce2f8b12df5fa9536"
+    },
+    {
+      "path": "GTASAConsole/CarPics/573.bmp",
+      "source_area": "formal-release",
+      "source_relative": "CarPics/573.bmp",
+      "sha256": "ee20ae78f71a0b635e5017901713f9f79ed3de7df8dbcde01206b84dfa99440e"
+    },
+    {
+      "path": "GTASAConsole/CarPics/574.bmp",
+      "source_area": "formal-release",
+      "source_relative": "CarPics/574.bmp",
+      "sha256": "3f3923dca09b8088c2e44956abad052a824d5b7e8b87df956b11ea5cd0c15bf8"
+    },
+    {
+      "path": "GTASAConsole/CarPics/575.bmp",
+      "source_area": "formal-release",
+      "source_relative": "CarPics/575.bmp",
+      "sha256": "a98758e3ba69d8e26175afbd1d8f453326565c2f699a93c7e09526e8eb96e888"
+    },
+    {
+      "path": "GTASAConsole/CarPics/576.bmp",
+      "source_area": "formal-release",
+      "source_relative": "CarPics/576.bmp",
+      "sha256": "76b54a8058107f2c75d67bec468823e508705a6c492818283a1218270ed71de3"
+    },
+    {
+      "path": "GTASAConsole/CarPics/577.bmp",
+      "source_area": "formal-release",
+      "source_relative": "CarPics/577.bmp",
+      "sha256": "1e381993cc19b61916dca61b4d0593fc29b29952848657522d8db07237967bc2"
+    },
+    {
+      "path": "GTASAConsole/CarPics/578.bmp",
+      "source_area": "formal-release",
+      "source_relative": "CarPics/578.bmp",
+      "sha256": "a137dd484998d45f7752d99c8f9898a8ab00e8663a476c8aacc0397ffdaa5b82"
+    },
+    {
+      "path": "GTASAConsole/CarPics/579.bmp",
+      "source_area": "formal-release",
+      "source_relative": "CarPics/579.bmp",
+      "sha256": "ec4c81aed49c577c6bb5aac704637b75b3dc42b64e464677f07d233fad88df2f"
+    },
+    {
+      "path": "GTASAConsole/CarPics/580.bmp",
+      "source_area": "formal-release",
+      "source_relative": "CarPics/580.bmp",
+      "sha256": "6fef539c097cfc70935a454fab63adf27e3685b6085de68e179b5c98643a186a"
+    },
+    {
+      "path": "GTASAConsole/CarPics/581.bmp",
+      "source_area": "formal-release",
+      "source_relative": "CarPics/581.bmp",
+      "sha256": "a28b9d90db85f1e474fd9e5f8a35b3848c719fc7a73d446c9c75d3cb5b434613"
+    },
+    {
+      "path": "GTASAConsole/CarPics/582.bmp",
+      "source_area": "formal-release",
+      "source_relative": "CarPics/582.bmp",
+      "sha256": "6cd04e56262b86a26d2c06d7d4354742b7c76377bcacc29930e16b3379631ec2"
+    },
+    {
+      "path": "GTASAConsole/CarPics/583.bmp",
+      "source_area": "formal-release",
+      "source_relative": "CarPics/583.bmp",
+      "sha256": "61c037745a1ab077f4981197eb2fb43c2f6d558e0a91de621e9b982dbe65a80d"
+    },
+    {
+      "path": "GTASAConsole/CarPics/584.bmp",
+      "source_area": "formal-release",
+      "source_relative": "CarPics/584.bmp",
+      "sha256": "e9607a5210956c386f5cfa4900f76ce7ab6ff568341904c7a430f1507fe14aec"
+    },
+    {
+      "path": "GTASAConsole/CarPics/585.bmp",
+      "source_area": "formal-release",
+      "source_relative": "CarPics/585.bmp",
+      "sha256": "47696fbede84fbc958b41635d9ecc60279466cfc61d32def6282c30df4dc68a3"
+    },
+    {
+      "path": "GTASAConsole/CarPics/586.bmp",
+      "source_area": "formal-release",
+      "source_relative": "CarPics/586.bmp",
+      "sha256": "4efd976fa9690753fb626f07c16aa54b230d4d39590cb5e425aa165bfd3f41dd"
+    },
+    {
+      "path": "GTASAConsole/CarPics/587.bmp",
+      "source_area": "formal-release",
+      "source_relative": "CarPics/587.bmp",
+      "sha256": "43af7ac1e2221fd55ae123d5f8f6210129093680ef47732014125819ad21ef45"
+    },
+    {
+      "path": "GTASAConsole/CarPics/588.bmp",
+      "source_area": "formal-release",
+      "source_relative": "CarPics/588.bmp",
+      "sha256": "0674a3d76dba40151b664a0686ddc37a1050805ba1fad8fe0955a50f14cb34ae"
+    },
+    {
+      "path": "GTASAConsole/CarPics/589.bmp",
+      "source_area": "formal-release",
+      "source_relative": "CarPics/589.bmp",
+      "sha256": "72f427e3bf50a1b032a36e5990e8bf8a283dda7e9e908c466a2394ad28588c9a"
+    },
+    {
+      "path": "GTASAConsole/CarPics/591.bmp",
+      "source_area": "formal-release",
+      "source_relative": "CarPics/591.bmp",
+      "sha256": "6eb8b0188605ce664f2e8815ffefabdd90ade67c9f89a316be84b3247a7cd747"
+    },
+    {
+      "path": "GTASAConsole/CarPics/592.bmp",
+      "source_area": "formal-release",
+      "source_relative": "CarPics/592.bmp",
+      "sha256": "6c83b6ad86cef8c5e3ad9f3a74f58c58c99ea08c73bf29ea09b139bdd3164f2e"
+    },
+    {
+      "path": "GTASAConsole/CarPics/593.bmp",
+      "source_area": "formal-release",
+      "source_relative": "CarPics/593.bmp",
+      "sha256": "ec5d730f253a0f24d4987117946c90f8d1716c6e2a4992bf332c4e4c44abb778"
+    },
+    {
+      "path": "GTASAConsole/CarPics/595.bmp",
+      "source_area": "formal-release",
+      "source_relative": "CarPics/595.bmp",
+      "sha256": "17c47b2853836853f057a812ed93a5245b820de5b717f37b747c27f967a4c34e"
+    },
+    {
+      "path": "GTASAConsole/CarPics/596.bmp",
+      "source_area": "formal-release",
+      "source_relative": "CarPics/596.bmp",
+      "sha256": "08c2b61d0b48359d945b7afa9d6eadc0e7af2be726a4a1e0d5e5295f55295661"
+    },
+    {
+      "path": "GTASAConsole/CarPics/597.bmp",
+      "source_area": "formal-release",
+      "source_relative": "CarPics/597.bmp",
+      "sha256": "c8587011573ce539d4218f9d983313e117a9742b1d274b7e1389321919654ce3"
+    },
+    {
+      "path": "GTASAConsole/CarPics/598.bmp",
+      "source_area": "formal-release",
+      "source_relative": "CarPics/598.bmp",
+      "sha256": "9e8ed1e9542732774f8b85403dbe35092eee5fec071917cc6f75faf59d2cc764"
+    },
+    {
+      "path": "GTASAConsole/CarPics/599.bmp",
+      "source_area": "formal-release",
+      "source_relative": "CarPics/599.bmp",
+      "sha256": "25fdfa25a2a1a3f1bfda999f2941add2c66b92a068e0982027621093a95dc5fd"
+    },
+    {
+      "path": "GTASAConsole/CarPics/600.bmp",
+      "source_area": "formal-release",
+      "source_relative": "CarPics/600.bmp",
+      "sha256": "4a8d74cea025ea053c7f98a8dee844883b25cdcd2f0ee0dfcbf4e016f6b04e67"
+    },
+    {
+      "path": "GTASAConsole/CarPics/601.bmp",
+      "source_area": "formal-release",
+      "source_relative": "CarPics/601.bmp",
+      "sha256": "fda85990a697d2f9e69f9572c8091054692ee73c55dedc3bc72d13b6709c4d42"
+    },
+    {
+      "path": "GTASAConsole/CarPics/602.bmp",
+      "source_area": "formal-release",
+      "source_relative": "CarPics/602.bmp",
+      "sha256": "93cb462af8cd03b43395005cc93c203e488ee03dfea1f05a6b25be9084eb283d"
+    },
+    {
+      "path": "GTASAConsole/CarPics/603.bmp",
+      "source_area": "formal-release",
+      "source_relative": "CarPics/603.bmp",
+      "sha256": "b0c6ce2d7b8a238baf805fb3189dcd92368d6abafd5b431e30d32f247a47ee59"
+    },
+    {
+      "path": "GTASAConsole/CarPics/604.bmp",
+      "source_area": "formal-release",
+      "source_relative": "CarPics/604.bmp",
+      "sha256": "81fc39b0ad4929a6ea94895edc7a47423674ef1e8c13a970df1fe9c59ac7105f"
+    },
+    {
+      "path": "GTASAConsole/CarPics/605.bmp",
+      "source_area": "formal-release",
+      "source_relative": "CarPics/605.bmp",
+      "sha256": "026832f8af3063e483f04fec3484eb27c117b070d72e63f732b6538602028227"
+    },
+    {
+      "path": "GTASAConsole/CarPics/606.bmp",
+      "source_area": "formal-release",
+      "source_relative": "CarPics/606.bmp",
+      "sha256": "2d9f874bf9697792fb7bcca6a6934a1887900544d1482c24dd23b8d0a3d502a7"
+    },
+    {
+      "path": "GTASAConsole/CarPics/607.bmp",
+      "source_area": "formal-release",
+      "source_relative": "CarPics/607.bmp",
+      "sha256": "c473d242ec0f31d09d273041f331b0b7afaec820bae72c4eba044d864530ea12"
+    },
+    {
+      "path": "GTASAConsole/CarPics/608.bmp",
+      "source_area": "formal-release",
+      "source_relative": "CarPics/608.bmp",
+      "sha256": "30add6f743f03605f83ebcd2c1978e912a5ba8390f2c06121f7d3720755bad9b"
+    },
+    {
+      "path": "GTASAConsole/CarPics/609.bmp",
+      "source_area": "formal-release",
+      "source_relative": "CarPics/609.bmp",
+      "sha256": "91c6109a312822e053b1ffd27496c967efda077d44a8cffc42d4812e9d36a346"
+    },
+    {
+      "path": "GTASAConsole/CarPics/610.bmp",
+      "source_area": "formal-release",
+      "source_relative": "CarPics/610.bmp",
+      "sha256": "0f65264a9791d0adb9bca5307711eafa48ba6b19700a89b1ceffa30f5e2112ad"
+    },
+    {
+      "path": "GTASAConsole/CarPics/611.bmp",
+      "source_area": "formal-release",
+      "source_relative": "CarPics/611.bmp",
+      "sha256": "7dfebae7bc61cc354606b4cae4978634f887a89159831809788edd82e0ee4df8"
+    },
+    {
+      "path": "GTASAConsole/cCheatCollection.cls",
+      "source_area": "formal-release",
+      "source_relative": "cCheatCollection.cls",
+      "sha256": "cbc69711be6bc8e6dd8abccad4a8a9e0c34640ba859405bafb5cf0bf07ffd0a4"
+    },
+    {
+      "path": "GTASAConsole/cCheats.cls",
+      "source_area": "formal-release",
+      "source_relative": "cCheats.cls",
+      "sha256": "48145f0280e5fa6759c69dd330420f6e4fd05b41140995e768c1ed3a859eba38"
+    },
+    {
+      "path": "GTASAConsole/cGTASAGarage.ctl",
+      "source_area": "formal-release",
+      "source_relative": "cGTASAGarage.ctl",
+      "sha256": "35e12798f2c4362446a65d1ce0fab1fc14be63db65178902c3c7279d1745f900"
+    },
+    {
+      "path": "GTASAConsole/cGTASAGarage.ctx",
+      "source_area": "formal-release",
+      "source_relative": "cGTASAGarage.ctx",
+      "sha256": "df3f619804a92fdb4057192dc43dd748ea778adc52bc498ce80524c014b81119"
+    },
+    {
+      "path": "GTASAConsole/cShortcutCollection.cls",
+      "source_area": "formal-release",
+      "source_relative": "cShortcutCollection.cls",
+      "sha256": "8538c8a9a2726587f2a2462aa2a90a8cd31a60ea1fccafa461631ba69cd0604c"
+    },
+    {
+      "path": "GTASAConsole/cShortcuts.cls",
+      "source_area": "formal-release",
+      "source_relative": "cShortcuts.cls",
+      "sha256": "a6acaf25487206327326f14f08809936a4b9244ec3c5f3f7e6a1d4170a09aa17"
+    },
+    {
+      "path": "GTASAConsole/cWarpLocCollection.cls",
+      "source_area": "formal-release",
+      "source_relative": "cWarpLocCollection.cls",
+      "sha256": "e36513b911fbc43a055800291163e5ca1f47ebf278cef146616d0368251bf77f"
+    },
+    {
+      "path": "GTASAConsole/cWarpLocs.cls",
+      "source_area": "formal-release",
+      "source_relative": "cWarpLocs.cls",
+      "sha256": "99d65af7a7557d40bb7d35e4101b3649914708a5884ce35693b8a6a043ed5e75"
+    },
+    {
+      "path": "GTASAConsole/ESGTASA.ico",
+      "source_area": "formal-release",
+      "source_relative": "ESGTASA.ico",
+      "sha256": "92456218dbd4f0634f5810d211aae3206ec472775f3d01ffb8a69aa92fde49ee"
+    },
+    {
+      "path": "GTASAConsole/Form1.frm",
+      "source_area": "formal-release",
+      "source_relative": "Form1.frm",
+      "sha256": "6931ce5921bdec7cd3b3025272fc0afc6c402be80bdeb9070dc889659b66680a"
+    },
+    {
+      "path": "GTASAConsole/frmCarSelect.frm",
+      "source_area": "formal-release",
+      "source_relative": "frmCarSelect.frm",
+      "sha256": "f3b3b5b1580233486e057c68c19c16750a894d7684a2358ad91e8a7e666cb772"
+    },
+    {
+      "path": "GTASAConsole/frmCarSelect.frx",
+      "source_area": "formal-release",
+      "source_relative": "frmCarSelect.frx",
+      "sha256": "eda7306238d6f584d916490b3edde83ed89586c2d6c25fb8e54f39f7c4ec617c"
+    },
+    {
+      "path": "GTASAConsole/frmMods.frm",
+      "source_area": "formal-release",
+      "source_relative": "frmMods.frm",
+      "sha256": "52aa3f8a169fa124931869aca79567fa729fcd648782ba9b18622ee63cd73936"
+    },
+    {
+      "path": "GTASAConsole/frmMods.frx",
+      "source_area": "formal-release",
+      "source_relative": "frmMods.frx",
+      "sha256": "4d9530dfd896a64f468e89812dcadb1ef53a9e028d61c86af0d0a4be18facee2"
+    },
+    {
+      "path": "GTASAConsole/frmPickColor.frm",
+      "source_area": "formal-release",
+      "source_relative": "frmPickColor.frm",
+      "sha256": "c1eea9b09a44777805d14b0d73b9139f632c99ce6fabb191d057cc15881cf6dc"
+    },
+    {
+      "path": "GTASAConsole/frmSAConsole.frm",
+      "source_area": "formal-release",
+      "source_relative": "frmSAConsole.frm",
+      "sha256": "37ac898501b6f409130a187728efb2f2f03709c8c11a66469378e9a45c338c31"
+    },
+    {
+      "path": "GTASAConsole/frmSAConsole.frx",
+      "source_area": "formal-release",
+      "source_relative": "frmSAConsole.frx",
+      "sha256": "6d0abbbbf4444ec442ccdc97391a0f658f600de7eb43f5afe851000235764d5d"
+    },
+    {
+      "path": "GTASAConsole/frmSelectFolder.frm",
+      "source_area": "formal-release",
+      "source_relative": "frmSelectFolder.frm",
+      "sha256": "71516024817bded51fc65a5aca80a33db2022c2e3cb5dddf39a90f64845dde38"
+    },
+    {
+      "path": "GTASAConsole/frmWeaponStats.frm",
+      "source_area": "formal-release",
+      "source_relative": "frmWeaponStats.frm",
+      "sha256": "ce19ee87d769b31ed87013f42bcdd6e576bd7e8d45b459b82139f68b5e208b54"
+    },
+    {
+      "path": "GTASAConsole/frmWeaponStats.frx",
+      "source_area": "formal-release",
+      "source_relative": "frmWeaponStats.frx",
+      "sha256": "7f4005a6a45e88e30b99c35b4d02cbd235fd831562676f74bb35b3a7d6fadd6c"
+    },
+    {
+      "path": "GTASAConsole/GTA3ColorPicker.ctl",
+      "source_area": "formal-release",
+      "source_relative": "GTA3ColorPicker.ctl",
+      "sha256": "4c6bd8332b775745271da5bc8159c72187704f44e3ddbd17e7804b3f5bda839c"
+    },
+    {
+      "path": "GTASAConsole/GTASACarPics.dat",
+      "source_area": "formal-release",
+      "source_relative": "GTASACarPics.dat",
+      "sha256": "6e01187bcbfa4c3d1344adef1ddbb4a1ac35066e8713ac737d6ebe3ba6dcc508"
+    },
+    {
+      "path": "GTASAConsole/GTASACheat.ctl",
+      "source_area": "formal-release",
+      "source_relative": "GTASACheat.ctl",
+      "sha256": "67476f37acdddf6525fcabfd7b5ba145a8c2f854d9ad6a0c42c4e2bf16fc855c"
+    },
+    {
+      "path": "GTASAConsole/GTASACheat.ctx",
+      "source_area": "formal-release",
+      "source_relative": "GTASACheat.ctx",
+      "sha256": "757040237179b385144198cee63bfbd6b656d8944351674e12d1dc8c4eb7bb80"
+    },
+    {
+      "path": "GTASAConsole/GTASACheats.dat",
+      "source_area": "formal-release",
+      "source_relative": "GTASACheats.dat",
+      "sha256": "7bb211a1578e746076c1c67866484b012493b18e6a4e213c82760ed8cb6ec859"
+    },
+    {
+      "path": "GTASAConsole/GTASAConsole.res",
+      "source_area": "formal-release",
+      "source_relative": "GTASAConsole.res",
+      "sha256": "e7fc773c42322959345f3e2683efc1db3dd19943812dfaf918530774eb0363e6"
+    },
+    {
+      "path": "GTASAConsole/GTASAConsole.vbp",
+      "source_area": "formal-release",
+      "source_relative": "GTASAConsole.vbp",
+      "sha256": "950be01f04934dac0ed415ead6ad50ef13f679bee47e78a524041709fe3680f8"
+    },
+    {
+      "path": "GTASAConsole/GTASAData.dat",
+      "source_area": "formal-release",
+      "source_relative": "GTASAData.dat",
+      "sha256": "21f490093f0781516dc48e12144ee8fd0b5f9db392cbf4e3aba204cf60e0982a"
+    },
+    {
+      "path": "GTASAConsole/GTASADirection.ctl",
+      "source_area": "formal-release",
+      "source_relative": "GTASADirection.ctl",
+      "sha256": "815e9ae55fe5c104d0389103bc38dbfc46e869f6d1bf9a4cd41328b0f686413e"
+    },
+    {
+      "path": "GTASAConsole/GTASAGarageOcx.ctl",
+      "source_area": "formal-release",
+      "source_relative": "GTASAGarageOcx.ctl",
+      "sha256": "a3361d037a6360c676cf329696e20ff75c21577da8ec9facb742dff62a4b984f"
+    },
+    {
+      "path": "GTASAConsole/GTASAGarageOcx.ctx",
+      "source_area": "formal-release",
+      "source_relative": "GTASAGarageOcx.ctx",
+      "sha256": "374708fff7719dd5979ec875d56cd2286f6d3cf7ec317a3b25632aab28ec37bb"
+    },
+    {
+      "path": "GTASAConsole/GTASALocs.dat",
+      "source_area": "formal-release",
+      "source_relative": "GTASALocs.dat",
+      "sha256": "7d14b223f2af0c2c0da33bcb1a920c57ef0e17ea9080cfff382414a0e235b917"
+    },
+    {
+      "path": "GTASAConsole/GTASAStat.ctl",
+      "source_area": "formal-release",
+      "source_relative": "GTASAStat.ctl",
+      "sha256": "4aaa0e6ec33c70a11063c632275952804967aa4792fc0756d91b7439a04621cf"
+    },
+    {
+      "path": "GTASAConsole/Help/carpics_dat.html",
+      "source_area": "formal-release",
+      "source_relative": "Help/carpics_dat.html",
+      "sha256": "4e328e5cbad4ca05c579be11d4380529ebd0f75801b703bf4aa1b3a5c59daad1"
+    },
+    {
+      "path": "GTASAConsole/Help/cheats_dat.html",
+      "source_area": "formal-release",
+      "source_relative": "Help/cheats_dat.html",
+      "sha256": "337111c9e30c424486b4cfb5e0f4558b150fe86edf6c2e5136fef67aa3ed41c9"
+    },
+    {
+      "path": "GTASAConsole/Help/commands.html",
+      "source_area": "formal-release",
+      "source_relative": "Help/commands.html",
+      "sha256": "fff84806d96b2e1bbc03d140208da70b3fb859fc0bd8961d3792ed398e4397bf"
+    },
+    {
+      "path": "GTASAConsole/Help/config_dat.html",
+      "source_area": "formal-release",
+      "source_relative": "Help/config_dat.html",
+      "sha256": "5cf11a3a4e394a9415a1cd76866a300c476661636d3d4a993fbad2160c072fee"
+    },
+    {
+      "path": "GTASAConsole/Help/config_files.html",
+      "source_area": "formal-release",
+      "source_relative": "Help/config_files.html",
+      "sha256": "d743612fa4ccbc638411e0383d9e22fb10515be5c82cdbfb4e518844b22d79c2"
+    },
+    {
+      "path": "GTASAConsole/Help/control_logic.html",
+      "source_area": "formal-release",
+      "source_relative": "Help/control_logic.html",
+      "sha256": "dbc3ef32b473038ccdef8e246538b2b4dd67d1e97df021c6610f5e621885c487"
+    },
+    {
+      "path": "GTASAConsole/Help/ControlCenterHelp.chm",
+      "source_area": "formal-release",
+      "source_relative": "Help/ControlCenterHelp.chm",
+      "sha256": "8117ce0ffae1d880c531c7558865872c9fa54091de12f76be4ef73d261578327"
+    },
+    {
+      "path": "GTASAConsole/Help/ControlCenterHelp.hhc",
+      "source_area": "formal-release",
+      "source_relative": "Help/ControlCenterHelp.hhc",
+      "sha256": "5cd9865d23371cfdb05ef1589dd945f7fd319436d5b3e8b0e5c13561fba71ff6"
+    },
+    {
+      "path": "GTASAConsole/Help/ControlCenterHelp.hhk",
+      "source_area": "formal-release",
+      "source_relative": "Help/ControlCenterHelp.hhk",
+      "sha256": "625dad7030429efde459dd58c09311bf38b94dcf704b49c5f340c6c2af4dae0c"
+    },
+    {
+      "path": "GTASAConsole/Help/ControlCenterHelp.hhp",
+      "source_area": "formal-release",
+      "source_relative": "Help/ControlCenterHelp.hhp",
+      "sha256": "f8cdc3081f08eb45ad0ff150a83a19b0544f2c059dafde26d9eeb1c2eabecc54"
+    },
+    {
+      "path": "GTASAConsole/Help/data_dat.html",
+      "source_area": "formal-release",
+      "source_relative": "Help/data_dat.html",
+      "sha256": "60f8c0ea96e15423c491c1c86aac673d2045ee425cdac284d156dd7434fb323c"
+    },
+    {
+      "path": "GTASAConsole/Help/images/color_select.gif",
+      "source_area": "formal-release",
+      "source_relative": "Help/images/color_select.gif",
+      "sha256": "d2e6ad3cccf9d3d4f604cde1918db1b531bf7237a58fc16b3ca7974bbe47c44d"
+    },
+    {
+      "path": "GTASAConsole/Help/images/console_carspecs.gif",
+      "source_area": "formal-release",
+      "source_relative": "Help/images/console_carspecs.gif",
+      "sha256": "164561e5fb3ccac95efc7a06dcd76489abc95df61a62741452dc339b5d0abec1"
+    },
+    {
+      "path": "GTASAConsole/Help/images/console_kickstart.gif",
+      "source_area": "formal-release",
+      "source_relative": "Help/images/console_kickstart.gif",
+      "sha256": "32c8518d180072754b88f90c196f93cfcdead6552d01b4e31f00d2df33753de4"
+    },
+    {
+      "path": "GTASAConsole/Help/images/console_weathers.gif",
+      "source_area": "formal-release",
+      "source_relative": "Help/images/console_weathers.gif",
+      "sha256": "50c82f555f9b2547939b4d56ff7f2f892839561080374e70c566b73bf302d4c5"
+    },
+    {
+      "path": "GTASAConsole/Help/images/health_slider.gif",
+      "source_area": "formal-release",
+      "source_relative": "Help/images/health_slider.gif",
+      "sha256": "1e0a1a93fa9cc09e1b1f99bc64ca8dad076073d857b2b030b1df9e052149783f"
+    },
+    {
+      "path": "GTASAConsole/Help/images/mod_selection.gif",
+      "source_area": "formal-release",
+      "source_relative": "Help/images/mod_selection.gif",
+      "sha256": "b0ddb4d7b4c0cbc6ba5c353298db5f08b2a80b9d4aaff21aaf83a5d78baf2b24"
+    },
+    {
+      "path": "GTASAConsole/Help/images/moveto_folder.gif",
+      "source_area": "formal-release",
+      "source_relative": "Help/images/moveto_folder.gif",
+      "sha256": "a92e7c745f35e9c9604ba0251f9681a8279887250b5a3967370ac0789deb6ad7"
+    },
+    {
+      "path": "GTASAConsole/Help/images/page1.gif",
+      "source_area": "formal-release",
+      "source_relative": "Help/images/page1.gif",
+      "sha256": "070c2da966b8e8ca2223c643e45591d48f3ebdf584c261d884486df1281c0a09"
+    },
+    {
+      "path": "GTASAConsole/Help/images/page2.gif",
+      "source_area": "formal-release",
+      "source_relative": "Help/images/page2.gif",
+      "sha256": "2064bf5b54ac362c6622e55c1e8bb8b4b4a96e808e0d6005ef654ec5e5bca147"
+    },
+    {
+      "path": "GTASAConsole/Help/images/page3.gif",
+      "source_area": "formal-release",
+      "source_relative": "Help/images/page3.gif",
+      "sha256": "8d4d1321cd229b844bc296c586aaf39295b70442916780186dd10e928ba70ca2"
+    },
+    {
+      "path": "GTASAConsole/Help/images/page4.gif",
+      "source_area": "formal-release",
+      "source_relative": "Help/images/page4.gif",
+      "sha256": "4f590bb3fbb5a6be3a2119eb432d941023dbc48eb0a661ae230ff936e9800803"
+    },
+    {
+      "path": "GTASAConsole/Help/images/page4_context.gif",
+      "source_area": "formal-release",
+      "source_relative": "Help/images/page4_context.gif",
+      "sha256": "f994a9f00f8dac3632d9bb2924cb4f1d4b6c1488b81f83548c9f7f5c3054cf3a"
+    },
+    {
+      "path": "GTASAConsole/Help/images/page5.gif",
+      "source_area": "formal-release",
+      "source_relative": "Help/images/page5.gif",
+      "sha256": "e5d62cf5499d2c08d727f29a0a3480cbf94922153fd8bca37e80e0e05eb4d235"
+    },
+    {
+      "path": "GTASAConsole/Help/images/page5_loc_context.gif",
+      "source_area": "formal-release",
+      "source_relative": "Help/images/page5_loc_context.gif",
+      "sha256": "c5f9061383587a5e0bd26a26e084b2d64ed7824075abb9970d9e91f31c0a4b1b"
+    },
+    {
+      "path": "GTASAConsole/Help/images/page5_map_context.gif",
+      "source_area": "formal-release",
+      "source_relative": "Help/images/page5_map_context.gif",
+      "sha256": "5ea6996ca9c12fce38a75af55ac0d7cf0c79ac5ee2437aadfe9ed623424c2530"
+    },
+    {
+      "path": "GTASAConsole/Help/images/page5_tw_context.gif",
+      "source_area": "formal-release",
+      "source_relative": "Help/images/page5_tw_context.gif",
+      "sha256": "08357b547f660e810c9eef6d77497dfc3cd77c57a23192e1e1e427c4869de53d"
+    },
+    {
+      "path": "GTASAConsole/Help/images/page6.gif",
+      "source_area": "formal-release",
+      "source_relative": "Help/images/page6.gif",
+      "sha256": "629ac2a44b4429457385915362571ea3e575509d808c4ec580f331e5d5f54d07"
+    },
+    {
+      "path": "GTASAConsole/Help/images/vehicle_select.gif",
+      "source_area": "formal-release",
+      "source_relative": "Help/images/vehicle_select.gif",
+      "sha256": "baf8a539f43f8769f88ad13bf0341338eb236e3da92c35eff95614b969a823fd"
+    },
+    {
+      "path": "GTASAConsole/Help/images/vehicle_select_context.gif",
+      "source_area": "formal-release",
+      "source_relative": "Help/images/vehicle_select_context.gif",
+      "sha256": "c5228c2faae9b9500802ad929e1ef15047cb994daabfc589e24cdf209699eaa5"
+    },
+    {
+      "path": "GTASAConsole/Help/images/weapon_stats.gif",
+      "source_area": "formal-release",
+      "source_relative": "Help/images/weapon_stats.gif",
+      "sha256": "dcee0ab336c08fd15af624b7fedc5d121072ddb2a46445e56188394ba7e98375"
+    },
+    {
+      "path": "GTASAConsole/Help/index.html",
+      "source_area": "formal-release",
+      "source_relative": "Help/index.html",
+      "sha256": "93f548a25e86af924ab9290975bb8d52d9d97ffbcd401170366d04bde3f3d8ab"
+    },
+    {
+      "path": "GTASAConsole/Help/ini_file.html",
+      "source_area": "formal-release",
+      "source_relative": "Help/ini_file.html",
+      "sha256": "0ca54bf4d685bfc8438ffdec962ba6a48480219b60ff5e397742c919544c842e"
+    },
+    {
+      "path": "GTASAConsole/Help/installation.html",
+      "source_area": "formal-release",
+      "source_relative": "Help/installation.html",
+      "sha256": "e14d429a4213fb42ae247e3f0e1cdd4d7c615ec614b3c0a76b276f42eb8c096f"
+    },
+    {
+      "path": "GTASAConsole/Help/locs_dat.html",
+      "source_area": "formal-release",
+      "source_relative": "Help/locs_dat.html",
+      "sha256": "d769bae820e645a7f26c8f3a06bf46b40008101aaea56bebd79b1d56f2a88113"
+    },
+    {
+      "path": "GTASAConsole/Help/modlist.html",
+      "source_area": "formal-release",
+      "source_relative": "Help/modlist.html",
+      "sha256": "7937ce3a46236dce344923bacab8ae321cedb87adce3c784bdf600e61de230cf"
+    },
+    {
+      "path": "GTASAConsole/Help/page1.html",
+      "source_area": "formal-release",
+      "source_relative": "Help/page1.html",
+      "sha256": "8bc2a784cb653ac73250d414ce0a56235387f172e00221fe2b06050d508e5c18"
+    },
+    {
+      "path": "GTASAConsole/Help/page2.html",
+      "source_area": "formal-release",
+      "source_relative": "Help/page2.html",
+      "sha256": "a7f48372a0e5b2f292e9de4827dfc604894ef443435b4636ccd87d0e57aa4b93"
+    },
+    {
+      "path": "GTASAConsole/Help/page3.html",
+      "source_area": "formal-release",
+      "source_relative": "Help/page3.html",
+      "sha256": "d470d92fbe403b91497acd3c0452cf3bc14e9f8311e4bbbd19ca87bcb240fe26"
+    },
+    {
+      "path": "GTASAConsole/Help/page4.html",
+      "source_area": "formal-release",
+      "source_relative": "Help/page4.html",
+      "sha256": "ba3484dc8569aeef32654183907e1173cb854e81482e9775b74f6b184d63df2b"
+    },
+    {
+      "path": "GTASAConsole/Help/page5.html",
+      "source_area": "formal-release",
+      "source_relative": "Help/page5.html",
+      "sha256": "aa2587e29049cde38d1b9e7b8d421a02e6de2db0da95aff42c4c68485a504e6a"
+    },
+    {
+      "path": "GTASAConsole/Help/page6.html",
+      "source_area": "formal-release",
+      "source_relative": "Help/page6.html",
+      "sha256": "d476d84ebbaf2cd02733de9a16b8dbbf8ecb6083849671dfd87593c084af45a7"
+    },
+    {
+      "path": "GTASAConsole/Help/ReadMe.txt",
+      "source_area": "formal-release",
+      "source_relative": "Help/ReadMe.txt",
+      "sha256": "1a88588860dd4dc5996f166c6fa3af91418ae7546a409af1ec40f966905c3286"
+    },
+    {
+      "path": "GTASAConsole/Help/weathers.html",
+      "source_area": "formal-release",
+      "source_relative": "Help/weathers.html",
+      "sha256": "2871ef78ad7c27f89348676fc209e1abd83e3ff66f2d60bc0ee5a3e96d358ee7"
+    },
+    {
+      "path": "GTASAConsole/Images/Accept16.ico",
+      "source_area": "formal-release",
+      "source_relative": "Images/Accept16.ico",
+      "sha256": "9af9e554f11e91cfde072f16e7d58cb97bf7bca3b2ed101bedef3b569257f6a3"
+    },
+    {
+      "path": "GTASAConsole/Images/cheat.ico",
+      "source_area": "formal-release",
+      "source_relative": "Images/cheat.ico",
+      "sha256": "d3b690ba4f1452badbffc9772a55ef7d7fe0a18bde6477372d2bce18e9a6b683"
+    },
+    {
+      "path": "GTASAConsole/Images/cheat_move.ico",
+      "source_area": "formal-release",
+      "source_relative": "Images/cheat_move.ico",
+      "sha256": "9e74f5d907fcb6aa45f0976f66875306581b1c988ae43c99a5c68e7fd3654af9"
+    },
+    {
+      "path": "GTASAConsole/Images/closed.ico",
+      "source_area": "formal-release",
+      "source_relative": "Images/closed.ico",
+      "sha256": "4ea2aad753be8b83bbe2dc8213826f3b7f002c827df2ce02d258afd6f262bda8"
+    },
+    {
+      "path": "GTASAConsole/Images/folder_move.ico",
+      "source_area": "formal-release",
+      "source_relative": "Images/folder_move.ico",
+      "sha256": "6bd9391bc9f02122624788210c4945fc8141b3fb56554bd867c39910ca3f4f0c"
+    },
+    {
+      "path": "GTASAConsole/Images/GTASADirection_Toolbox.bmp",
+      "source_area": "formal-release",
+      "source_relative": "Images/GTASADirection_Toolbox.bmp",
+      "sha256": "dc67b990251f4f30cb5eb705351f0200c5b7fedfe378be5d088b9357d18cae69"
+    },
+    {
+      "path": "GTASAConsole/Images/loc.ico",
+      "source_area": "formal-release",
+      "source_relative": "Images/loc.ico",
+      "sha256": "3b26cd5716db71e2ce3c85b8deb2bc82f4c26a21f0f55371b28814cc78058db2"
+    },
+    {
+      "path": "GTASAConsole/Images/loc_move.ico",
+      "source_area": "formal-release",
+      "source_relative": "Images/loc_move.ico",
+      "sha256": "a48eb871b5cae67ff39ae2e4518333b39dbf1bab374d39f95ea3a6092709d8c3"
+    },
+    {
+      "path": "GTASAConsole/Images/locked.ico",
+      "source_area": "formal-release",
+      "source_relative": "Images/locked.ico",
+      "sha256": "34e0c1dcd2897d68eb6e89b8ac60e959960275fbe7a5997d2146d98eeadb60a9"
+    },
+    {
+      "path": "GTASAConsole/Images/locks/locked.ico",
+      "source_area": "formal-release",
+      "source_relative": "Images/locks/locked.ico",
+      "sha256": "9384fc5ae512d6edf2a9ed8e8fd573d1c2b34d076c5def29091f5a7fc6973038"
+    },
+    {
+      "path": "GTASAConsole/Images/locks/shell32_dll_Ico394.ico",
+      "source_area": "formal-release",
+      "source_relative": "Images/locks/shell32_dll_Ico394.ico",
+      "sha256": "a7f42c6a6a3baf72ec0e50c88ba2cbeb12ca007a96d9046cc1307243005b31a5"
+    },
+    {
+      "path": "GTASAConsole/Images/locks/shell32_dll_Ico395.ico",
+      "source_area": "formal-release",
+      "source_relative": "Images/locks/shell32_dll_Ico395.ico",
+      "sha256": "bfb9bc5d07e30365ae0c8111d10953e027ac6bef75495e5eca1962d483805179"
+    },
+    {
+      "path": "GTASAConsole/Images/locks/shell32_dll_Ico396.ico",
+      "source_area": "formal-release",
+      "source_relative": "Images/locks/shell32_dll_Ico396.ico",
+      "sha256": "a7407a4241de01d486edde3a81bab50306ae39cf84207aa8d5b4f25d89c0b146"
+    },
+    {
+      "path": "GTASAConsole/Images/locks/shell32_dll_Ico397.ico",
+      "source_area": "formal-release",
+      "source_relative": "Images/locks/shell32_dll_Ico397.ico",
+      "sha256": "3b3dccf5a959df5ea1b50a0552d2c40316a854ebc7052d1834bfedc4804fcf4d"
+    },
+    {
+      "path": "GTASAConsole/Images/locks/shell32_dll_Ico398.ico",
+      "source_area": "formal-release",
+      "source_relative": "Images/locks/shell32_dll_Ico398.ico",
+      "sha256": "dc58a6ad81738ffa2f64419a3cc8158eb2c7d3ccebe447726329a378f7a4dbf7"
+    },
+    {
+      "path": "GTASAConsole/Images/locks/shell32_dll_Ico399.ico",
+      "source_area": "formal-release",
+      "source_relative": "Images/locks/shell32_dll_Ico399.ico",
+      "sha256": "d36c398697d7d5aee5aef4ef8ba454b82633e5008574bb18f82e617bc622c438"
+    },
+    {
+      "path": "GTASAConsole/Images/locks/shell32_dll_Ico400.ico",
+      "source_area": "formal-release",
+      "source_relative": "Images/locks/shell32_dll_Ico400.ico",
+      "sha256": "c053dd31a2c5196349a9e47e10487af10f6bfa2ffbb81f06c20645e874139a0b"
+    },
+    {
+      "path": "GTASAConsole/Images/locks/shell32_dll_Ico401.ico",
+      "source_area": "formal-release",
+      "source_relative": "Images/locks/shell32_dll_Ico401.ico",
+      "sha256": "520fd19051ab61bdf7e3b4f10fc9c3b91638ac7452c1caa80b25718ff9fd75c0"
+    },
+    {
+      "path": "GTASAConsole/Images/locks/shell32_dll_Ico402.ico",
+      "source_area": "formal-release",
+      "source_relative": "Images/locks/shell32_dll_Ico402.ico",
+      "sha256": "cb322476dab759fec4e70e23ff2ee4528e0c8b058a0c71fefa7b0d64ca41b2ad"
+    },
+    {
+      "path": "GTASAConsole/Images/locks/shell32_dll_Ico403.ico",
+      "source_area": "formal-release",
+      "source_relative": "Images/locks/shell32_dll_Ico403.ico",
+      "sha256": "eada5904e2b594908832252457e4a2d6b7180918c6bad88b1231302001936fde"
+    },
+    {
+      "path": "GTASAConsole/Images/locks/shell32_dll_Ico404.ico",
+      "source_area": "formal-release",
+      "source_relative": "Images/locks/shell32_dll_Ico404.ico",
+      "sha256": "262a479804e3b1b1a6d439eb50974cfa1b46bfc8d0ca551644c4a8e5cd45091e"
+    },
+    {
+      "path": "GTASAConsole/Images/locks/shell32_dll_Ico405.ico",
+      "source_area": "formal-release",
+      "source_relative": "Images/locks/shell32_dll_Ico405.ico",
+      "sha256": "bf5d033a9443f7b2a93f2e7f90caf684f4b963d7e5caa9f908787d1668bcff36"
+    },
+    {
+      "path": "GTASAConsole/Images/locks/unlocked.ico",
+      "source_area": "formal-release",
+      "source_relative": "Images/locks/unlocked.ico",
+      "sha256": "7a5cd98fe4e6d5783ab1bf6c01c709bccdd80517115c86e0685b353fb69076f0"
+    },
+    {
+      "path": "GTASAConsole/Images/open.ico",
+      "source_area": "formal-release",
+      "source_relative": "Images/open.ico",
+      "sha256": "e236e89bdbdd543a7a1374c2c35c39048b70e0b2eab97abe58b265bc8ecae7e0"
+    },
+    {
+      "path": "GTASAConsole/Images/shortcut.ico",
+      "source_area": "formal-release",
+      "source_relative": "Images/shortcut.ico",
+      "sha256": "b8972d4632795258969f596ee93b49e5abb81b115d0ef2204b95801281a4958b"
+    },
+    {
+      "path": "GTASAConsole/Images/shortcut_active.ico",
+      "source_area": "formal-release",
+      "source_relative": "Images/shortcut_active.ico",
+      "sha256": "13a9bccbe4758e5e99b655d48dc4bac62f41bc635ae8d38b10b47954bc1f2118"
+    },
+    {
+      "path": "GTASAConsole/Images/shortcut_move.ico",
+      "source_area": "formal-release",
+      "source_relative": "Images/shortcut_move.ico",
+      "sha256": "9bdbf455d855e02468d52b7fd36927e8ad0b7bce320a2900a0f2c5f53ef15867"
+    },
+    {
+      "path": "GTASAConsole/Images/unlocked.ico",
+      "source_area": "formal-release",
+      "source_relative": "Images/unlocked.ico",
+      "sha256": "425b1b3e411615ad4e39b4815083519de76ca37bd6e721979866da36b398b68c"
+    },
+    {
+      "path": "GTASAConsole/mdlGTASAConsole.bas",
+      "source_area": "formal-release",
+      "source_relative": "mdlGTASAConsole.bas",
+      "sha256": "626e5b52f6f0095af285939d879eac3401f787cffed6612301c0d29301343fd1"
+    },
+    {
+      "path": "GTASAConsole/mdlGTASADeclares.bas",
+      "source_area": "formal-release",
+      "source_relative": "mdlGTASADeclares.bas",
+      "sha256": "2d43febbeba3efe790f2d264466d917cc3805f3d8e603f8e57ba73d7b1a0609f"
+    },
+    {
+      "path": "GTASAConsole/mdlGUID.bas",
+      "source_area": "formal-release",
+      "source_relative": "mdlGUID.bas",
+      "sha256": "8767bc3925b797cc6b4dafb4fdc00aea88a0c4a6c5a83b7d895084af4eb1164a"
+    },
+    {
+      "path": "GTASAConsole/mdlLocalization.bas",
+      "source_area": "formal-release",
+      "source_relative": "mdlLocalization.bas",
+      "sha256": "fad4adbf80584b1622e102ae73aa68c1d052f4869ebde0fdfcb26d017fe2ef6e"
+    },
+    {
+      "path": "GTASAConsole/mdlRegistry.bas",
+      "source_area": "formal-release",
+      "source_relative": "mdlRegistry.bas",
+      "sha256": "deaeeb01bbf9c5de16bf0ef124084a96dbc44a64c1f9cd77a2d135172564a5e8"
+    },
+    {
+      "path": "GTASAConsole/MiniCheckBox.ctl",
+      "source_area": "formal-release",
+      "source_relative": "MiniCheckBox.ctl",
+      "sha256": "e1d6174853d111b44f112b36b2cb6b9859331308c95bc7d18b16556a4ba95155"
+    },
+    {
+      "path": "GTASAConsole/MiniCheckBox.ctx",
+      "source_area": "formal-release",
+      "source_relative": "MiniCheckBox.ctx",
+      "sha256": "aa55edcb468ed98b07615b106760320059e58afce4559638dd917b54d0c226e7"
+    },
+    {
+      "path": "GTASAConsole/zh-CN.tsv",
+      "source_area": "formal-release",
+      "source_relative": "zh-CN.tsv",
+      "sha256": "bee614a5b5bff9b9c98b107408c73db9857670eb02d19b150f7a069e6858b73d"
+    },
+    {
+      "path": "native/SteamMemory.cpp",
+      "source_area": "legacy-steam-backend",
+      "source_relative": "SteamMemory.cpp",
+      "sha256": "7006a05933d78227932cb49848e9b9769f4bd91955f57e2ab49d44e4d9129891"
+    },
+    {
+      "path": "native/exports.def",
+      "source_area": "legacy-steam-backend",
+      "source_relative": "exports.def",
+      "sha256": "753982fc5e3e9da946b2da5dd09fc0b1ac59dc6efb4ea258e3e40a224c30f5d4"
+    },
+    {
+      "path": "vendor/vb6-controls/TabCtl32.ocx",
+      "source_area": "formal-release-runtime-component",
+      "source_relative": "TabCtl32.ocx",
+      "sha256": "341d97cb88c04c4b566c82ec36d4ee1f2bca5e31bf04d240796277ce770b56c9"
+    },
+    {
+      "path": "vendor/vb6-controls/mscomctl.ocx",
+      "source_area": "formal-release-runtime-component",
+      "source_relative": "mscomctl.ocx",
+      "sha256": "e0ab15288662b91d8fa4a5f77d8d72c08a55b0c88324c1cd1441265818aa0c61"
+    },
+    {
+      "path": "localization/source-tables/trainer-locations-zh.tsv",
+      "source_area": "translation-authoring-tables",
+      "source_relative": "trainer-locations-zh.tsv",
+      "sha256": "db1b97ee193d78d8f5a116f88bf13f5dab9b00d6adc7918cc2371293586ff27d"
+    },
+    {
+      "path": "localization/source-tables/trainer-steam-zh-extra.tsv",
+      "source_area": "translation-authoring-tables",
+      "source_relative": "trainer-steam-zh-extra.tsv",
+      "sha256": "ae64675292fd3f5e3baffd82e5f8b92c0bae64899610dd91d5e9949fbe9c7335"
+    },
+    {
+      "path": "localization/source-tables/trainer-ui-final.tsv",
+      "source_area": "translation-authoring-tables",
+      "source_relative": "trainer-ui-final.tsv",
+      "sha256": "1dd41c3f0778f48038c098ae5f9a9307ff83cec129c2a2145ad53e4e84aefeff"
+    },
+    {
+      "path": "localization/source-tables/trainer-weather-zh.tsv",
+      "source_area": "translation-authoring-tables",
+      "source_relative": "trainer-weather-zh.tsv",
+      "sha256": "ec1612a249b9e26a2cb55cd2d2aba1d8f0bc004a6b12be29fae4a39a2b7faaa3"
+    },
+    {
+      "path": "localization/source-tables/trainer-zh-cn.tsv",
+      "source_area": "translation-authoring-tables",
+      "source_relative": "trainer-zh-cn.tsv",
+      "sha256": "bbe79f51a7ff5db02c60b88ee9bc7f4a0716c1f13b6451fb379d2d817a430436"
+    }
+  ],
+  "portable_adjustments": [
+    {
+      "path": "GTASAConsole/GTASAConsole.vbp",
+      "original_sha256": "950be01f04934dac0ed415ead6ad50ef13f679bee47e78a524041709fe3680f8",
+      "backup_sha256": "a04bbac26480d034539c9718581f01a39f2e312fed078f6f5b3ccbf80b1f5547",
+      "reason": "Portable OLE reference or obsolete debug/unreferenced-module path normalization; active functional code unchanged"
+    },
+    {
+      "path": "GTASAConsole/frmSAConsole.frm",
+      "original_sha256": "37ac898501b6f409130a187728efb2f2f03709c8c11a66469378e9a45c338c31",
+      "backup_sha256": "280f4972fcbe322dc5ab53c6223400a61766d17fd742dae7ced4f120f5fe1846",
+      "reason": "Portable OLE reference or obsolete debug/unreferenced-module path normalization; active functional code unchanged"
+    },
+    {
+      "path": "GTASAConsole/mdlRegistry.bas",
+      "original_sha256": "deaeeb01bbf9c5de16bf0ef124084a96dbc44a64c1f9cd77a2d135172564a5e8",
+      "backup_sha256": "6ae008cbac07e9d94342edcba9d01d3945941cf2d2c2f158aaa242eeaffc1d00",
+      "reason": "Portable OLE reference or obsolete debug/unreferenced-module path normalization; active functional code unchanged"
+    }
+  ],
+  "excluded_files": [
+    {
+      "path": "!GTASAData.dat",
+      "reason": "Personal/runtime/scratch or reproducible output; runtime OCX preserved separately"
+    },
+    {
+      "path": "!MakeUPX.bat",
+      "reason": "Personal/runtime/scratch or reproducible output; runtime OCX preserved separately"
+    },
+    {
+      "path": "Copy of GTASAConsole.ini",
+      "reason": "Personal/runtime/scratch or reproducible output; runtime OCX preserved separately"
+    },
+    {
+      "path": "Copy of GTASAData.dat",
+      "reason": "Personal/runtime/scratch or reproducible output; runtime OCX preserved separately"
+    },
+    {
+      "path": "dump.bin",
+      "reason": "Personal/runtime/scratch or reproducible output; runtime OCX preserved separately"
+    },
+    {
+      "path": "GTASA_Center_ZH.exe",
+      "reason": "Personal/runtime/scratch or reproducible output; runtime OCX preserved separately"
+    },
+    {
+      "path": "GTASAConfig.dat",
+      "reason": "Personal/runtime/scratch or reproducible output; runtime OCX preserved separately"
+    },
+    {
+      "path": "GTASAConsole.ini",
+      "reason": "Personal/runtime/scratch or reproducible output; runtime OCX preserved separately"
+    },
+    {
+      "path": "GTASAConsole_Scratchpad.txt",
+      "reason": "Personal/runtime/scratch or reproducible output; runtime OCX preserved separately"
+    },
+    {
+      "path": "GTASASteam.dll",
+      "reason": "Personal/runtime/scratch or reproducible output; runtime OCX preserved separately"
+    },
+    {
+      "path": "mscomctl.ocx",
+      "reason": "Personal/runtime/scratch or reproducible output; runtime OCX preserved separately"
+    },
+    {
+      "path": "my_GTASALocs.dat",
+      "reason": "Personal/runtime/scratch or reproducible output; runtime OCX preserved separately"
+    },
+    {
+      "path": "TabCtl32.ocx",
+      "reason": "Personal/runtime/scratch or reproducible output; runtime OCX preserved separately"
+    }
+  ],
+  "original_project_unchanged": true
+}

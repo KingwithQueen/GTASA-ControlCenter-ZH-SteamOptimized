@@ -1,0 +1,64 @@
+{
+  "schema": 1,
+  "reference_release": "LegacyPerf_20261004",
+  "reference_exe_sha256": "76954b8b6763b9832fb9f201d3ffdf241f03825a0f61cff9da6b7e2845e737d7",
+  "tools_not_included": [
+    {
+      "name": "twinBASIC",
+      "version": "BETA 991 / Win32",
+      "official_url": "https://github.com/twinbasic/twinbasic/releases/tag/beta-x-0991",
+      "archive_name": "twinBASIC_IDE_BETA_991.zip",
+      "archive_sha256": "d692622444e9eec52bceda2ae9e9eba8d1664f31dd7ce84099b0433ad029ef7d",
+      "tested_executable_sha256": "778843a946495fbdaf0040a2e8400dd133f02e075bfbd39f335895e83727287f"
+    },
+    {
+      "name": "Python",
+      "tested_version": "3.10.3 x64",
+      "compatible_requirement": "Python 3.10+; standard library only; no pip packages required",
+      "official_url": "https://www.python.org/downloads/release/python-3103/",
+      "verification": "Use official release signatures and installer metadata; installer hash not recorded locally"
+    },
+    {
+      "name": "Node.js",
+      "version": "24.19.0 x64",
+      "official_url": "https://nodejs.org/download/release/v24.19.0/",
+      "checksums_url": "https://nodejs.org/download/release/v24.19.0/SHASUMS256.txt",
+      "reason": "Compiler CDP helper uses built-in fetch and WebSocket; no npm dependencies"
+    },
+    {
+      "name": "MSVC x86 and Windows SDK",
+      "tested_toolset": "14.51.36231",
+      "official_url": "https://visualstudio.microsoft.com/downloads/",
+      "selection": "Desktop development with C++; Windows SDK; cl/rc/link; supply VCVARS32_PATH or discover with vswhere",
+      "verification": "Microsoft installer signature; exact installed toolchain checksums vary by selected components"
+    },
+    {
+      "name": "Windows OLE Automation",
+      "version": "System-supplied stdole2.tlb",
+      "official_url": "https://learn.microsoft.com/en-us/windows/win32/api/oaidl/",
+      "selection": "Prepared project copies the Windows SysWOW64/System32 typelib; no registry changes"
+    }
+  ],
+  "pinned_runtime_components": {
+    "TabCtl32.ocx": {
+      "version": "6.1.98.16",
+      "sha256": "341d97cb88c04c4b566c82ec36d4ee1f2bca5e31bf04d240796277ce770b56c9",
+      "included": "vendor/vb6-controls/TabCtl32.ocx"
+    },
+    "mscomctl.ocx": {
+      "version": "6.1.98.16",
+      "sha256": "e0ab15288662b91d8fa4a5f77d8d72c08a55b0c88324c1cd1441265818aa0c61",
+      "included": "vendor/vb6-controls/mscomctl.ocx"
+    }
+  },
+  "runtime_component_source": {
+    "original_package": "VB60SP6-KB957924-v2-x86-ENU.msi",
+    "original_package_sha256": "00df93edc4093e7e17897700601b4d4ae17d2d74e60dd1a9d554c93407eded3d",
+    "official_support_url": "https://support.microsoft.com/en-us/servicing/os/windows-server/2020/04/description-of-the-cumulative-update-rollup-for-the-visual-basic-6-0-service-pack-6-runtime-extended",
+    "current_official_download_url": "https://www.microsoft.com/en-us/download/details.aspx?id=7030",
+    "current_offered_package": "VB60SP6-KB2708437-x86-ENU.msi",
+    "exact_old_download_revalidated": false,
+    "recovery_decision": "Preserve the exact two required OCX runtime components, not MSI installer or developer tool packages, because the historical link returned 404 and the current package is a newer update.",
+    "system_com_registration_required": false
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "exe_sha256": "76954b8b6763b9832fb9f201d3ffdf241f03825a0f61cff9da6b7e2845e737d7",
+  "zip_sha256": "bba2dcacfb74c3f7ddd6bfb6070a170a9ac843d21c4f9bc9a093d7d860622fab",
+  "zip_bytes": 4782873,
+  "source_zip_sha256": "d563b0274cc4ac1aa8a6d7776fe4f4c30c305cf1e84f9733108ed0562bc1ff3f",
+  "protected_assets_and_ini_unchanged": true,
+  "frozen_original_files_unchanged": 656,
+  "zip_integrity_passed": true,
+  "production_exe_launched": false
+}

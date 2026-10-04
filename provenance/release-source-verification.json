@@ -1,0 +1,13 @@
+{
+  "changed_sources": [
+    "frmSAConsole.frm",
+    "GTASADirection.ctl",
+    "GTASAStat.ctl",
+    "mdlLocalization.bas"
+  ],
+  "designer_layout_unchanged": true,
+  "frozen_originals_unchanged": 656,
+  "qa_hooks_removed": true,
+  "startup_experiments_excluded": true,
+  "production_exe_launched": false
+}
