@@ -1,6 +1,6 @@
-# GTA SA Control Center 旧版汉化与优化源码
+# GTA SA Control Center 汉化与优化源码
 
-这个目录是 LegacyPerf_20261004 正式旧版的独立源码备份。工程入口为 `GTASAConsole/GTASAConsole.vbp`，采用 VB6 工程格式，以 twinBASIC BETA 991 编译 Win32。源文件取自正式 release；Steam 后端取自对应的旧版 C++ 后端。
+本项目基于GTA SA Control Center开源代码，汉化了修改器文本，适配了steam版GTASA。工程入口为 `GTASAConsole/GTASAConsole.vbp`，采用 VB6 工程格式，以 twinBASIC BETA 991 编译 Win32。源文件取自正式 release；Steam 后端取自对应的旧版 C++ 后端。
 
 ## 内容
 
@@ -60,12 +60,10 @@ build.cmd --prepare-only --output ".work\manual-import"
 
 本备份保持实际编译源码与资源。仅有三处便携化调整：VBP 的 Windows OLE 引用改为相对路径；未启用的转储注释改为相对文件名；未加入工程的 mdlRegistry.bas 中遗留路径整理。具体前后哈希见 `provenance/source-correspondence.json`。编译时只在生成副本中将 OLE 引用解析成其当前实际位置。没有重新应用 baseline 补丁，也没有用 benchmark 源码替代正式源码。
 
-重新生成的 EXE/DLL 可能因工具链、编译时间或资源嵌入而与既有发布产物哈希不同。本次验证检查编译成功、既有诊断、资源及依赖完整性；不宣称逐字节复现或实际游戏行为验证。
+重新生成的 EXE/DLL 可能因工具链、编译时间或资源嵌入而与既有发布产物哈希不同。
 
 ## 依赖与授权记录
 
 两个 OCX 是必要运行依赖，未能确认精确历史版本仍可从官方重新下载，因此保留本次正式版本的原文件。旧包与组件哈希均已记录；当前微软下载页提供较新的 KB2708437 包，不能直接当成已验证的同版本替代品。没有包含旧 MSI 或开发工具。详情见 tools.lock.json 和 NOTICE.md。
 
-上游历史资料将项目称为 open source，但本次材料没有明确的 SPDX 许可证文本。本目录保留原作者声明、帮助与署名，没有追加 MIT 等授权。版权与来源事实见 NOTICE.md。
-
-这个目录可作为单独的 Git 仓库根目录备份。已准备 .gitignore/.gitattributes；本次没有初始化仓库、提交、推送或创建 GitHub 仓库。
+本目录保留原作者声明、帮助与署名。版权与来源事实见 NOTICE.md。
