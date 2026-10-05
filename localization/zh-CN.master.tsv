@@ -1610,3 +1610,20 @@ CTRL+4 Give Weapon & Ammo (Minigun. Ammo: 20000)	CTRL+4 给予武器和弹药 (M
 CTRL+4 Give Weapon & Ammo (Silenced Pistol. Ammo: 1000)	CTRL+4 给予武器和弹药 (Silenced Pistol. 弹药： 1000)
 CTRL+5 Remove Current Weapon	CTRL+5 移除当前武器
 CTRL+6 Clear All Weapons	CTRL+6 移除所有武器
+Steam garage: game is not connected.	Steam车库：游戏尚未连接。
+Steam garage: close the garage, stand outdoors and pause with Esc first.	Steam车库：请先关闭车库，在室外步行并按Esc暂停游戏。
+Steam garage: selected vehicle, modification or placement is invalid.	Steam车库：所选车型、改装或停车位置无效。
+Steam garage: write failed; the original records were restored.	Steam车库：写入失败，已恢复原始记录。
+Steam garage: result could not be confirmed. Disconnect and reload your save.	Steam车库：无法确认写入结果，请断开修改器并重新载入存档。
+Steam garage: game state changed. Read garages again before applying.	Steam车库：游戏状态已变化，请重新读取车库后再应用。
+Steam garage: memory could not be read or written.	Steam车库：无法读取或写入游戏数据。
+Steam garage: edit while paused and the garage is closed.	Steam车库：关闭车库并暂停游戏后编辑。
+Steam feature: pause with Esc before enabling this for the first time.	首次启用此功能前，请按Esc暂停游戏。
+Steam feature: code differs or an older trainer is still installed. Restart the game first.	游戏代码不匹配，或旧版修改器仍驻留。请重启游戏后再试。
+Steam feature: the operation failed. The switch has been restored.	操作失败，已还原开关状态。
+Steam girlfriend: pause with Esc before changing or locking progress.	修改或锁定女友关系进度前，请按Esc暂停游戏。
+Steam girlfriend: the script does not match. Progress was not changed.	游戏脚本不匹配，未修改女友进度。
+Steam feedback: pause with Esc before enabling game messages.	启用游戏内反馈前，请先按Esc暂停游戏。
+Steam Coffee: pause before changing the verified script flag.	切换隐藏约会内容前，请按Esc暂停游戏。
+Steam Coffee: script package is not supported.	当前脚本包不支持隐藏约会开关。
+Steam Coffee: script validation or writing failed; the switch has been restored.	脚本校验或写入失败，已还原隐藏约会开关。

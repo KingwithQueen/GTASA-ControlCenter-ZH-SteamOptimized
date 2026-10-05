@@ -744,6 +744,7 @@ End Sub
 Private Sub cmdClearMods_Click(Index As Integer)
 On Error Resume Next
     isResetMods(Index) = True
+    isDirty = True
     CopyMemory tNowParking.ParkingSlots(Index).intTuneArr(0), zeroTuneInt(0), 30&
     '&HFF 02 00 00
     '   3  2  1  0

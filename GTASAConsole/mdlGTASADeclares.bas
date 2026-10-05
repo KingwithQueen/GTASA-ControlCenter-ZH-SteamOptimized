@@ -455,4 +455,19 @@ Global isCarPicsReady As Boolean
 
 Declare Function SteamAttach Lib "GTASASteam.dll" (ByVal hProcess As Long) As Long
 Declare Function SteamStatus Lib "GTASASteam.dll" () As Long
+Declare Function SteamGarageInspect Lib "GTASASteam.dll" (ByVal Index As Long, Metadata As Long, Cars As Byte) As Long
+Declare Function SteamGarageWrite Lib "GTASASteam.dll" (ByVal Index As Long, Metadata As Long, Before As Byte, Selected As Byte, ByVal Repark As Long) As Long
+Declare Function SteamGarageLock Lib "GTASASteam.dll" (ByVal Index As Long, ByVal Armed As Long, Selected As Byte) As Long
 Global isSteamGame As Boolean
+
+Declare Function SteamFeatureSet Lib "GTASASteam.dll" (ByVal Feature As Long, ByVal Value As Long) As Long
+Declare Function SteamFeatureGet Lib "GTASASteam.dll" (ByVal Feature As Long) As Long
+
+Declare Function SteamGirlfriendSupported Lib "GTASASteam.dll" () As Long
+Declare Function SteamGirlfriendSet Lib "GTASASteam.dll" (ByVal Index As Long, ByVal Value As Long, ByVal Mode As Long) As Long
+
+Declare Function SteamFeedbackEnable Lib "GTASASteam.dll" (ByVal Enabled As Long) As Long
+Declare Function SteamFeedbackMessage Lib "GTASASteam.dll" (ByVal TextPointer As Long, ByVal Length As Long) As Long
+
+Declare Function SteamCoffeeGet Lib "GTASASteam.dll" () As Long
+Declare Function SteamCoffeeSet Lib "GTASASteam.dll" (ByVal Censored As Long) As Long

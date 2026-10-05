@@ -1,6 +1,6 @@
 """Embed the preserved app-local manifest with Windows resource APIs only."""
 from pathlib import Path
-import ctypes as C,struct
+import ctypes as C,struct,time
 def embed(exe,manifest):
     exe=Path(exe);data=Path(manifest).read_bytes();raw=exe.read_bytes()
     pe=struct.unpack_from('<I',raw,0x3c)[0]
@@ -11,11 +11,20 @@ def embed(exe,manifest):
     k.BeginUpdateResourceW.argtypes=[C.c_wchar_p,C.c_int];k.BeginUpdateResourceW.restype=C.c_void_p
     k.UpdateResourceW.argtypes=[C.c_void_p,C.c_void_p,C.c_void_p,C.c_ushort,C.c_void_p,C.c_ulong];k.UpdateResourceW.restype=C.c_int
     k.EndUpdateResourceW.argtypes=[C.c_void_p,C.c_int];k.EndUpdateResourceW.restype=C.c_int
-    h=k.BeginUpdateResourceW(str(exe),False)
-    if not h:raise C.WinError(C.get_last_error())
     b=C.create_string_buffer(data)
-    ok=k.UpdateResourceW(h,C.c_void_p(24),C.c_void_p(1),0,b,len(data))
-    if not k.EndUpdateResourceW(h,not ok) or not ok:raise C.WinError(C.get_last_error())
+    for attempt in range(6):
+        h=k.BeginUpdateResourceW(str(exe),False)
+        if h:
+            ok=k.UpdateResourceW(h,C.c_void_p(24),C.c_void_p(1),0,b,len(data))
+            update_error=C.get_last_error()
+            ended=k.EndUpdateResourceW(h,not ok)
+            error=C.get_last_error() if ok else update_error
+            if ok and ended:break
+        else:error=C.get_last_error()
+        # Compiler children and file scanners can release the newly linked EXE
+        # slightly later than the compiler process. Retry only transient locks.
+        if error not in (5,32,33,110) or attempt==5:raise C.WinError(error)
+        time.sleep(0.5)
     k.LoadLibraryExW.argtypes=[C.c_wchar_p,C.c_void_p,C.c_ulong];k.LoadLibraryExW.restype=C.c_void_p
     k.FindResourceW.argtypes=[C.c_void_p,C.c_void_p,C.c_void_p];k.FindResourceW.restype=C.c_void_p
     k.SizeofResource.argtypes=[C.c_void_p,C.c_void_p];k.SizeofResource.restype=C.c_ulong

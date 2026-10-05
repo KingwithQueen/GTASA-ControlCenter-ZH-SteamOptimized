@@ -30,6 +30,7 @@ def compiler(exe,project,output,port,node):
     k.CreateProcessW.argtypes=[W.LPCWSTR,W.LPWSTR,C.c_void_p,C.c_void_p,W.BOOL,W.DWORD,C.c_void_p,W.LPCWSTR,C.POINTER(SI),C.POINTER(PI)]
     k.AssignProcessToJobObject.argtypes=[W.HANDLE,W.HANDLE]
     k.ResumeThread.argtypes=[W.HANDLE];k.CloseHandle.argtypes=[W.HANDLE];k.TerminateProcess.argtypes=[W.HANDLE,W.UINT]
+    k.WaitForSingleObject.argtypes=[W.HANDLE,W.DWORD];k.WaitForSingleObject.restype=W.DWORD
     desktop_name='LegacySourceRestore-'+str(os.getpid())
     desktop=u.CreateDesktopW(desktop_name,None,None,0,0x01FF,None)
     if not desktop:raise C.WinError(C.get_last_error())
@@ -48,7 +49,11 @@ def compiler(exe,project,output,port,node):
     finally:
         if job:k.CloseHandle(job)
         if pi.thread:k.CloseHandle(pi.thread)
-        if pi.process:k.CloseHandle(pi.process)
+        if pi.process:
+            # Closing the job requests termination; wait until the compiler has
+            # released the linked EXE before updating its resources.
+            k.WaitForSingleObject(pi.process,10000)
+            k.CloseHandle(pi.process)
         u.CloseDesktop(desktop)
 def main():
     p=argparse.ArgumentParser()

@@ -5407,6 +5407,13 @@ Private isFixBrassKnuckle As Boolean
 Private isFixWeaponSlots(10) As Boolean
 Private iFixWeaponID(10) As Long
 Private iFixWeaponAmmo(10) As Long
+Private m_SteamFeedbackReady As Boolean
+Private m_SteamGarageMeta(407) As Long
+Private m_SteamGarageBefore(4351) As Byte
+Private m_SteamGarageValid(16) As Boolean
+Private m_SteamGarageNeedsBaseline(16) As Boolean
+Private m_SteamGarageArmed(16) As Boolean
+Private m_SteamGarageImported(16) As Boolean
 Private isControlRCCars As Boolean
 Private iMsgShowCtr As Integer          'how many times to show run gta msg
 Private isAutoInject As Boolean         'if car spawner code should be auto-injected or not
@@ -6787,6 +6794,10 @@ End Sub
 Private Sub oCheatStates_CheatClicked(Index As Integer)
 On Error Resume Next
     If isInternalClick Then Exit Sub
+    If isSteamGame And (Index = 20 Or Index = 21) Then
+        ApplySteamFeature Index, True
+        Exit Sub
+    End If
     If Index = 10 Then 'Fast Cars, toggling cheats
         If oCheatStates(10).CheatState = vbChecked And oCheatStates(11).CheatState = vbChecked Then oCheatStates(11).CheatState = vbUnchecked
         If ReFillPlayerAdr Then SetMemByte GTASABaseAdr.cFastCarsAdr, oCheatStates(10).CheatState
@@ -7029,6 +7040,7 @@ Private Sub oGFStats_LockedClick(Index As Integer)
 On Error Resume Next
     If isInternalClick Then Exit Sub
     isLockGF(Index) = (oGFStats(Index).Locked = vbChecked)
+    If isSteamGame Then ApplySteamGirlfriend Index, IIf(isLockGF(Index), 1, 0), True
     WritePrivateProfileString "PlayerTracking", oGFStats(Index).Tag, Format$(oGFStats(Index).Locked) & "," & Format$(CInt(oGFStats(Index).ScrollVal)), strIniFileName
 End Sub
 
@@ -7036,8 +7048,12 @@ Private Sub oGFStats_ScrollChange(Index As Integer)
 On Error Resume Next
     If isInternalClick Then Exit Sub
     If ReFillPlayerAdr Then
+        If isSteamGame Then
+            ApplySteamGirlfriend Index, IIf(isLockGF(Index), 1, 2), True
+        Else
         SetMemLong GTASABaseAdr.GFStatAdr(Index), oGFStats(Index).ScrollVal 'Denise/Michelle/Helena/Katie/Barbara/Millie
         If isOrgSCM Then SetMemLong GTASABaseAdr.GFProgressAdr(Index), oGFStats(Index).ScrollVal 'Denise/Michelle/Helena/Katie/Barbara/Millie
+        End If
     End If
     lngLockGFto(Index) = oGFStats(Index).ScrollVal
     WritePrivateProfileString "PlayerTracking", oGFStats(Index).Tag, Format$(oGFStats(Index).Locked) & "," & Format$(CInt(oGFStats(Index).ScrollVal)), strIniFileName
@@ -7062,6 +7078,10 @@ On Error GoTo errcmdGarages_Click
     Dim sngDepthDivider As Single
     Dim tGarageNow As GTASAFullGarage
     Dim bGarage(255) As Byte 'all 4 cars in 256 bytes
+    If isSteamGame And Index < 2 Then
+        SteamGarageCommand Index
+        Exit Sub
+    End If
     Select Case Index
         Case 0 'Read from GTA SA
             If Not (isHasHandle And isHasPlayer) Then Exit Sub
@@ -7337,6 +7357,7 @@ On Error GoTo errcmdGarages_Click
                 GetPrivateProfileString "CarTracking", "Garage" & iGarageCtr, "0,1,1,1,1,1,0,0,0,FF,FF080000,FF0004,FE9D06,FFFFFFFF,FFFFFFFF,FFFFFFFF,FFFFFFFF,FFFFFFFF,FFFFFFFF,FFFFFFFF", strBuffer, 255, strIniFileName
                 strBuffer = TrimChr0(strBuffer)
                 cParking(iGarageCtr \ 4).SetIniVals (iGarageCtr Mod 4), strBuffer
+                m_SteamGarageImported(iGarageCtr \ 4) = True
             Next iGarageCtr
         Case 3 'Write to INI
             'reads all 68 parking slots (0 to 67) from ocx's and assigns back to ini:
@@ -8456,6 +8477,18 @@ Private Sub chkFeedback_Click()
 On Error Resume Next
     If isInternalClick Then Exit Sub
     isHasFeedback = (chkFeedback.Value = 1)
+    If isSteamGame Then
+        If SteamFeedbackEnable(chkFeedback.Value) <> 0 Then
+            isInternalClick = True
+            chkFeedback.Value = vbUnchecked
+            isInternalClick = False
+            isHasFeedback = False
+            m_SteamFeedbackReady = False
+            MsgBox ZH("Steam feedback: pause with Esc before enabling game messages."), vbInformation
+        Else
+            m_SteamFeedbackReady = isHasFeedback
+        End If
+    End If
     WritePrivateProfileString "Main", "Feedback", Format$(chkFeedback.Value), strIniFileName
     If Me.Visible Then
         If isGTASAiconic And Not isTimerClick Then txtFocus.SetFocus: Err.Clear
@@ -8561,6 +8594,7 @@ On Error GoTo errtmrHook_Timer
         'Open process:
         lngPHandle = OpenProcess(PROCESS_ALL_ACCESS, False, lngPid)
         If lngPHandle <> 0 Then
+            ResetSteamGarages
             isSteamGame = (SteamAttach(lngPHandle) <> 0)
             If isSteamGame Then
                 isInternalClick = True
@@ -8753,6 +8787,14 @@ On Error GoTo errtmrHook_Timer
             lngHookBuffer = GetMemLong(GTASABaseAdr.WeatherCurrentAdr)
             If lngHookBuffer > -1 And lngHookBuffer < 46 Then cboWeather.ListIndex = lngHookBuffer
         End If
+        If isSteamGame Then
+            isOrgSCM = (SteamGirlfriendSupported() = 1)
+            chkOrgSCM.Value = IIf(isOrgSCM, vbChecked, vbUnchecked)
+            RefreshSteamCoffeeUI
+            For iStatCtr = 0 To 5
+                oGFStats(iStatCtr).Enabled = isOrgSCM
+            Next iStatCtr
+        Else
         'Girlfriends:
         bytHookBuffer = GetMemByte(GTASABaseAdr.HotCoffeeAdr)
         If bytHookBuffer = 1 Then
@@ -8772,6 +8814,7 @@ On Error GoTo errtmrHook_Timer
     cmdGarages(0).Enabled = False
     cmdGarages(1).Enabled = False
         End If
+        End If
         For iStatCtr = 0 To 5
             oGFStats(iStatCtr).ScrollVal = GetMemLong(GTASABaseAdr.GFStatAdr(iStatCtr))
         Next iStatCtr
@@ -8781,6 +8824,11 @@ On Error GoTo errtmrHook_Timer
                 oCheatStates(iStatCtr).CheatState = IIf(GetMemByte(GTASABaseAdr.cCheatsAdr(iStatCtr)) = 1, vbChecked, vbUnchecked)
             End If
         Next iStatCtr
+        If isSteamGame Then
+            For iStatCtr = 20 To 21
+                If oCheatStates(iStatCtr).CheatLock = vbUnchecked Then oCheatStates(iStatCtr).CheatState = SteamFeatureGet(iStatCtr - 20)
+            Next iStatCtr
+        Else
         'code-inject cheats:
         If oCheatStates(20).CheatLock = vbUnchecked Then
             'check the mem status:
@@ -8789,13 +8837,14 @@ On Error GoTo errtmrHook_Timer
                 (bInjectCheck_OneHitKill(2) = bInjectedJump_OneHitKill(2)) And (bInjectCheck_OneHitKill(3) = bInjectedJump_OneHitKill(3)) And _
                 (bInjectCheck_OneHitKill(4) = bInjectedJump_OneHitKill(4))) Then
                 'jump code is injected!!
-                oCheatStates(21).CheatState = vbChecked
+                oCheatStates(20).CheatState = vbChecked
             Else
-                oCheatStates(21).CheatState = vbUnchecked
+                oCheatStates(20).CheatState = vbUnchecked
             End If
         End If
         If oCheatStates(21).CheatLock = vbUnchecked Then
             oCheatStates(21).CheatState = IIf(GetMemInt(GTASABaseAdr.CodeInjectNOP_FreezeTimerUpAdr) = &H9090, vbChecked, vbUnchecked)
+        End If
         End If
         'Ped Speed:
         lngReadReturn = ReadProcessMemory(lngPHandle, GTASAPlayerAddresse.lngPedSpeedAdr, speedHookBuffer, 12&, 0&)
@@ -9031,6 +9080,13 @@ On Error GoTo errtmrConsole_Timer
         SetBitOnInteger GTASAPlayerAddresse.lngSpecialsAdr, 2, (chkPedSpecs(2).Value = vbChecked)
         SetBitOnInteger GTASAPlayerAddresse.lngSpecialsAdr, 3, (chkPedSpecs(3).Value = vbChecked)
     End If
+    If isSteamGame Then
+        For iStatCtr = 0 To 5
+            If isLockGF(iStatCtr) Then
+                If GetMemLong(GTASABaseAdr.GFStatAdr(iStatCtr)) <> lngLockGFto(iStatCtr) Then ApplySteamGirlfriend iStatCtr, 1, False, lngLockGFto(iStatCtr)
+            End If
+        Next iStatCtr
+    Else
     For iStatCtr = 0 To 5
         If isLockGF(iStatCtr) Then
             If GetMemLong(GTASABaseAdr.GFStatAdr(iStatCtr)) <> lngLockGFto(iStatCtr) Then
@@ -9039,12 +9095,20 @@ On Error GoTo errtmrConsole_Timer
             End If
         End If
     Next iStatCtr
+    End If
     'cheats status:
     For iStatCtr = 0 To 19
         If oCheatStates(iStatCtr).CheatLock = vbChecked Then
             If GetMemByte(GTASABaseAdr.cCheatsAdr(iStatCtr)) <> oCheatStates(iStatCtr).CheatState Then SetMemByte GTASABaseAdr.cCheatsAdr(iStatCtr), oCheatStates(iStatCtr).CheatState
         End If
     Next iStatCtr
+    If isSteamGame Then
+        For iStatCtr = 20 To 21
+            If oCheatStates(iStatCtr).CheatLock = vbChecked Then
+                If SteamFeatureGet(iStatCtr - 20) <> oCheatStates(iStatCtr).CheatState Then ApplySteamFeature iStatCtr, False
+            End If
+        Next iStatCtr
+    Else
     'injectable cheats status:
     If oCheatStates(20).CheatLock = vbChecked Then
         'check the mem status:
@@ -9086,6 +9150,7 @@ On Error GoTo errtmrConsole_Timer
                 If GetMemInt(GTASABaseAdr.CodeInjectNOP_FreezeTimerDownAdr) = &H9090 Then SetMemInt GTASABaseAdr.CodeInjectNOP_FreezeTimerDownAdr, iOrg_FreezeTimerDown
             End If
         End If
+    End If
     End If
     If isRestartCar And tCurrCarAdr.isUsable Then 'restart car if needed
         If (GetMemByte(tCurrCarAdr.lngStalledAdr) And &H10) = 0 Then SetMemByte tCurrCarAdr.lngStalledAdr, GetMemByte(tCurrCarAdr.lngStalledAdr) Or &H10
@@ -10811,6 +10876,16 @@ On Error Resume Next
                 strOnScreenText = strOnScreenText & "; " & Replace(GTASAConsoleCommands(intCommandOrdinal).Description, "Toggle ", "") & IIf(chkWeatherLock.Value = vbChecked, " ON", " OFF")
             End If
         Case 125 'Toggle One Hit Kill
+            If isSteamGame Then
+                If intGameTimeChangeCount = 0 Then
+                    intGameTimeChangeCount = 3
+                    isInternalClick = True
+                    oCheatStates(20).CheatState = IIf(SteamFeatureGet(0) = 0, vbChecked, vbUnchecked)
+                    isInternalClick = False
+                    ApplySteamFeature 20, False
+                End If
+                GoTo FunctionExit
+            End If
             If intGameTimeChangeCount = 0 Then
                 intGameTimeChangeCount = 3
                 If oCheatStates(20).CheatState = vbChecked Then
@@ -10848,6 +10923,16 @@ On Error Resume Next
                 strOnScreenText = strOnScreenText & "; One Hit Kill " & IIf(oCheatStates(20).CheatState = vbChecked, "Enabled", "Disabled")
             End If
         Case 126 'Toggle Freeze Mission Timers
+            If isSteamGame Then
+                If intGameTimeChangeCount = 0 Then
+                    intGameTimeChangeCount = 3
+                    isInternalClick = True
+                    oCheatStates(21).CheatState = IIf(SteamFeatureGet(1) = 0, vbChecked, vbUnchecked)
+                    isInternalClick = False
+                    ApplySteamFeature 21, False
+                End If
+                GoTo FunctionExit
+            End If
             If intGameTimeChangeCount = 0 Then
                 intGameTimeChangeCount = 3
                 If oCheatStates(21).CheatState = vbChecked Then
@@ -11033,6 +11118,12 @@ End Function
 
 Private Function OnScreenText(ByVal strTextToScreen As String) As Boolean '
 On Error Resume Next
+    If isSteamGame Then
+        If Not m_SteamFeedbackReady Then Exit Function
+        strTextToScreen = Left$(Trim$(strTextToScreen), 180)
+        If Len(strTextToScreen) > 0 Then OnScreenText = (SteamFeedbackMessage(StrPtr(strTextToScreen), Len(strTextToScreen)) = 0)
+        Exit Function
+    End If
     Static intWCounter As Integer
     'first, delete current text:
     GTASAText.CharValue(0) = 32
@@ -11059,6 +11150,17 @@ On Error Resume Next
     Dim iGarageCtr As Integer
     Dim bGarage(255) As Byte 'all 4 cars in 256 bytes
     'Write to GTA SA
+    If isSteamGame Then
+        For iGarageCtr = 0 To 16
+            If cParking(iGarageCtr).Locked = vbChecked And m_SteamGarageValid(iGarageCtr) And Not m_SteamGarageArmed(iGarageCtr) And Not cParking(iGarageCtr).isDirty Then
+                CopyMemory bGarage(0), m_SteamGarageBefore(iGarageCtr * 256), 256&
+                cParking(iGarageCtr).UpdateValuesOfGarageStructByteArray bGarage
+                m_SteamGarageArmed(iGarageCtr) = (SteamGarageLock(iGarageCtr, 1&, bGarage(0)) = 0)
+            End If
+        Next iGarageCtr
+        CheckAndRefreshGarages = True
+        Exit Function
+    End If
     If Not (isHasHandle And isHasPlayer) Then Exit Function
     'go thru all garages and force-write to gta if garage is locked:
     For iGarageCtr = iJohnson To iHashbury
@@ -12638,26 +12740,216 @@ End Function
 'End Sub
 '
 
+
+Private Sub ResetSteamGarages()
+    Dim i As Integer
+    m_SteamFeedbackReady = False
+    For i = 0 To 16
+        m_SteamGarageValid(i) = False
+        m_SteamGarageNeedsBaseline(i) = True
+        m_SteamGarageArmed(i) = False
+    Next i
+End Sub
+
+Private Function SteamGarageMessage(ByVal Status As Long) As String
+    Select Case Status
+        Case 1: SteamGarageMessage = ZH("Steam garage: game is not connected.")
+        Case 2: SteamGarageMessage = ZH("Steam garage: close the garage, stand outdoors and pause with Esc first.")
+        Case 3: SteamGarageMessage = ZH("Steam garage: selected vehicle, modification or placement is invalid.")
+        Case 5: SteamGarageMessage = ZH("Steam garage: write failed; the original records were restored.")
+        Case 6: SteamGarageMessage = ZH("Steam garage: result could not be confirmed. Disconnect and reload your save.")
+        Case 7: SteamGarageMessage = ZH("Steam garage: game state changed. Read garages again before applying.")
+        Case Else: SteamGarageMessage = ZH("Steam garage: memory could not be read or written.")
+    End Select
+End Function
+
+Private Sub SteamGarageCommand(ByVal Operation As Integer)
+    Dim i As Integer, Status As Long, FirstError As Long, Done As Integer
+    Dim Meta(23) As Long, Before(255) As Byte, Selected(255) As Byte, Repark As Long, KeepEdits As Boolean
+    For i = 0 To 16
+        If Operation = 0 Then
+            KeepEdits = isTimerClick And m_SteamGarageNeedsBaseline(i) And (cParking(i).Locked = vbChecked Or cParking(i).isDirty Or m_SteamGarageImported(i))
+            If Not isTimerClick Or m_SteamGarageNeedsBaseline(i) Or (cParking(i).Locked = vbUnchecked And Not cParking(i).isDirty And Not cParking(i).isReparkNeeded) Then
+                Status = SteamGarageInspect(i, Meta(0), Before(0))
+                m_SteamGarageValid(i) = (Status = 0)
+                If Status = 0 Then
+                    CopyMemory m_SteamGarageMeta(i * 24), Meta(0), 96&
+                    CopyMemory m_SteamGarageBefore(i * 256), Before(0), 256&
+                    If Not KeepEdits Then
+                        cParking(i).SetValuesFromOnlineGarageByteArray Before
+                        m_SteamGarageImported(i) = False
+                    End If
+                    m_SteamGarageNeedsBaseline(i) = False
+                    If cParking(i).Locked = vbChecked And Not KeepEdits Then m_SteamGarageArmed(i) = (SteamGarageLock(i, 1&, Before(0)) = 0)
+                    Done = Done + 1
+                ElseIf FirstError = 0 Then
+                    FirstError = Status
+                End If
+            End If
+        ElseIf cParking(i).isDirty Or cParking(i).isReparkNeeded Then
+            If Not m_SteamGarageValid(i) Then
+                Status = 7
+            Else
+                CopyMemory Meta(0), m_SteamGarageMeta(i * 24), 96&
+                CopyMemory Before(0), m_SteamGarageBefore(i * 256), 256&
+                CopyMemory Selected(0), Before(0), 256&
+                cParking(i).UpdateValuesOfGarageStructByteArray Selected
+                Repark = Abs(CLng(cParking(i).isReparkNeeded))
+                Status = SteamGarageWrite(i, Meta(0), Before(0), Selected(0), Repark)
+                If Status = 0 Then
+                    Status = SteamGarageInspect(i, Meta(0), Before(0))
+                    If Status = 0 Then
+                        CopyMemory m_SteamGarageMeta(i * 24), Meta(0), 96&
+                        CopyMemory m_SteamGarageBefore(i * 256), Before(0), 256&
+                        cParking(i).SetValuesFromOnlineGarageByteArray Before
+                        m_SteamGarageImported(i) = False
+                        Done = Done + 1
+                        If cParking(i).Locked = vbChecked Then
+                            Status = SteamGarageLock(i, 1&, Before(0))
+                            m_SteamGarageArmed(i) = (Status = 0)
+                        End If
+                    End If
+                End If
+            End If
+            If Status <> 0 Then
+                m_SteamGarageValid(i) = False
+                If FirstError = 0 Then FirstError = Status
+            End If
+        End If
+    Next i
+    If FirstError <> 0 And Not isTimerClick Then MsgBox SteamGarageMessage(FirstError), vbInformation
+End Sub
+
+Private Sub cParking_GarageLocked(Index As Integer, ByVal NewChecked As Integer)
+    Dim Status As Long, Selected(255) As Byte
+    If Not isSteamGame Or isInternalClick Then Exit Sub
+    If NewChecked = vbChecked Then
+        If Not m_SteamGarageValid(Index) Then
+            Status = 7
+        Else
+            CopyMemory Selected(0), m_SteamGarageBefore(Index * 256), 256&
+            cParking(Index).UpdateValuesOfGarageStructByteArray Selected
+            Status = SteamGarageLock(Index, 1&, Selected(0))
+        End If
+    Else
+        Status = SteamGarageLock(Index, 0&, Selected(0))
+    End If
+    If Status = 0 Then m_SteamGarageArmed(Index) = (NewChecked = vbChecked)
+    If Status <> 0 Then
+        isInternalClick = True
+        cParking(Index).Locked = IIf(NewChecked = vbUnchecked, vbChecked, vbUnchecked)
+        isInternalClick = False
+        MsgBox SteamGarageMessage(Status), vbInformation
+    End If
+End Sub
+
+Private Sub ApplySteamFeature(ByVal Index As Integer, ByVal ShowError As Boolean)
+    Dim Status As Long, Wanted As Long, WasInternal As Boolean
+    Wanted = oCheatStates(Index).CheatState
+    Status = SteamFeatureSet(Index - 20, Wanted)
+    If Status <> 0 Then
+        WasInternal = isInternalClick
+        isInternalClick = True
+        oCheatStates(Index).CheatState = SteamFeatureGet(Index - 20)
+        isInternalClick = WasInternal
+        If ShowError Then
+            If Status = 2 Then
+                MsgBox ZH("Steam feature: pause with Esc before enabling this for the first time."), vbInformation
+            ElseIf Status = 3 Then
+                MsgBox ZH("Steam feature: code differs or an older trainer is still installed. Restart the game first."), vbInformation
+            Else
+                MsgBox ZH("Steam feature: the operation failed. The switch has been restored."), vbInformation
+            End If
+        End If
+    End If
+    WritePrivateProfileString "Main", oCheatStates(Index).Tag, Format$(oCheatStates(Index).CheatLock) & "," & Format$(oCheatStates(Index).CheatState), strIniFileName
+End Sub
+
+Private Sub ApplySteamGirlfriend(ByVal Index As Integer, ByVal Mode As Long, ByVal ShowError As Boolean, Optional ByVal ValueOverride As Long = -1)
+    Dim Status As Long, WasInternal As Boolean, Wanted As Long
+    Wanted = CLng(oGFStats(Index).ScrollVal)
+    If ValueOverride >= 0 Then Wanted = ValueOverride
+    Status = SteamGirlfriendSet(Index, Wanted, Mode)
+    If Status = 0 Then Exit Sub
+    WasInternal = isInternalClick
+    isInternalClick = True
+    oGFStats(Index).ScrollVal = GetMemLong(GTASABaseAdr.GFStatAdr(Index))
+    If Mode = 0 Then
+        oGFStats(Index).Locked = vbChecked
+        isLockGF(Index) = True
+    ElseIf Mode = 1 Then
+        SteamGirlfriendSet Index, 0&, 0&
+        oGFStats(Index).Locked = vbUnchecked
+        isLockGF(Index) = False
+    End If
+    isInternalClick = WasInternal
+    If ShowError Then
+        If Status = 2 Then
+            MsgBox ZH("Steam girlfriend: pause with Esc before changing or locking progress."), vbInformation
+        ElseIf Status = 3 Then
+            MsgBox ZH("Steam girlfriend: the script does not match. Progress was not changed."), vbInformation
+        Else
+            MsgBox SteamGarageMessage(Status), vbInformation
+        End If
+    End If
+End Sub
+
+Private Sub RefreshSteamCoffeeUI()
+    Dim Value As Long, WasInternal As Boolean
+    Value = SteamCoffeeGet()
+    WasInternal = isInternalClick
+    isInternalClick = True
+    chkCoffee.Enabled = (Value < 2)
+    If Value < 2 Then
+        chkCoffee.Value = IIf(Value = 0, vbChecked, vbUnchecked)
+        chkCoffee.Caption = IIf(Value = 0, ZH("Coffee: Uncensored"), ZH("Coffee: Censored"))
+        chkCoffee.ToolTipText = ZH("Steam Coffee: pause before changing the verified script flag.")
+    Else
+        chkCoffee.Value = vbUnchecked
+        chkCoffee.Caption = ZH("Steam Coffee: script package is not supported.")
+    End If
+    isInternalClick = WasInternal
+End Sub
+
+Private Sub chkCoffee_Click()
+    Dim Status As Long
+    If isInternalClick Or Not isHasHandle Then Exit Sub
+    If Not isSteamGame Then
+        If isOrgSCM Then SetMemByte GTASABaseAdr.HotCoffeeAdr, IIf(chkCoffee.Value = vbChecked, 0, 1)
+        Exit Sub
+    End If
+    Status = SteamCoffeeSet(IIf(chkCoffee.Value = vbChecked, 0, 1))
+    RefreshSteamCoffeeUI
+    If Status = 2 Then
+        MsgBox ZH("Steam Coffee: pause before changing the verified script flag."), vbInformation
+    ElseIf Status <> 0 Then
+        MsgBox ZH("Steam Coffee: script validation or writing failed; the switch has been restored."), vbInformation
+    End If
+End Sub
+
 Private Sub ApplySteamUI()
     On Error Resume Next
     Dim i As Long
     If cboGTAVersion.ToolTipText <> ZH("Classic Steam version detected automatically") Then cboGTAVersion.ToolTipText = ZH("Classic Steam version detected automatically")
-    'These old script/code functions have not been ported; reject them in the backend too.
-    If oCheatStates(20).Enabled Then oCheatStates(20).Enabled = False
-    If oCheatStates(21).Enabled Then oCheatStates(21).Enabled = False
-    If chkCoffee.Enabled Then chkCoffee.Enabled = False
-    If chkFeedback.Enabled Then chkFeedback.Enabled = False
-    isHasFeedback = False
-    If cmdGarages(0).Enabled Then cmdGarages(0).Enabled = False
-    If cmdGarages(1).Enabled Then cmdGarages(1).Enabled = False
+    'Steam-specific operations use verified typed APIs; legacy globals stay guarded.
+    If Not oCheatStates(20).Enabled Then oCheatStates(20).Enabled = True
+    If Not oCheatStates(21).Enabled Then oCheatStates(21).Enabled = True
+    RefreshSteamCoffeeUI
+    If Not chkFeedback.Enabled Then chkFeedback.Enabled = True
+    chkFeedback.ToolTipText = ZH("Steam feedback: pause with Esc before enabling game messages.")
+    If isHasFeedback And Not m_SteamFeedbackReady Then
+        If SteamFeedbackEnable(1&) = 0 Then m_SteamFeedbackReady = True
+    End If
+    If Not cmdGarages(0).Enabled Then cmdGarages(0).Enabled = True
+    If Not cmdGarages(1).Enabled Then cmdGarages(1).Enabled = True
     For i = 0 To 16
-        If cParking(i).Enabled Then cParking(i).Enabled = False
-        If cParking(i).ToolTipText <> ZH("Steam version: unsupported feature") Then cParking(i).ToolTipText = ZH("Steam version: unsupported feature")
+        If Not cParking(i).Enabled Then cParking(i).Enabled = True
+        If cParking(i).ToolTipText <> ZH("Steam garage: edit while paused and the garage is closed.") Then cParking(i).ToolTipText = ZH("Steam garage: edit while paused and the garage is closed.")
     Next i
-    isOrgSCM = False
+    isOrgSCM = (SteamGirlfriendSupported() = 1)
     If chkOrgSCM.Enabled Then chkOrgSCM.Enabled = False
-    If oCheatStates(20).ToolTipText <> ZH("Steam version: unsupported feature") Then oCheatStates(20).ToolTipText = ZH("Steam version: unsupported feature")
-    If oCheatStates(21).ToolTipText <> ZH("Steam version: unsupported feature") Then oCheatStates(21).ToolTipText = ZH("Steam version: unsupported feature")
+    oCheatStates(20).ToolTipText = ZH("Steam feature: pause with Esc before enabling this for the first time.")
+    oCheatStates(21).ToolTipText = ZH("Steam feature: pause with Esc before enabling this for the first time.")
 End Sub
 
 Private Sub BeginMainTabRedraw(Optional ByVal holdUntilMouseUp As Boolean = False)
