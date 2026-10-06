@@ -16,3 +16,8 @@ EXPORTS
  SteamGarageInspect=_SteamGarageInspect@12
  SteamGarageWrite=_SteamGarageWrite@20
  SteamGarageLock=_SteamGarageLock@12
+ SteamPlateSet=_SteamPlateSet@12
+ SteamPlateStatus=_SteamPlateStatus@0
+
+ SteamGarageModelSupported=_SteamGarageModelSupported@4
+ SteamGarageCapabilities=_SteamGarageCapabilities@0

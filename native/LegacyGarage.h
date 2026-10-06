@@ -50,10 +50,11 @@ static bool garagePaused(const DWORD* meta){
   !u32(va(0x9e22a4))&&!u32(va(0x9e22ac))&&!u8(va(0x9dd099))&&!u8(va(0x9dd100));
 }
 #include "GarageCatalog.h"
+#include "SpecialGarage.h"
 static bool garageDefaults(WORD model,DWORD& flags){
- if(model<400||model>611||!garageCatalog[model-400].parkable)return false;
+ if(!SteamGarageModelSupported(model))return false;
  DWORD info=u32(va(0xb12818)+model*4),kind=0;WORD handling=0;
- if(!(garageData(info,0x4c)||privateWritable(info,0x4c))||!read(info+60,&kind,4)||kind<1||kind>11||(kind>=6&&kind<=8)||
+ if(!(garageData(info,0x4c)||privateWritable(info,0x4c))||!read(info+60,&kind,4)||kind>11||
   !read(info+74,&handling,2)||handling>=210)return false;
  DWORD entry=va(0xcaca24)+handling*0xe0;
  if(!garageData(entry,0xe0)||u32(entry)!=handling||!read(entry+0xd0,&flags,4))return false;
@@ -124,6 +125,7 @@ extern "C" DWORD __stdcall SteamGarageWrite(DWORD index,const DWORD* expected,co
  if(!expected||!before||!selected)return 3;DWORD meta[24]={};BYTE old[256]={},after[256]={},check[256]={};
  DWORD status=garageInspect(index,meta,old);if(status)return status;if(!garagePaused(meta))return 2;
  if(memcmp(meta,expected,sizeof meta)||memcmp(old,before,256))return 7;
+ if(garageNeedsTrain(selected)&&!trainRestorePresent())return 9;
  if(!garageBuild(meta,before,selected,repark,after))return 3;
  if(!memcmp(before,after,256))return 0;
  status=garageInspect(index,meta,old);if(status||!garagePaused(meta)||memcmp(meta,expected,sizeof meta)||memcmp(old,before,256))return 7;
@@ -146,6 +148,7 @@ extern "C" DWORD __stdcall SteamGarageLock(DWORD index,DWORD armed,const BYTE* s
  if(!armed){return !remote||write(remote+off,&zero,4)?0:4;}
  DWORD meta[24]={};BYTE before[256]={},after[256]={};DWORD status=garageInspect(index,meta,before);
  if(status)return status;if(!selected||!garagePaused(meta))return 2;
+ if(garageNeedsTrain(selected)&&!trainRestorePresent())return 9;
  if(!garageBuild(meta,before,selected,1,after))return 3;if(!installQueue())return 4;
  BYTE record[lockStride]={};DWORD words[5]={0,meta[1],meta[2],garageTypes[index],meta[3]};
  memcpy(record,words,20);memcpy(record+20,meta+4,48);memcpy(record+68,after,256);

@@ -17,10 +17,15 @@ def main():
     parser.add_argument('--output',type=Path,required=True)
     parser.add_argument('--twinbasic',type=Path,required=True)
     args=parser.parse_args();output=args.output.resolve()
+    inputs=[p for p in (ROOT/'GTASAConsole').iterdir() if p.suffix.lower() in ('.frm','.frx','.bas','.cls','.ctl','.ctx','.res')] + [p for p in (ROOT/'native').iterdir() if p.is_file()]
+    inputs += [ROOT/'localization/zh-CN.master.tsv', ROOT/'scripts/fixtures/completion-ui.bas']
+    source_receipt={p.relative_to(ROOT).as_posix():hashlib.sha256(p.read_bytes()).hexdigest() for p in inputs}
     subprocess.run([sys.executable,str(ROOT/'scripts/build.py'),'--prepare-only','--output',str(output)],check=True)
     os.environ.update(LEGACY_SOURCE_ROOT=str(ROOT),LEGACY_BUILD_OUTPUT=str(output),TEMP=str(output/'temp'),TMP=str(output/'temp'))
     project=output/'GTASAConsole';declares=project/'mdlGTASADeclares.bas';form=project/'frmSAConsole.frm'
     edit(declares,'Option Explicit','Option Explicit\r\nPublic Const LegacyOfflineBuild As Boolean = True\r\n'
+        'Declare Function SteamFixtureTrain Lib "GTASASteam.dll" () As Long\r\n'
+        'Declare Function SteamFixtureVehicle Lib "GTASASteam.dll" (ByVal Enabled As Long) As Long\r\n'
         'Declare Function SteamFixtureBegin Lib "GTASASteam.dll" () As Long\r\n'
         'Declare Function SteamFixtureRun Lib "GTASASteam.dll" () As Long\r\n'
         'Declare Function SteamFixtureDisturbGarage Lib "GTASASteam.dll" () As Long')
@@ -38,6 +43,8 @@ def main():
         content=re.sub(pattern,'',content)
         content+='\r\nPublic Function '+name+' ('+signature+'\r\n    '+name+' = 0\r\nEnd Function\r\n'
     declares.write_bytes(content.encode('cp1252'))
+    cheat=project/'GTASACheat.ctl'
+    cheat.write_bytes(cheat.read_bytes()+b'\r\nPublic Property Get OfflineCheatHandle() As Long\r\n    OfflineCheatHandle = m_CheatWnd\r\nEnd Property\r\nPublic Property Get OfflineLockHandle() As Long\r\n    OfflineLockHandle = m_LockWnd\r\nEnd Property\r\n')
     fixture=r'''
 Private Sub OfflineCheck(ByVal Condition As Boolean, ByVal Label As String)
     If Not Condition Then Err.Raise vbObjectError + 902, "Offline UI", Label
@@ -108,7 +115,8 @@ Private Sub OfflineFeatureUiTest()
     OfflineCheck OnScreenText("Steam trainer feedback " & ChrW(&H4E2D) & ChrW(&H6587)), "feedback StrPtr/length ABI"
     OfflineCheck SteamFixtureRun() = 1, "feedback queue dispatch"
     chkFeedback.Value = vbUnchecked
-    For i = 0 To 5: sstMain.Tab = i: Me.Refresh: Next i
+    OfflineCompletionTests f
+    OfflineCapturePages
     Print #f, "feedback enable/message events and all six pages passed"
     Print #f, "PASS"
     Close #f
@@ -123,7 +131,8 @@ Failed:
 End Sub
 '''.replace('\n','\r\n')
     with form.open('ab') as file:file.write(fixture.encode('cp1252'))
-    extra='\n SteamFixtureBegin=_SteamFixtureBegin@0\n SteamFixtureRun=_SteamFixtureRun@0\n SteamFixtureDisturbGarage=_SteamFixtureDisturbGarage@0\n'
+    with form.open('ab') as file:file.write((ROOT/'scripts/fixtures/completion-ui.bas').read_bytes().decode('ascii').replace('\r\n','\n').replace('\n','\r\n').encode('cp1252'))
+    extra='\n SteamFixtureTrain=_SteamFixtureTrain@0\n SteamFixtureVehicle=_SteamFixtureVehicle@4\n SteamFixtureBegin=_SteamFixtureBegin@0\n SteamFixtureRun=_SteamFixtureRun@0\n SteamFixtureDisturbGarage=_SteamFixtureDisturbGarage@0\n'
     (output/'offline-fixture.def').write_text((ROOT/'native/exports.def').read_text().replace('LIBRARY GTASASteam','LIBRARY OfflineUiFixture')+extra,encoding='utf8')
     subprocess.run([os.environ['COMSPEC'],'/d','/c',str(ROOT/'scripts/build-offline-fixture.cmd')],check=True)
     shutil.copy2(output/'OfflineUiFixture.dll',project/'GTASASteam.dll')
@@ -132,13 +141,24 @@ End Sub
     # Reuse the established owned-desktop harness; it enumerates no processes.
     from private_desktop import launch
     receipt=project/'offline-feature-ui.txt'
-    with launch(exe,['--offline-features']):
+    from capture_completion_ui import capture_pages
+    from private_desktop import u,k
+    import ctypes as C
+    from ctypes import wintypes as W
+    u.GetThreadDesktop.argtypes=[W.DWORD];u.GetThreadDesktop.restype=W.HANDLE
+    u.SetThreadDesktop.argtypes=[W.HANDLE];u.SetThreadDesktop.restype=W.BOOL
+    k.GetCurrentThreadId.restype=W.DWORD
+    with launch(exe,['--offline-features']) as (process,desktop):
+        previous=u.GetThreadDesktop(k.GetCurrentThreadId())
+        assert u.SetThreadDesktop(desktop)
+        try:capture_pages(project,output,process)
+        finally:assert u.SetThreadDesktop(previous)
         for _ in range(450):
             text=receipt.read_bytes().decode('cp1252') if receipt.exists() else ''
             if 'FAIL ' in text:raise RuntimeError(text)
             if '\nPASS' in text:break
             time.sleep(.1)
         else:raise RuntimeError('Offline UI test timed out: '+text)
-    result={'success':True,'private_desktop':True,'instrumented_ui_only':True,'real_game_discovery_or_access':False,'production_trainer_launched':False,'test_exe_sha256':hashlib.sha256(exe.read_bytes()).hexdigest(),'receipt':text}
+    result={'success':True,'private_desktop':True,'instrumented_ui_only':True,'real_game_discovery_or_access':False,'production_trainer_launched':False,'test_exe_sha256':hashlib.sha256(exe.read_bytes()).hexdigest(),'receipt':text,'source_inputs':source_receipt,'captured_pages':8,'native_cheat_and_lock_clicks':88,'player_controls_within_tab_bounds':True}
     (output/'offline-ui-result.json').write_text(json.dumps(result,indent=2),encoding='utf8');print(json.dumps(result))
 if __name__=='__main__':main()

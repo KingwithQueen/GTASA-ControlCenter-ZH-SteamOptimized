@@ -211,8 +211,8 @@ Car Weight: (50 Tons)	车辆重量（50 吨）
 Check to lock Car-weight	锁定车辆重量
 Perfect Handling	完美操控
 Decreased Traffic	减少交通流量
-Huge Bunny Hop	自行车超级跳跃
-Cars have Nitro	所有汽车配备氮气
+Huge Bunny Hop	自行车大跳
+Cars have Nitro	全车氮气
 Boats can Fly	船只飞行
 Cars can Fly	汽车飞行
 One Hit Kill	一击必杀
@@ -1627,3 +1627,12 @@ Steam feedback: pause with Esc before enabling game messages.	启用游戏内反
 Steam Coffee: pause before changing the verified script flag.	切换隐藏约会内容前，请按Esc暂停游戏。
 Steam Coffee: script package is not supported.	当前脚本包不支持隐藏约会开关。
 Steam Coffee: script validation or writing failed; the switch has been restored.	脚本校验或写入失败，已还原隐藏约会开关。
+Enter a vehicle with a license plate first.	请先进入一辆有车牌的车辆。
+Plate request accepted. Continue the game to display it.	车牌修改已提交，继续游戏后生效。
+Pause with Esc before the first plate update.	首次修改车牌前，请按 Esc 暂停游戏。
+Use 1-8 letters, numbers or spaces. This vehicle or plate renderer is not supported.	请输入 1 至 8 个英文字母、数字或空格；车辆必须支持车牌。
+A plate update is pending. Continue the game first.	上一项车牌修改正在等待处理，请先继续游戏。
+The plate request failed. No texture was renamed.	车牌修改提交失败，原车牌仍保留。
+The vehicle changed or plate generation failed. Retry on the current vehicle.	车辆已变化或车牌生成失败，请在当前车辆上重试。
+Update the current plate after continuing the game.	提交当前车牌文字，继续游戏后更新显示。
+Steam garage: install the train restore component and restart the game before storing trains.	Steam 车库：存放火车前，请安装火车还原组件并重启游戏。

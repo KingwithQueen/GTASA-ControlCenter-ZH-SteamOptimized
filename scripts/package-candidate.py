@@ -12,7 +12,7 @@ import zipfile
 
 ROOT = Path(__file__).resolve().parents[1]
 RUNTIME_FILES = (
-    'GTASA_Center_ZH.exe', 'GTASASteam.dll', 'mscomctl.ocx', 'TabCtl32.ocx',
+    'GTASA_Center_ZH.exe', 'GTASASteam.dll', 'GTASA_TrainRestore_Steam.asi', 'mscomctl.ocx', 'TabCtl32.ocx',
     'zh-CN.tsv', 'GTASAConsole.ini', 'GTASAConfig.dat', 'GTASAData.dat',
     'GTASACarPics.dat', 'GTASACheats.dat', 'GTASALocs.dat',
     'app-local-controls.manifest',
@@ -113,6 +113,10 @@ def main():
     assert not result['trainer_launched'] and not result['real_gta_accessed']
     assert ui_result['success'] and not ui_result['real_game_discovery_or_access']
     assert not ui_result['production_trainer_launched']
+    for source_receipt in (result['native_source_inputs'],ui_result['source_inputs']):
+        for name,expected_hash in source_receipt.items():
+            assert sha(ROOT / name)==expected_hash, 'Validation source differs: '+name
+    assert ui_result['captured_pages']==8 and ui_result['native_cheat_and_lock_clicks']==88
     project = build / 'GTASAConsole'
     for file in (ROOT / 'GTASAConsole').glob('*'):
         if file.suffix.lower() in ('.frm', '.frx', '.bas', '.cls', '.ctl', '.ctx', '.res'):
@@ -120,6 +124,8 @@ def main():
     assert sha(project / 'GTASA_Center_ZH.exe') == result['exe_sha256']
     assert sha(project / 'GTASASteam.dll') == result['native_dll_sha256']
     check_pe(project / 'GTASA_Center_ZH.exe')
+    check_pe(project / 'GTASA_TrainRestore_Steam.asi')
+    assert sha(project / 'GTASA_TrainRestore_Steam.asi') == result['train_component_sha256']
     exports = check_pe(project / 'GTASASteam.dll', True)
     expected = sorted(line.strip().split('=')[0] for line in
                       (ROOT / 'native/exports.def').read_text().splitlines() if '=' in line)
@@ -133,6 +139,7 @@ def main():
     log = (build / 'native-build.log').read_text(encoding='utf8')
     assert all(marker in log for marker in (
         'LEGACY_GARAGE=PASS', 'FEATURE_HOOKS=PASS', 'SCRIPT_FEEDBACK_RC=PASS',
+        'TRAIN_RESTORE=PASS', 'TRAIN_COMPONENT=PASS', 'PASS: plate game-thread dispatch',
         'PASS: real x86 game-thread queue'))
     assert 'warning C' not in log and 'warning LNK' not in log
     output.mkdir(parents=True)
@@ -140,21 +147,23 @@ def main():
         shutil.copy2(project / name, output / name)
     for name in ('CarPics', 'Images', 'Help'):
         shutil.copytree(project / name, output / name)
-    for name in ('Restore-OriginalDrivingShortcuts.ps1', 'Restore-OriginalDrivingShortcuts.cmd'):
+    for name in ('Restore-OriginalDrivingShortcuts.ps1', 'Restore-OriginalDrivingShortcuts.cmd', 'Install-TrainRestore.ps1', 'Install-TrainRestore.cmd'):
         shutil.copy2(ROOT / 'scripts' / name, output / name)
-    for name in ('NOTICE.md', '开发记录20261006.md'):
+    for name in ('NOTICE.md', '开发记录20261006.md', '开发记录20261006-r2.md'):
         shutil.copy2(ROOT / name, output / name)
     (output / '使用说明.md').write_text(
-        '# 20261006 功能补全候选版\n\n'
+        '# 20261006 r2 功能补全候选版\n\n'
         '解压到新目录，运行 GTASA_Center_ZH.exe。候选版已通过编译、原生测试和旧界面离线联调，真实游戏验收待进行。\n\n'
-        '本次补全车库、一击必杀、任务显示计时冻结、六位女友同步、Hot Coffee 脚本开关、游戏内反馈、驾驶快捷键和遥控载具识别。\n\n'
+        'r2 恢复玩家状态页 22 组开关及锁定按钮（含车辆稀少），修复防护显示、弹药锁定、车辆及拖车传送旋转，新增当前车辆车牌更新，修正普通汽车与特殊车型存车判断，并提供火车还原组件。保留 r1 已开发功能。\n\n'
         '使用前关闭旧修改器并重启游戏，保留旧发行包及存档备份。首次启用代码功能、反馈和持续锁定时先按 Esc 暂停；女友和 Hot Coffee 修改也要求暂停。\n\n'
-        '车库写入前关闭车库、在室外步行并暂停，然后读取车库、编辑、写入。新增或替换飞机、火车等不受支持的存车类型会被拒绝。\n\n'
+        '车库写入前关闭车库、在室外步行并暂停，然后读取车库、编辑、写入。飞机及直升机使用游戏原有还原流程；大型载具的空间、碰撞及读档表现待逐项实测。\n\n'
+        '火车需要可选的 GTASA_TrainRestore_Steam.asi 组件。完全退出游戏后运行 Install-TrainRestore.cmd，输入游戏目录；游戏需已有 ASI 加载器。工具核对版本和文件，组件加载确认后车库才追加火车车型。本次开发未安装组件。移除前必须在组件仍启用时清空所有车库火车记录并重新保存。\n\n'
+        '车牌仅支持 1 至 8 个英文字母、数字或空格。进入带车牌车辆后填写文字、点击修改按钮，再继续游戏等待更新；首次使用前先暂停。状态栏颜色和提示说明处理结果，画面效果仍待实机确认。\n\n'
         'Hot Coffee 仅恢复已核对的脚本标志，画面、动画和完整小游戏仍待实机确认；游戏内汉字显示也待实机确认。其余限制和验收项目见开发记录。\n\n'
         '包内为全新默认配置。需沿用旧设置时，在旧配置的副本上运行快捷键恢复工具；工具保存完整备份，仅恢复原版 14 条驾驶辅助的启用状态。双击 CMD 工具会处理同目录的 GTASAConfig.dat。\n',
         encoding='utf8')
     metadata = {
-        'version': '20261006-feature-candidate', 'source_commit': commit, 'branch': branch,
+        'version': '20261006-feature-candidate-r2', 'source_commit': commit, 'branch': branch,
         'source_files_manifest_sha256': sha(ROOT / 'FILES.sha256'),
         'build': result, 'offline_ui': ui_result, 'native_warnings': 0,
         'exports': exports, 'shortcut_total': 69, 'shortcut_active': 65,
@@ -177,7 +186,7 @@ def main():
             assert hashlib.sha256(package.read(entry)).hexdigest() == sha(path)
     receipt = {'success': True, 'archive': str(archive), 'sha256': sha(archive),
                'bytes': archive.stat().st_size, 'files': len(files), 'source_commit': commit,
-               'exe_sha256': result['exe_sha256'], 'dll_sha256': result['native_dll_sha256'],
+               'exe_sha256': result['exe_sha256'], 'dll_sha256': result['native_dll_sha256'], 'train_component_sha256': result['train_component_sha256'],
                'real_game_acceptance': 'pending'}
     archive.with_suffix('.zip.sha256').write_text(receipt['sha256'] + '  ' + archive.name + '\n', encoding='utf8')
     archive.with_suffix('.receipt.json').write_text(json.dumps(receipt, indent=2, ensure_ascii=False) + '\n', encoding='utf8')

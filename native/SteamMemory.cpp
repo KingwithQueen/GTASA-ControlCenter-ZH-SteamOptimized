@@ -81,6 +81,7 @@ static bool featurePause();
 #include "Girlfriends.h"
 #include "HotCoffee.h"
 #include "Feedback.h"
+#include "LicensePlate.h"
 
 // Remote queue layout: magic[32], enabled DWORD at +32, car at +36,
 // twelve model requests at +40. Code starts at +0x100 and executes on the game thread.
@@ -94,6 +95,7 @@ static std::vector<BYTE> stub(DWORD allocation){
  appendGarageCode(b,allocation,start);
  appendGirlfriendCode(b,allocation,start);
  appendFeedbackCode(b,allocation,start);
+ appendPlateCode(b,allocation,start);
  bytes({0x83,0x3d});word(allocation+32);byte(0);
  bytes({0x0f,0x84});SIZE_T skip=b.size();word(0);
  // Clear each slot before calling the engine; reentrant requests cannot run twice.
@@ -109,7 +111,7 @@ static std::vector<BYTE> stub(DWORD allocation){
  bytes({0x0f,0xae,0x0c,0x24,0x8b,0xe5,0x61,0x9d}); // restore FX/registers/flags
  call(va(0x43BF50));byte(0xc3);return b;
 }
-static const char magic[]="GTASA_CC_STEAM_QUEUE_V2";
+static const char magic[]="GTASA_CC_STEAM_QUEUE_V3";
 static bool installQueue(){
  if(remote)return true;
  BYTE old[5];if(!read(va(0x54BD2B),old,5))return false;
@@ -158,7 +160,7 @@ extern "C" DWORD __stdcall SteamAttach(HANDLE process){
   coffeeScriptsVerified=fingerprint(scriptPath.c_str(),"4ce0cdde60b95b4676d392685b0440a391f1e4bb8ac79db6abb35e379ff82fde");}
  BYTE call[5]={};const BYTE original[]={0xe8,0x20,0x02,0xef,0xff};
  if(read(va(0x54bd2b),call,5)&&memcmp(call,original,5)&&installQueue()){
-  // A previous instance may have crashed. Adopt only the exact V2 allocation
+  // A previous instance may have crashed. Adopt only the exact V3 allocation
   // and release its old controls before the newly loaded UI chooses settings.
   if(!stopRuntime()){lastError=4;return 0;}
  }
@@ -173,6 +175,7 @@ static bool stopRuntime(){
  ok=write(remote+featureFlags,zero,8)&&ok;
  for(DWORD i=0;i<6;i++)ok=write(remote+gfOffset+i*gfStride,zero,4)&&ok;
  DWORD cancelled=4;for(DWORD i=0;i<2;i++)ok=write(remote+feedbackOffset+i*feedbackStride,&cancelled,4)&&ok;
+ ok=write(remote+plateOffset,&cancelled,4)&&ok;
  for(DWORD i=0;i<17;i++)ok=write(remote+lockOffset+i*lockStride,zero,4)&&ok;
  return ok;
 }
@@ -232,10 +235,13 @@ static void callback(DWORD address,DWORD* counter,DWORD* argument){
  if(argument){code.insert(code.end(),{0x8b,0x44,0x24,0x04,0xa3});at=(DWORD)argument;for(int i=0;i<4;i++)code.push_back(BYTE(at>>(8*i)));}
  code.push_back(0xc3);memcpy((void*)address,code.data(),code.size());
 }
+#include "TrainRestoreTests.h"
 #include "LegacyGarageTests.h"
 #include "FeatureHookTests.h"
 #include "ScriptFeedbackTests.h"
+#include "LicensePlateTests.h"
 int main(){
+ _set_error_mode(_OUT_TO_STDERR);_set_abort_behavior(0,_WRITE_ABORT_MSG|_CALL_REPORTFAULT);
  game=GetCurrentProcess();base=(DWORD)VirtualAlloc(nullptr,0xa00000,MEM_COMMIT|MEM_RESERVE,PAGE_EXECUTE_READWRITE);
  remote=(DWORD)VirtualAlloc(nullptr,remoteSize,MEM_COMMIT|MEM_RESERVE,PAGE_EXECUTE_READWRITE);assert(base&&remote);
  callback(va(0x43C620),&carCalls,&lastCar);callback(va(0x408B00),&modelCalls,&lastModel);callback(va(0x43BF50),&originalCalls,nullptr);
@@ -253,9 +259,11 @@ int main(){
  assert(mapped(0xB793D4,4)==va(0xC0C5FC));assert(mapped(0xB79000,4)==va(0xC0C228));
  assert(mapped(0xA4AC6C,1)==0&&mapped(0x53BF9C,5)==0&&mapped(0x96ABD8,256)==0);
  assert(mapped(0xB794C6,4)==0); // crossing the end of the float array must fail
+ trainRestoreTests();
  legacyGarageTests();
  featureHookTests();
  scriptFeedbackTests();
+ licensePlateTests();
  HANDLE owned=nullptr;assert(DuplicateHandle(GetCurrentProcess(),GetCurrentProcess(),GetCurrentProcess(),&owned,0,FALSE,DUPLICATE_SAME_ACCESS));
  game=owned;DWORD savedRemote=remote;*(DWORD*)(remote+32)=1;*(DWORD*)(remote+36)=411;
  assert(TrainerCloseHandle(owned));assert(!game&&!base&&!remote&&!enabled);

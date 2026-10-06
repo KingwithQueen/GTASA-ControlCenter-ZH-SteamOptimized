@@ -471,3 +471,9 @@ Declare Function SteamFeedbackMessage Lib "GTASASteam.dll" (ByVal TextPointer As
 
 Declare Function SteamCoffeeGet Lib "GTASASteam.dll" () As Long
 Declare Function SteamCoffeeSet Lib "GTASASteam.dll" (ByVal Censored As Long) As Long
+
+Declare Function SteamPlateSet Lib "GTASASteam.dll" (ByVal Vehicle As Long, ByVal TextPointer As Long, ByVal Length As Long) As Long
+Declare Function SteamPlateStatus Lib "GTASASteam.dll" () As Long
+
+Declare Function SteamGarageModelSupported Lib "GTASASteam.dll" (ByVal Model As Long) As Long
+Declare Function SteamGarageCapabilities Lib "GTASASteam.dll" () As Long

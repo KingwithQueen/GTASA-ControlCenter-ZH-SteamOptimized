@@ -1,0 +1,92 @@
+{
+  "game_exe_sha256": "15e3cfedba9a841df67d8194e7249afb493b0e10d6138fb8ebab2c136e543efb",
+  "game_file_read_only": true,
+  "game_discovery_or_attach": false,
+  "steam_stored_restore": "0x44ad30",
+  "restore_switch_values_1_through_11": [
+    "0x44adf6",
+    "0x44ae28",
+    "0x44ae5a",
+    "0x44ae8c",
+    "0x44af5e",
+    "0x44af89",
+    "0x44af89",
+    "0x44af89",
+    "0x44aebe",
+    "0x44aeff",
+    "0x44af33"
+  ],
+  "train_metadata_kind": 6,
+  "train_switch_entry": "0x44b1f0",
+  "ordinary_automobile_kind": 0,
+  "train_constructor": "0x706300",
+  "train_object_size": "0x6ac",
+  "plate_create": "0x732c10",
+  "texture_destroy": "0x828060",
+  "constructors": [
+    {
+      "address": "0x6def80",
+      "rtti_class": ".?AVCAutomobile@@",
+      "prefix": "558bec6aff689b80890064a100000000",
+      "vtable": "0x8bc49c"
+    },
+    {
+      "address": "0x6fd7a0",
+      "rtti_class": ".?AVCMonsterTruck@@",
+      "prefix": "558bec6aff687886890064a100000000",
+      "vtable": "0x8bcf44"
+    },
+    {
+      "address": "0x7032e0",
+      "rtti_class": ".?AVCQuadBike@@",
+      "prefix": "558bec6aff68a687890064a100000000",
+      "vtable": "0x8bd2ac"
+    },
+    {
+      "address": "0x6f8a10",
+      "rtti_class": ".?AVCHeli@@",
+      "prefix": "558bec6aff686885890064a100000000",
+      "vtable": "0x8bcdc4"
+    },
+    {
+      "address": "0x6fdb00",
+      "rtti_class": ".?AVCPlane@@",
+      "prefix": "558bec6aff689886890064a100000000",
+      "vtable": "0x8bd0bc"
+    },
+    {
+      "address": "0x6f3a90",
+      "rtti_class": ".?AVCBoat@@",
+      "prefix": "558bec6aff685884890064a100000000",
+      "vtable": "0x8bcab4"
+    },
+    {
+      "address": "0x706300",
+      "rtti_class": ".?AVCTrain@@",
+      "prefix": "558bec6aff685888890064a100000000",
+      "vtable": "0x8bd524"
+    },
+    {
+      "address": "0x6ee0a0",
+      "rtti_class": ".?AVCBike@@",
+      "prefix": "558bec6aff682483890064a100000000",
+      "vtable": "0x8bc76c"
+    },
+    {
+      "address": "0x6ee540",
+      "rtti_class": ".?AVCBmx@@",
+      "prefix": "558bec6aff683883890064a100000000",
+      "vtable": "0x8bc974"
+    },
+    {
+      "address": "0x7054c0",
+      "rtti_class": ".?AVCTrailer@@",
+      "prefix": "558bec6aff681888890064a100000000",
+      "vtable": "0x8bd3ec"
+    }
+  ],
+  "protected_baseline_files_verified": 656,
+  "protected_baseline_mismatches": 0,
+  "previous_r1_zip_sha256": "08659db9c44860d588dbd885e04a23ef8b38a3d82ba60b75315578d8ad97a793",
+  "real_game_acceptance": "pending"
+}

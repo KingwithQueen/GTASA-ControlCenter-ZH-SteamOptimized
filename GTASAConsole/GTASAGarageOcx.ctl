@@ -855,6 +855,9 @@ On Error Resume Next
     cboSelectCar(2).AddItem sCarName
     cboSelectCar(3).AddItem sCarName
 End Sub
+Public Property Get CarCount() As Integer
+    CarCount = cboSelectCar(0).ListCount
+End Property
 Public Property Get CarID(ByVal iCarIdx As Integer) As Integer
     CarID = cboSelectCar(iCarIdx).ListIndex
 End Property

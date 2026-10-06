@@ -5403,11 +5403,13 @@ Private isWeatherLock As Boolean
 Private lngLockWeatherTo As Long
 Private sLicensePlate As String
 Private isFixLicensePlate As Boolean
+Private m_SteamPlatePending As Boolean
 Private isFixBrassKnuckle As Boolean
 Private isFixWeaponSlots(10) As Boolean
 Private iFixWeaponID(10) As Long
 Private iFixWeaponAmmo(10) As Long
 Private m_SteamFeedbackReady As Boolean
+Private m_SteamSpecialCatalogCaps As Long
 Private m_SteamGarageMeta(407) As Long
 Private m_SteamGarageBefore(4351) As Byte
 Private m_SteamGarageValid(16) As Boolean
@@ -5473,6 +5475,8 @@ Private intHookCounter As Integer       'allg. Counter for tmrHook
 Private layoutWidth(5) As Long
 Private layoutHeight(5) As Long
 Private layoutValid(5) As Boolean
+Private m_PlayerCheatWindows(63) As Long
+Private Declare Function CheatShowWindow Lib "user32" Alias "ShowWindow" (ByVal wnd As Long, ByVal command As Long) As Long
 Private intLastSyncedMainTab As Integer 'last main tab whose native child visibility was synchronized
 Private isLockHealth As Boolean         'mirror of chkPlayerStats(0).value
 Private isLockArmor As Boolean          'mirror of chkPlayerStats(1).value
@@ -5557,15 +5561,50 @@ End Sub
 
 Private Sub cmdSetPlate_Click()
 On Error Resume Next
-    MsgBox ZH("Coming soon...")
-    Exit Sub
-    If isHasHandle And isHasCar Then
-        'apply license plate change:
-        sLicensePlate = txtLicensePlate.Text
-        SetMemString tCurrCarAdr.lngLicensePlateAdr, sLicensePlate, 8
-    End If
-    txtLicensePlate.BackColor = &HFFFFFF
+    sLicensePlate = UCase$(Left$(txtLicensePlate.Text, 8))
+    ApplySteamPlate False
     If isGTASAiconic And Not isTimerClick Then txtFocus.SetFocus
+End Sub
+
+Private Function ApplySteamPlate(ByVal Silent As Boolean) As Boolean
+    Dim status As Long
+    If Not isSteamGame Then
+        If Not Silent Then MsgBox ZH("Plate editing is available for Classic Steam vehicles."), vbInformation
+        Exit Function
+    End If
+    If Not (isHasHandle And isHasCar And tCurrCarAdr.isUsable) Then
+        If Not Silent Then MsgBox ZH("Enter a vehicle with a license plate first."), vbInformation
+        Exit Function
+    End If
+    status = SteamPlateSet(tCurrCarAdr.lngObjectStart, StrPtr(sLicensePlate), Len(sLicensePlate))
+    If status = 0 Then
+        m_SteamPlatePending = True
+        txtLicensePlate.BackColor = &H80FF80
+        txtLicensePlate.ToolTipText = ZH("Plate request accepted. Continue the game to display it.")
+        ApplySteamPlate = True
+    ElseIf Not Silent Then
+        Select Case status
+            Case 2: MsgBox ZH("Pause with Esc before the first plate update."), vbInformation
+            Case 3: MsgBox ZH("Use 1-8 letters, numbers or spaces. This vehicle or plate renderer is not supported."), vbInformation
+            Case 8: MsgBox ZH("A plate update is pending. Continue the game first."), vbInformation
+            Case Else: MsgBox ZH("The plate request failed. No texture was renamed."), vbInformation
+        End Select
+    End If
+End Function
+
+Private Sub RefreshSteamPlateUI()
+    Dim status As Long
+    If Not m_SteamPlatePending Then Exit Sub
+    status = SteamPlateStatus()
+    If status = 8 Then Exit Sub
+    m_SteamPlatePending = False
+    If status = 0 Then
+        txtLicensePlate.BackColor = &HFFFFFF
+        txtLicensePlate.ToolTipText = ZH("License Plate (Upper Case, 8 Characters)")
+    Else
+        txtLicensePlate.BackColor = &H8080FF
+        txtLicensePlate.ToolTipText = ZH("The vehicle changed or plate generation failed. Retry on the current vehicle.")
+    End If
 End Sub
 
 Private Sub txtLicensePlate_Change()
@@ -5886,12 +5925,42 @@ On Error Resume Next
     layoutValid(activeTab) = (Err.Number = 0)
 End Sub
 
+Private Sub MaintainWeaponLocks()
+    Dim slot As Integer
+    If isFixBrassKnuckle Then
+        If GetMemLong(GTASAPlayerAddresse.lngBrassKnucklesAdr) = 0 Then
+            SetMemLong GTASAPlayerAddresse.lngBrassKnucklesAdr, 1
+            SetMemLong GTASAPlayerAddresse.lngBrassKnucklesAdr + 12, 1
+        End If
+    End If
+    For slot = 0 To 10
+        If isFixWeaponSlots(slot) Then
+            'get current weapon at this slot:
+            ReadProcessMemory lngPHandle, GTASAPlayerAddresse.lngWeaponsAdr(slot), HookPlayerWeapon, 16&, 0&
+            'compare this against iFixWeaponID and iFixWeaponAmmo:
+            If isInjected And (HookPlayerWeapon.lngWeaponID <> iFixWeaponID(slot)) And iFixWeaponID(slot) > 0 Then
+                'if code is injected, and player has currently another weapon in this slot, initialise this new weapon
+                WriteProcessMemory lngPHandle, GTASABaseAdr.WeaponSpawnAdr(slot), WeaponIDtoDatID(iFixWeaponID(slot)), 4&, 4&
+            End If
+            If ((HookPlayerWeapon.lngWeaponID <> iFixWeaponID(slot)) Or _
+                (HookPlayerWeapon.lngTotalAmmo <> iFixWeaponAmmo(slot))) Then
+                HookPlayerWeapon.lngWeaponID = iFixWeaponID(slot)
+                HookPlayerWeapon.lngTotalAmmo = iFixWeaponAmmo(slot)
+                WriteProcessMemory lngPHandle, GTASAPlayerAddresse.lngWeaponsAdr(slot), HookPlayerWeapon, 16&, 16&
+            End If
+        End If
+    Next slot
+End Sub
+
 Private Sub SyncPlayerStatusControls()
 On Error Resume Next
-    If intLastSyncedMainTab = sstMain.Tab Then Exit Sub
+    If intLastSyncedMainTab = sstMain.Tab Then
+        SyncNativeCheatVisibility
+        Exit Sub
+    End If
     intLastSyncedMainTab = sstMain.Tab
-    'The native children used by the imported player controls are parented to
-    'SSTab itself, so SSTab cannot hide them automatically with the old page.
+    'Imported native player widgets use explicit parent/visibility management.
+    'Keep page changes synchronized after SSTab redraw.
     If sstMain.Tab = 1 Then
         RestorePlayerStatusControls
     Else
@@ -5910,6 +5979,14 @@ On Error Resume Next
     oPedStats(20).PlaceOnSSTab sstMain.hWnd, 7920, 7755, True
     oPedDirection.PlaceOnSSTab sstMain.hWnd, 4065, 555, True
     oPedStart.PlaceOnSSTab sstMain.hWnd, 5685, 555, True
+    For i = 0 To 31
+        oCheatStates(i).PlaceOnSSTab Me.hWnd, sstMain.Left + 7920 + (i Mod 2) * 1770, sstMain.Top + 1035 + (i \ 2) * 360, True
+        m_PlayerCheatWindows(i * 2) = oCheatStates(i).NativeToggleHwnd
+        m_PlayerCheatWindows(i * 2 + 1) = oCheatStates(i).NativeLockHwnd
+    Next i
+    For i = 0 To 3
+        chkPedSpecs(i).ZOrder 0
+    Next i
 End Sub
 
 Private Sub HidePlayerStatusControls()
@@ -5921,6 +5998,7 @@ On Error Resume Next
     oPedStats(20).PlaceOnSSTab sstMain.hWnd, 0, 0, False
     oPedDirection.PlaceOnSSTab sstMain.hWnd, 0, 0, False
     oPedStart.PlaceOnSSTab sstMain.hWnd, 0, 0, False
+    SyncNativeCheatVisibility
 End Sub
 
 Private Sub Form_Unload(Cancel As Integer)
@@ -8541,6 +8619,7 @@ End Sub
 Private Sub tmrHook_Timer() ' 'Hook GTASA / Check Hook status (1000 ms)
 On Error GoTo errtmrHook_Timer
     EndMainTabRedraw
+    RefreshSteamPlateUI
     Static iStatCtr As Long
     Static sngWeaponProfTotal As Single
     Static lngVehicleProfTotal As Long
@@ -9155,30 +9234,7 @@ On Error GoTo errtmrConsole_Timer
     If isRestartCar And tCurrCarAdr.isUsable Then 'restart car if needed
         If (GetMemByte(tCurrCarAdr.lngStalledAdr) And &H10) = 0 Then SetMemByte tCurrCarAdr.lngStalledAdr, GetMemByte(tCurrCarAdr.lngStalledAdr) Or &H10
     End If
-    'weapons:
-    If isFixBrassKnuckle Then
-        If GetMemLong(GTASAPlayerAddresse.lngBrassKnucklesAdr) = 0 Then
-            SetMemLong GTASAPlayerAddresse.lngBrassKnucklesAdr, 1
-            SetMemLong GTASAPlayerAddresse.lngBrassKnucklesAdr + 12, 1
-        End If
-    End If
-    For iStatCtr = 0 To 10
-        If isFixWeaponSlots(iStatCtr) Then
-            'get current weapon at this slot:
-            ReadProcessMemory lngPHandle, GTASAPlayerAddresse.lngWeaponsAdr(iStatCtr), HookPlayerWeapon, 16&, 0&
-            'compare this against iFixWeaponID and iFixWeaponAmmo:
-            If isInjected And (HookPlayerWeapon.lngWeaponID <> iFixWeaponID(iStatCtr)) And iFixWeaponID(iStatCtr) > 0 Then
-                'if code is injected, and player has currently another weapon in this slot, initialise this new weapon
-                WriteProcessMemory lngPHandle, GTASABaseAdr.WeaponSpawnAdr(iStatCtr), WeaponIDtoDatID(iFixWeaponID(iStatCtr)), 4&, 4&
-            End If
-            If ((HookPlayerWeapon.lngWeaponID <> iFixWeaponID(iStatCtr)) Or _
-                (HookPlayerWeapon.lngTotalAmmo = iFixWeaponAmmo(iStatCtr))) Then
-                HookPlayerWeapon.lngWeaponID = iFixWeaponID(iStatCtr)
-                HookPlayerWeapon.lngTotalAmmo = iFixWeaponAmmo(iStatCtr)
-                WriteProcessMemory lngPHandle, GTASAPlayerAddresse.lngWeaponsAdr(iStatCtr), HookPlayerWeapon, 16&, 16&
-            End If
-        End If
-    Next iStatCtr
+    MaintainWeaponLocks
     strOnScreenText = ""
     'special case for Warp to next/previous location:
     If intWarpNextHitDelayCount > 0 Then intWarpNextHitDelayCount = intWarpNextHitDelayCount - 1
@@ -10059,13 +10115,13 @@ On Error Resume Next
         WriteProcessMemory lngPHandle, tCurrCarAdr.lngCarPosAdr, GTASAWarpCarPos, 60, 60&
         '!Speed/Spin values will not be saved, they will be set to zero during paste
         WriteProcessMemory lngPHandle, tCurrCarAdr.lngCarSpeedAdr, zeroSpeed, 12&, 12&
-        WriteProcessMemory lngPHandle, tCurrCarAdr.lngCarSpeedAdr, zeroSpin, 12&, 12&
+        WriteProcessMemory lngPHandle, tCurrCarAdr.lngCarSpinAdr, zeroSpin, 12&, 12&
         'write trailer pos data if needed:
         If tCurrTrailer.isUsable Then
             WriteProcessMemory lngPHandle, tCurrTrailer.lngCarPosAdr, GTASAWarpTrailerPos, 60, 60&
             '!Speed/Spin values will not be saved, they will be set to zero during paste
             WriteProcessMemory lngPHandle, tCurrTrailer.lngCarSpeedAdr, zeroSpeed, 12&, 12&
-            WriteProcessMemory lngPHandle, tCurrTrailer.lngCarSpeedAdr, zeroSpin, 12&, 12&
+            WriteProcessMemory lngPHandle, tCurrTrailer.lngCarSpinAdr, zeroSpin, 12&, 12&
         End If
         'Detachables:
         If ParkedCars(intCarIDforWarp).isBike Then
@@ -11716,9 +11772,7 @@ On Error GoTo errCheckPlayerCarStatus
         If chkCarDynamics(6).Value = 1 Then 'Stop CarAlarm
             SetMemLong tCurrCarAdr.lngSirenTimeAdr, 0&
         End If
-        If chkCarDynamics(10).Value = 1 Then 'Set License Plate:
-            SetMemString tCurrCarAdr.lngLicensePlateAdr, sLicensePlate, 8
-        End If
+        If chkCarDynamics(10).Value = 1 Then ApplySteamPlate True
         If (Len(strBuffer) > 2) And (intPlayerDrivesCar >= 400) And (intPlayerDrivesCar <= 611) Then
             strBuffer = Left$(strBuffer, Len(strBuffer) - 2) & "."
             If isHasNewTrailerOnly Then
@@ -12759,6 +12813,7 @@ Private Function SteamGarageMessage(ByVal Status As Long) As String
         Case 5: SteamGarageMessage = ZH("Steam garage: write failed; the original records were restored.")
         Case 6: SteamGarageMessage = ZH("Steam garage: result could not be confirmed. Disconnect and reload your save.")
         Case 7: SteamGarageMessage = ZH("Steam garage: game state changed. Read garages again before applying.")
+        Case 9: SteamGarageMessage = ZH("Steam garage: install the train restore component and restart the game before storing trains.")
         Case Else: SteamGarageMessage = ZH("Steam garage: memory could not be read or written.")
     End Select
 End Function
@@ -12930,6 +12985,10 @@ End Sub
 Private Sub ApplySteamUI()
     On Error Resume Next
     Dim i As Long
+    AppendSteamSpecialVehicles
+    txtLicensePlate.Locked = False
+    chkCarDynamics(10).Enabled = True
+    cmdSetPlate.ToolTipText = ZH("Update the current plate after continuing the game.")
     If cboGTAVersion.ToolTipText <> ZH("Classic Steam version detected automatically") Then cboGTAVersion.ToolTipText = ZH("Classic Steam version detected automatically")
     'Steam-specific operations use verified typed APIs; legacy globals stay guarded.
     If Not oCheatStates(20).Enabled Then oCheatStates(20).Enabled = True
@@ -13000,3 +13059,38 @@ Private Sub Form_Deactivate()
     EndMainTabRedraw
 End Sub
 
+
+Private Sub AppendSteamSpecialVehicles()
+    Dim Caps As Long, Model As Integer, Slot As Integer, Garage As Integer, Count As Integer
+    Caps = SteamGarageCapabilities()
+    If Caps = m_SteamSpecialCatalogCaps Then Exit Sub
+    m_SteamSpecialCatalogCaps = Caps
+    For Model = 400 To 611
+        If GarageListMatrix(0, Model) = 0 And SteamGarageModelSupported(Model) = 1 Then
+            Count = cParking(0).CarCount
+            If Count > UBound(ParkedCarMatrix, 2) Then Exit Sub
+            For Garage = 0 To 16
+                cParking(Garage).AddCar ParkedCars(Model).strCarName
+            Next Garage
+            For Slot = 0 To 3
+                GarageListMatrix(Slot, Model) = Count
+                ParkedCarMatrix(Slot, Count) = Model
+            Next Slot
+            ParkedCars(Model).isParkable = True
+        End If
+    Next Model
+End Sub
+
+Private Sub SyncNativeCheatVisibility()
+    Dim i As Integer, ShowIt As Boolean
+    ShowIt = (sstMain.Tab = 1)
+    For i = 0 To 63
+        If m_PlayerCheatWindows(i) <> 0 Then
+            If ShowIt Then
+                If PerfIsWindowVisible(m_PlayerCheatWindows(i)) = 0 Then CheatShowWindow m_PlayerCheatWindows(i), 5
+            Else
+                If PerfIsWindowVisible(m_PlayerCheatWindows(i)) <> 0 Then CheatShowWindow m_PlayerCheatWindows(i), 0
+            End If
+        End If
+    Next i
+End Sub

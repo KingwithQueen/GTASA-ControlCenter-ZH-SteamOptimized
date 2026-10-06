@@ -20,6 +20,12 @@ backend-tests.exe
 if errorlevel 1 goto failed
 cl /nologo /W4 /O2 /MT /std:c++17 /EHsc /LD "%LEGACY_SOURCE_ROOT%\native\SteamMemory.cpp" /FoSteamMemory.obj /FeGTASASteam.dll /link /DEF:"%LEGACY_SOURCE_ROOT%\native\exports.def" /INCREMENTAL:NO
 if errorlevel 1 goto failed
+cl /nologo /W4 /O2 /MT /std:c++17 /EHsc "%LEGACY_SOURCE_ROOT%\native\SteamTrainRestoreTests.cpp" /FoTrainTests.obj /FeTrainTests.exe /link /INCREMENTAL:NO
+if errorlevel 1 goto failed
+TrainTests.exe
+if errorlevel 1 goto failed
+cl /nologo /W4 /O2 /MT /std:c++17 /EHsc /LD "%LEGACY_SOURCE_ROOT%\native\SteamTrainRestore.cpp" /FoSteamTrainRestore.obj /FeGTASA_TrainRestore_Steam.asi /link /INCREMENTAL:NO
+if errorlevel 1 goto failed
 popd
 exit /b 0
 :failed

@@ -61,7 +61,7 @@ static constexpr GarageCatalogEntry garageCatalog[212]={
 {true,false,false,0.4f,0,{}}, // 457
 {true,false,false,1.4f,5,{1008,1009,1010,1086,1087}}, // 458
 {true,false,true,2.6f,0,{}}, // 459
-{false,false,true,1.2f,0,{}}, // 460
+{true,false,true,1.2f,0,{}}, // 460
 {true,true,false,1.2f,0,{}}, // 461
 {true,true,false,1.2f,0,{}}, // 462
 {true,true,false,1.5f,0,{}}, // 463
@@ -77,7 +77,7 @@ static constexpr GarageCatalogEntry garageCatalog[212]={
 {true,false,false,1.6f,0,{}}, // 473
 {true,false,false,1.6f,5,{1008,1009,1010,1086,1087}}, // 474
 {true,false,false,1.9f,5,{1008,1009,1010,1086,1087}}, // 475
-{false,false,true,1.2f,0,{}}, // 476
+{true,false,true,1.2f,0,{}}, // 476
 {true,false,false,1.8f,11,{1008,1009,1010,1086,1087,1020,1021,1019,1018,1006,1007}}, // 477
 {true,false,false,2.1f,13,{1008,1009,1010,1086,1087,1005,1004,1012,1020,1021,1022,1013,1024}}, // 478
 {true,false,false,1.7f,5,{1008,1009,1010,1086,1087}}, // 479
@@ -112,16 +112,16 @@ static constexpr GarageCatalogEntry garageCatalog[212]={
 {true,false,false,2.0f,0,{}}, // 508
 {true,true,false,1.2f,0,{}}, // 509
 {true,true,false,1.2f,0,{}}, // 510
-{false,false,true,1.2f,0,{}}, // 511
-{false,false,true,1.2f,0,{}}, // 512
-{false,false,true,1.2f,0,{}}, // 513
+{true,false,true,1.2f,0,{}}, // 511
+{true,false,true,1.2f,0,{}}, // 512
+{true,false,true,1.2f,0,{}}, // 513
 {true,false,false,2.0f,0,{}}, // 514
 {true,false,false,1.0f,0,{}}, // 515
 {true,false,false,1.5f,15,{1008,1009,1010,1086,1087,1004,1020,1021,1019,1018,1002,1015,1016,1000,1007}}, // 516
 {true,false,false,1.5f,15,{1008,1009,1010,1086,1087,1143,1145,1020,1019,1018,1002,1023,1016,1003,1007}}, // 517
 {true,false,false,1.5f,16,{1008,1009,1010,1086,1087,1005,1143,1145,1020,1018,1013,1006,1001,1023,1003,1007}}, // 518
-{false,false,true,1.2f,0,{}}, // 519
-{false,false,true,1.2f,0,{}}, // 520
+{true,false,true,1.2f,0,{}}, // 519
+{true,false,true,1.2f,0,{}}, // 520
 {true,true,false,1.5f,0,{}}, // 521
 {true,true,false,1.5f,0,{}}, // 522
 {true,true,false,1.2f,0,{}}, // 523
@@ -140,7 +140,7 @@ static constexpr GarageCatalogEntry garageCatalog[212]={
 {true,false,false,1.5f,14,{1008,1009,1010,1086,1087,1104,1105,1182,1181,1184,1183,1128,1103,1108}}, // 536
 {false,false,true,2.9f,0,{}}, // 537
 {false,false,true,2.9f,0,{}}, // 538
-{false,false,true,1.2f,0,{}}, // 539
+{true,false,true,1.2f,0,{}}, // 539
 {true,false,false,1.5f,16,{1008,1009,1010,1086,1087,1004,1143,1145,1020,1019,1018,1024,1006,1001,1023,1007}}, // 540
 {true,false,false,1.3f,5,{1008,1009,1010,1086,1087}}, // 541
 {true,false,false,1.8f,12,{1008,1009,1010,1086,1087,1145,1020,1021,1019,1018,1014,1015}}, // 542
@@ -154,7 +154,7 @@ static constexpr GarageCatalogEntry garageCatalog[212]={
 {true,false,false,1.6f,16,{1008,1009,1010,1086,1087,1005,1004,1143,1145,1020,1019,1018,1006,1001,1023,1003}}, // 550
 {true,false,false,1.6f,15,{1008,1009,1010,1086,1087,1005,1020,1021,1019,1018,1006,1002,1023,1016,1003}}, // 551
 {true,false,true,3.3f,0,{}}, // 552
-{false,false,true,2.2f,0,{}}, // 553
+{true,false,true,2.2f,0,{}}, // 553
 {true,false,true,3.3f,0,{}}, // 554
 {true,false,false,1.6f,5,{1008,1009,1010,1086,1087}}, // 555
 {true,false,true,3.0f,0,{}}, // 556
@@ -178,7 +178,7 @@ static constexpr GarageCatalogEntry garageCatalog[212]={
 {true,false,false,2.8f,0,{}}, // 574
 {true,false,false,1.9f,12,{1008,1009,1010,1086,1087,1044,1043,1174,1175,1176,1177,1042}}, // 575
 {true,false,false,1.9f,12,{1008,1009,1010,1086,1087,1136,1135,1191,1190,1192,1193,1134}}, // 576
-{false,false,true,4.0f,0,{}}, // 577
+{true,false,true,4.0f,0,{}}, // 577
 {true,false,true,3.6f,0,{}}, // 578
 {true,false,false,2.0f,5,{1008,1009,1010,1086,1087}}, // 579
 {true,false,false,1.5f,11,{1008,1009,1010,1086,1087,1020,1018,1006,1001,1023,1007}}, // 580
@@ -193,8 +193,8 @@ static constexpr GarageCatalogEntry garageCatalog[212]={
 {true,false,false,1.5f,16,{1008,1009,1010,1086,1087,1005,1004,1145,1020,1018,1024,1013,1006,1016,1000,1007}}, // 589
 {false,false,true,2.9f,0,{}}, // 590
 {true,false,true,3.6f,0,{}}, // 591
-{false,false,true,1.2f,0,{}}, // 592
-{false,false,true,1.2f,0,{}}, // 593
+{true,false,true,1.2f,0,{}}, // 592
+{true,false,true,1.2f,0,{}}, // 593
 {false,false,false,1.0f,0,{}}, // 594
 {true,false,true,2.2f,0,{}}, // 595
 {true,false,false,1.6f,0,{}}, // 596
