@@ -514,7 +514,7 @@ Begin VB.Form frmSAConsole
          Width           =   3300
       End
       Begin VB.CommandButton cmdSpawnCar 
-         Caption         =   "Spawn selected Vehicle (� Jacob)"
+         Caption         =   "Spawn selected Vehicle (by Jacob)"
          Enabled         =   0   'False
          Height          =   480
          Index           =   0
@@ -532,7 +532,7 @@ Begin VB.Form frmSAConsole
          Style           =   1  'Graphical
          TabIndex        =   276
          TabStop         =   0   'False
-         ToolTipText     =   "Injection ASM Code � Jacob"
+         ToolTipText     =   "Injection ASM Code by Jacob"
          Top             =   6675
          Width           =   3465
       End
@@ -5222,16 +5222,17 @@ Begin VB.Form frmSAConsole
       EndProperty
    End
    Begin VB.CheckBox chkCoffee 
-      Caption         =   "Coffee: Censored"
-      Height          =   375
-      Left            =   0
+      Caption         =   "Hot Coffee: Not connected"
+      Enabled         =   0   'False
+      Height          =   360
+      Left            =   7920
       Style           =   1  'Graphical
       TabIndex        =   251
       TabStop         =   0   'False
       ToolTipText     =   "Click to toggle 'HotCoffee' On and Off (ie. Censored and Uncensored)"
-      Top             =   0
+      Top             =   4995
       Visible         =   0   'False
-      Width           =   1590
+      Width           =   3555
    End
    Begin VB.Menu mCheatContext 
       Caption         =   "mCheatContext"
@@ -5987,6 +5988,7 @@ On Error Resume Next
     For i = 0 To 3
         chkPedSpecs(i).ZOrder 0
     Next i
+    SyncNativeCheatVisibility
 End Sub
 
 Private Sub HidePlayerStatusControls()
@@ -12961,7 +12963,8 @@ Private Sub RefreshSteamCoffeeUI()
         chkCoffee.ToolTipText = ZH("Steam Coffee: pause before changing the verified script flag.")
     Else
         chkCoffee.Value = vbUnchecked
-        chkCoffee.Caption = ZH("Steam Coffee: script package is not supported.")
+        chkCoffee.Caption = ZH("Hot Coffee: Script unsupported")
+        chkCoffee.ToolTipText = ZH("Steam Coffee: script package is not supported.")
     End If
     isInternalClick = WasInternal
 End Sub
@@ -13083,8 +13086,9 @@ End Sub
 
 Private Sub SyncNativeCheatVisibility()
     Dim i As Integer, ShowIt As Boolean
-    ShowIt = (sstMain.Tab = 1)
+    LayoutCoffeeControl
     For i = 0 To 63
+        ShowIt = (sstMain.Tab = 1 And (i < 44 Or i > 47))
         If m_PlayerCheatWindows(i) <> 0 Then
             If ShowIt Then
                 If PerfIsWindowVisible(m_PlayerCheatWindows(i)) = 0 Then CheatShowWindow m_PlayerCheatWindows(i), 5
@@ -13093,4 +13097,23 @@ Private Sub SyncNativeCheatVisibility()
             End If
         End If
     Next i
+End Sub
+
+Private Sub LayoutCoffeeControl()
+    If sstMain.Tab = 1 Then
+        If chkCoffee.Left <> sstMain.Left + 7920 Or chkCoffee.Top <> sstMain.Top + 4995 Then
+            chkCoffee.Move sstMain.Left + 7920, sstMain.Top + 4995, 3555, 360
+        End If
+        If Not chkCoffee.Visible Then
+            chkCoffee.Visible = True
+            chkCoffee.ZOrder 0
+        End If
+        If Not isHasHandle Then
+            chkCoffee.Enabled = False
+            chkCoffee.Caption = ZH("Hot Coffee: Not connected")
+            chkCoffee.ToolTipText = ZH("Hot Coffee changes a dating-script flag only. The complete minigame is not verified.")
+        End If
+    Else
+        If chkCoffee.Visible Then chkCoffee.Visible = False
+    End If
 End Sub

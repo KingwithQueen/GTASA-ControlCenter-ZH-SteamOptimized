@@ -1,8 +1,15 @@
 """Export the exact latest UTF-8 dictionary; no source rewriting."""
 from pathlib import Path
-import argparse
+import argparse,re
 ROOT=Path(__file__).resolve().parents[1]
 def export(destination):
+    # Keep legacy designer literals ASCII; Unicode comes from the UTF-8 dictionary.
+    for source in (ROOT/'GTASAConsole').iterdir():
+        if source.suffix.lower() not in ('.frm','.ctl'):continue
+        for number,line in enumerate(source.read_bytes().splitlines(),1):
+            match=re.match(rb'^\s*(?:Caption|ToolTipText|ButtonCaption|Text)\s*=\s*"([^"]*)"',line)
+            if match and any(byte>=128 for byte in match[1]):
+                raise ValueError(f'{source.name}:{number}: non-ASCII designer text; use an ASCII dictionary key')
     data=(ROOT/'localization/zh-CN.master.tsv').read_bytes()
     seen=set()
     for i,line in enumerate(data.decode('utf-8-sig').splitlines(),1):
