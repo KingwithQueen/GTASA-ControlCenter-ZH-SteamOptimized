@@ -744,6 +744,7 @@ End Sub
 Private Sub cmdClearMods_Click(Index As Integer)
 On Error Resume Next
     isResetMods(Index) = True
+    isDirty = True
     CopyMemory tNowParking.ParkingSlots(Index).intTuneArr(0), zeroTuneInt(0), 30&
     '&HFF 02 00 00
     '   3  2  1  0
@@ -854,6 +855,9 @@ On Error Resume Next
     cboSelectCar(2).AddItem sCarName
     cboSelectCar(3).AddItem sCarName
 End Sub
+Public Property Get CarCount() As Integer
+    CarCount = cboSelectCar(0).ListCount
+End Property
 Public Property Get CarID(ByVal iCarIdx As Integer) As Integer
     CarID = cboSelectCar(iCarIdx).ListIndex
 End Property

@@ -1,7 +1,23 @@
 LIBRARY GTASASteam
 EXPORTS
+ SteamCoffeeGet=_SteamCoffeeGet@0
+ SteamCoffeeSet=_SteamCoffeeSet@4
+ SteamFeedbackEnable=_SteamFeedbackEnable@4
+ SteamFeedbackMessage=_SteamFeedbackMessage@8
+ SteamGirlfriendSet=_SteamGirlfriendSet@12
+ SteamGirlfriendSupported=_SteamGirlfriendSupported@0
+ SteamFeatureSet=_SteamFeatureSet@8
+ SteamFeatureGet=_SteamFeatureGet@4
  SteamAttach=_SteamAttach@4
  SteamStatus=_SteamStatus@0
  TrainerCloseHandle=_TrainerCloseHandle@4
  TrainerReadMemory=_TrainerReadMemory@20
  TrainerWriteMemory=_TrainerWriteMemory@20
+ SteamGarageInspect=_SteamGarageInspect@12
+ SteamGarageWrite=_SteamGarageWrite@20
+ SteamGarageLock=_SteamGarageLock@12
+ SteamPlateSet=_SteamPlateSet@12
+ SteamPlateStatus=_SteamPlateStatus@0
+
+ SteamGarageModelSupported=_SteamGarageModelSupported@4
+ SteamGarageCapabilities=_SteamGarageCapabilities@0

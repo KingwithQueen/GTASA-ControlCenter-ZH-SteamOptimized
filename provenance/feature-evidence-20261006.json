@@ -1,0 +1,77 @@
+{
+  "date": "2026-10-06",
+  "baseline_commit": "b96b553d5c1bdf35d7ec5dfbc4d912c4cbe6296f",
+  "branch": "feature/steam-features-20261005",
+  "supported_game_exe_sha256": "15e3cfedba9a841df67d8194e7249afb493b0e10d6138fb8ebab2c136e543efb",
+  "main_scm_sha256": "c06162725bbc5429f7a871a29633ae5faa5b1f6a23ddbaa42c8d2fed70021b3e",
+  "script_img_sha256": "4ce0cdde60b95b4676d392685b0440a391f1e4bb8ac79db6abb35e379ff82fde",
+  "hot_coffee": {
+    "script_space": "0xAC12D0",
+    "flag_offset": "0x130C",
+    "steam_flag": "0xAC25DC",
+    "main_definitions": [
+      "0x226E4",
+      "0x25AFC"
+    ],
+    "streamed_readers": {
+      "gf_date.scm": [
+        "0x233C",
+        "0x23A2",
+        "0x2B6C",
+        "0x5E12",
+        "0x5E55",
+        "0x7FDC"
+      ],
+      "gf_sex.scm": [
+        "0x89",
+        "0x119",
+        "0x4BB"
+      ]
+    },
+    "scope": "verified script toggle only; game scenes/assets not runtime-tested"
+  },
+  "damage_sites": [
+    "0x4BAE4B",
+    "0x4BAE97"
+  ],
+  "timer_pause_check": "0x4504E3",
+  "hud_set_help_message": "0x594CB0",
+  "remote_vehicle_pointer": "0xC10180",
+  "integer_stats_legacy_index_zero": "0xC0C228",
+  "garage": {
+    "count": "0x9E3AB4",
+    "array": "0x9E3AC0",
+    "stride": "0xD8",
+    "stored_cars": "0x9E2668",
+    "slot_bytes": 64,
+    "garages": 17,
+    "slots": 68
+  },
+  "shortcut_resource": {
+    "changed_entries": [
+      [
+        "SETTINGS",
+        102
+      ]
+    ],
+    "other_resource_entries_unchanged": true,
+    "total": 69,
+    "active": 65,
+    "restore_tool_changed_active_bytes": 14,
+    "restoration_idempotent": true
+  },
+  "native_tests": "PASS",
+  "offline_ui": "PASS",
+  "compile_errors": 0,
+  "preexisting_vb_warnings": 5,
+  "native_warnings": 0,
+  "real_game_accessed": false,
+  "real_game_acceptance": "pending",
+  "production_trainer_launched": false,
+  "candidate_exe_sha256": "b0793b11d6deb1e47b875f0b12c0b6c27069b6bad35372bbc33a62e1993fed3c",
+  "candidate_dll_sha256": "8ecb9d438da58a46d01b424a5da6cac95505fe54102d67dcfdb18fce37fdfb03",
+  "offline_ui_test_exe_sha256": "fd701125888a42af118b36a08b35c8facd15702797efc7d85c632cc164dd9386",
+  "feedback_in_flight_cancellation": "PASS; game-thread acknowledgement before buffer reuse",
+  "formal_export_count": 16,
+  "fixture_exports_present": false
+}

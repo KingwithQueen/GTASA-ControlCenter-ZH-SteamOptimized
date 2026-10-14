@@ -36,12 +36,62 @@ Attribute VB_Creatable = True
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
 Option Explicit
+Private Declare Function SetParentWin Lib "user32" Alias "SetParent" (ByVal child As Long, ByVal parent As Long) As Long
+Private Declare Function MoveWindowNative Lib "user32" Alias "MoveWindow" (ByVal wnd As Long, ByVal X As Long, ByVal Y As Long, ByVal nWidth As Long, ByVal nHeight As Long, ByVal repaint As Long) As Long
+Private Declare Function ShowWindowNative Lib "user32" Alias "ShowWindow" (ByVal wnd As Long, ByVal command As Long) As Long
+Private Declare Function EnableWindowNative Lib "user32" Alias "EnableWindow" (ByVal wnd As Long, ByVal enabled As Long) As Long
+Private m_CheatWnd As Long, m_LockWnd As Long
+Private m_NativeParent As Long
+Private m_NativeLeft As Long, m_NativeTop As Long
+Private m_NativeTwipsX As Long, m_NativeTwipsY As Long
+Private m_NativeLayoutValid As Boolean
 'Event Declarations:
 Event CheatClicked() 'MappingInfo=chkCheat,chkCheat,-1,Click
 Attribute CheatClicked.VB_Description = "Occurs when the user presses and then releases a mouse button over an object."
 Event LockedClicked() 'MappingInfo=chkCheatLock,chkCheatLock,-1,Click
 Attribute LockedClicked.VB_Description = "Occurs when the user presses and then releases a mouse button over an object."
 
+
+Public Sub PlaceOnSSTab(ByVal ParentHwnd As Long, ByVal LeftTwips As Long, ByVal TopTwips As Long, ByVal ShowIt As Boolean)
+    Dim px As Long, py As Long, ok As Boolean, CheatWnd As Long, LockWnd As Long
+    If Not ShowIt Then
+        If m_CheatWnd <> 0 Then ShowWindowNative m_CheatWnd, 0
+        If m_LockWnd <> 0 Then ShowWindowNative m_LockWnd, 0
+        m_NativeLayoutValid = False
+        Exit Sub
+    End If
+    CheatWnd = chkCheat.hWnd: LockWnd = chkCheatLock.hWnd
+    If CheatWnd <> m_CheatWnd Or LockWnd <> m_LockWnd Then m_NativeParent = 0
+    m_CheatWnd = CheatWnd: m_LockWnd = LockWnd
+    If m_NativeParent <> ParentHwnd Then
+        SetParentWin m_CheatWnd, ParentHwnd
+        SetParentWin m_LockWnd, ParentHwnd
+        m_NativeParent = ParentHwnd
+        m_NativeLayoutValid = False
+    End If
+    If ShowIt Then
+        px = LeftTwips \ Screen.TwipsPerPixelX
+        py = TopTwips \ Screen.TwipsPerPixelY
+        If Not m_NativeLayoutValid Or m_NativeLeft <> px Or m_NativeTop <> py Or m_NativeTwipsX <> Screen.TwipsPerPixelX Or m_NativeTwipsY <> Screen.TwipsPerPixelY Then
+            ok = (MoveWindowNative(m_LockWnd, px, py, 360 \ Screen.TwipsPerPixelX, 360 \ Screen.TwipsPerPixelY, 1) <> 0)
+            If MoveWindowNative(m_CheatWnd, px + 345 \ Screen.TwipsPerPixelX, py, 1440 \ Screen.TwipsPerPixelX, 360 \ Screen.TwipsPerPixelY, 1) = 0 Then ok = False
+            m_NativeLeft = px: m_NativeTop = py
+            m_NativeTwipsX = Screen.TwipsPerPixelX: m_NativeTwipsY = Screen.TwipsPerPixelY
+            m_NativeLayoutValid = ok
+        End If
+    End If
+    EnableWindowNative m_CheatWnd, Abs(CLng(UserControl.Enabled))
+    EnableWindowNative m_LockWnd, Abs(CLng(UserControl.Enabled))
+    ShowWindowNative m_CheatWnd, IIf(ShowIt, 5, 0)
+    ShowWindowNative m_LockWnd, IIf(ShowIt, 5, 0)
+End Sub
+
+Public Property Get NativeToggleHwnd() As Long
+    NativeToggleHwnd = m_CheatWnd
+End Property
+Public Property Get NativeLockHwnd() As Long
+    NativeLockHwnd = m_LockWnd
+End Property
 
 'WARNING! DO NOT REMOVE OR MODIFY THE FOLLOWING COMMENTED LINES!
 'MappingInfo=chkCheat,chkCheat,-1,Caption

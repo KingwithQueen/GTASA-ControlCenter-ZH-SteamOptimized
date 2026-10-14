@@ -30,6 +30,7 @@ def compiler(exe,project,output,port,node):
     k.CreateProcessW.argtypes=[W.LPCWSTR,W.LPWSTR,C.c_void_p,C.c_void_p,W.BOOL,W.DWORD,C.c_void_p,W.LPCWSTR,C.POINTER(SI),C.POINTER(PI)]
     k.AssignProcessToJobObject.argtypes=[W.HANDLE,W.HANDLE]
     k.ResumeThread.argtypes=[W.HANDLE];k.CloseHandle.argtypes=[W.HANDLE];k.TerminateProcess.argtypes=[W.HANDLE,W.UINT]
+    k.WaitForSingleObject.argtypes=[W.HANDLE,W.DWORD];k.WaitForSingleObject.restype=W.DWORD
     desktop_name='LegacySourceRestore-'+str(os.getpid())
     desktop=u.CreateDesktopW(desktop_name,None,None,0,0x01FF,None)
     if not desktop:raise C.WinError(C.get_last_error())
@@ -48,7 +49,11 @@ def compiler(exe,project,output,port,node):
     finally:
         if job:k.CloseHandle(job)
         if pi.thread:k.CloseHandle(pi.thread)
-        if pi.process:k.CloseHandle(pi.process)
+        if pi.process:
+            # Closing the job requests termination; wait until the compiler has
+            # released the linked EXE before updating its resources.
+            k.WaitForSingleObject(pi.process,10000)
+            k.CloseHandle(pi.process)
         u.CloseDesktop(desktop)
 def main():
     p=argparse.ArgumentParser()
@@ -86,18 +91,21 @@ def main():
     shutil.copy2(ROOT/'resources/defaults/GTASAConfig.default.dat',project/'GTASAConfig.dat')
     if a.prepare_only:
         print(json.dumps({'prepared':True,'project':str(project),'trainer_launched':False}));return
+    native_source_receipt={p.relative_to(ROOT).as_posix():sha(p) for p in (ROOT/'native').iterdir() if p.is_file()}
     print(json.dumps({'phase':'native','source_from_backup_only':True}),flush=True)
     native=subprocess.run([os.environ['COMSPEC'],'/d','/c',str(ROOT/'scripts/build-native.cmd')],cwd=ROOT,stdout=subprocess.PIPE,stderr=subprocess.STDOUT,text=True,encoding=locale.getpreferredencoding(False),errors='replace',timeout=180)
     (output/'native-build.log').write_text(native.stdout,encoding='utf8')
     print(native.stdout[-3500:],flush=True)
     if native.returncode:raise RuntimeError('Native build/test failed; see native-build.log')
+    assert all(marker in native.stdout for marker in ('TRAIN_RESTORE=PASS','TRAIN_COMPONENT=PASS','LEGACY_GARAGE=PASS','FEATURE_HOOKS=PASS','SCRIPT_FEEDBACK_RC=PASS','PASS: plate game-thread dispatch','PASS: real x86 game-thread queue')), 'Missing native test receipt'
     shutil.copy2(output/'native/GTASASteam.dll',project/'GTASASteam.dll')
+    shutil.copy2(output/'native/GTASA_TrainRestore_Steam.asi',project/'GTASA_TrainRestore_Steam.asi')
     compiler(a.twinbasic.resolve(),project,output,a.port,a.node)
     exe=project/'GTASA_Center_ZH.exe'
     metadata=embed(exe,ROOT/'GTASAConsole/app-local-controls.manifest')
     report=json.loads((output/'compiler-report.json').read_text(encoding='utf8'))
     assert report['success'] and 'DIAGNOSTICS\n0\n5\n0\n0' in report['buildState'],'Unexpected compiler diagnostics; review compiler report'
-    result={'success':True,'source_from_backup_only':True,'native_unit_test_passed':True,'compiler':'twinBASIC beta 991 Win32','compile_errors':0,'preexisting_warnings':5,'trainer_launched':False,'real_gta_accessed':False,'exe_bytes':exe.stat().st_size,'exe_sha256':sha(exe),'native_dll_sha256':sha(project/'GTASASteam.dll'),'binary_identical_to_original_required':False,**metadata}
+    result={'success':True,'source_from_backup_only':True,'native_unit_test_passed':True,'compiler':'twinBASIC beta 991 Win32','compile_errors':0,'preexisting_warnings':5,'trainer_launched':False,'real_gta_accessed':False,'exe_bytes':exe.stat().st_size,'exe_sha256':sha(exe),'native_dll_sha256':sha(project/'GTASASteam.dll'),'train_component_sha256':sha(project/'GTASA_TrainRestore_Steam.asi'),'native_source_inputs':native_source_receipt,'binary_identical_to_original_required':False,**metadata}
     (output/'build-result.json').write_text(json.dumps(result,indent=2)+'\n',encoding='utf8')
     print(json.dumps(result),flush=True)
 if __name__=='__main__':main()

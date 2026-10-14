@@ -2,6 +2,10 @@
 
 本项目基于GTA SA Control Center开源代码，汉化了修改器文本，适配了steam版GTASA。工程入口为 `GTASAConsole/GTASAConsole.vbp`，采用 VB6 工程格式，以 twinBASIC BETA 991 编译 Win32。源文件取自正式 release；Steam 后端取自对应的旧版 C++ 后端。
 
+20261006 开发分支补全了 17 个车库存车编辑和锁定、一击必杀、任务显示计时冻结、六位女友统计和脚本进度同步、Hot Coffee 脚本开关、游戏内反馈、原版驾驶快捷键及遥控载具识别；同时修正 Steam 整数统计表起点。编译、原生夹具和旧版界面联调通过，真实游戏验收仍待进行。实现与使用边界见 `开发记录20261006.md`。
+
+20261006 r2 继续恢复玩家页 22 组开关和锁定按钮，修复弹药锁定、传送旋转和玩家防护显示，增加车牌更新，并修正普通汽车与特殊车型的存车判断。可选火车组件仅在游戏实际加载且核对通过后启用相应车型，使用和移除条件见 [r2 开发记录](开发记录20261006-r2.md)。离线验证和真实游戏验收分别记录。
+
 ## 内容
 
 | 目录或文件 | 用途 |
@@ -10,11 +14,11 @@
 | `native/SteamMemory.cpp`、`exports.def` | 可重建 GTASASteam.dll 的完整后端源码及导出清单；内含离线 UNIT_TEST |
 | `localization/zh-CN.master.tsv` | 正式最终字典；构建时逐字节导出到生成目录 |
 | `localization/source-tables/` | 保留的翻译编辑表，供维护查阅；不自动覆盖最终字典 |
-| `resources/defaults/` | 从正式 RES 中提取的原始默认设置，不含用户当前设置 |
+| `resources/defaults/` | 干净默认设置；快捷键已恢复为 69 条、65 条启用，并与 RES 内置资源同步 |
 | `vendor/vb6-controls/` | 正式版本使用的两个必要 OCX 运行依赖，版本 6.1.98.16 |
 | `scripts/`、`build.cmd` | 可迁移的离线构建、字典导出及免注册清单嵌入脚本 |
 | `tools.lock.json` | 工具版本、官方来源与已知哈希；不包含编译器或安装包 |
-| `provenance/` | 正式版本对应关系、来源哈希、移植调整及验证记录 |
+| `provenance/` | 20261004 基线对应关系及新功能地址、资源与离线验证记录 |
 | `FILES.sha256` | 本次备份文件的 SHA-256 清单；运行 `python -B scripts/verify_files.py` 核验，编辑源码后需重新生成 |
 
 保留了正式源码所需的二进制项目资源，不能因扩展名为 RES、FRX、CTX、OCX 而删除。帮助源文件和既有 CHM 均保留，避免丢失历史资料。没有打包游戏本体、C# 项目、离线禁用游戏的实验源码、编译器、MSI、下载缓存、用户 INI、用户 Config.dat、个人坐标、抓取转储或构建输出。
@@ -50,6 +54,12 @@ build.cmd --prepare-only --output ".work\manual-import"
 
 此模式不编译后端。完整可运行包需先构建后端 DLL，再在 twinBASIC 中编译 Win32，最后执行清单嵌入步骤；推荐使用完整 build.cmd 流程。直接导入本目录的 VBP 可能出现相对 OLE 引用转换提示，生成副本会自动解析它。
 
+运行旧版界面与新接口的离线联调，可在初始化开发环境后执行 `python scripts/verify-offline-ui.py --output .work/offline-ui-check --twinbasic 工具路径`。脚本只编译并运行专用测试副本，移除游戏发现与打开进程入口，使用当前测试进程中的模拟内存。`OFFLINE_UI_FIXTURE` 仅用于测试 DLL，正常构建没有这些导出。
+
+已有配置中的 14 条驾驶快捷键可用 `scripts/Restore-OriginalDrivingShortcuts.ps1 -ConfigPath 配置路径` 恢复。先关闭修改器；工具保存完整备份，只把对应 UID 的 Active 字段从 0 改为 1，保留其他字段、汉化文字和个人记录。它不会恢复已删除的记录；新发行包提供完整默认预设。
+
+离线验证通过并将源文件及更新后的 FILES.sha256 提交到本地分支后，运行 `python -B scripts/package-candidate.py --build 构建目录 --offline-ui 界面测试目录 --output 新的发行目录` 可生成独立 ZIP。输出放在源码目录外且必须尚不存在。打包脚本核对 x86、正式导出、免注册清单、内置快捷键、产物哈希及离线结果，只收录运行文件、必要资源、恢复工具、说明与验证记录，随后逐文件核验 ZIP。候选包记录源码提交，真实游戏验收状态保持 pending。
+
 ## 与正式交付的对应关系
 
 正式原版 EXE SHA-256：
@@ -58,7 +68,7 @@ build.cmd --prepare-only --output ".work\manual-import"
 76954b8b6763b9832fb9f201d3ffdf241f03825a0f61cff9da6b7e2845e737d7
 ```
 
-本备份保持实际编译源码与资源。仅有三处便携化调整：VBP 的 Windows OLE 引用改为相对路径；未启用的转储注释改为相对文件名；未加入工程的 mdlRegistry.bas 中遗留路径整理。具体前后哈希见 `provenance/source-correspondence.json`。编译时只在生成副本中将 OLE 引用解析成其当前实际位置。没有重新应用 baseline 补丁，也没有用 benchmark 源码替代正式源码。
+上述 EXE 和 `provenance/source-correspondence.json` 对应保留的 20261004 基线。该基线仅有三处便携化调整：VBP 的 Windows OLE 引用改为相对路径；未启用的转储注释改为相对文件名；未加入工程的 mdlRegistry.bas 中遗留路径整理。本分支在基准提交 b96b553d5c1bdf35d7ec5dfbc4d912c4cbe6296f 上实现功能补全，不能再用历史来源哈希表示当前文件。`FILES.sha256` 记录当前源文件，新增验证记录见 `provenance/feature-evidence-20261006.json`。
 
 重新生成的 EXE/DLL 可能因工具链、编译时间或资源嵌入而与既有发布产物哈希不同。
 
