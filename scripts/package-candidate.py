@@ -117,6 +117,7 @@ def main():
         for name,expected_hash in source_receipt.items():
             assert sha(ROOT / name)==expected_hash, 'Validation source differs: '+name
     assert ui_result['captured_pages']==8 and ui_result['native_cheat_and_lock_clicks']==88
+    assert ui_result['localized_spawn_button_verified'] and ui_result['coffee_native_clicks_verified'] and ui_result['coffee_visibility_verified']
     project = build / 'GTASAConsole'
     for file in (ROOT / 'GTASAConsole').glob('*'):
         if file.suffix.lower() in ('.frm', '.frx', '.bas', '.cls', '.ctl', '.ctx', '.res'):
@@ -149,21 +150,21 @@ def main():
         shutil.copytree(project / name, output / name)
     for name in ('Restore-OriginalDrivingShortcuts.ps1', 'Restore-OriginalDrivingShortcuts.cmd', 'Install-TrainRestore.ps1', 'Install-TrainRestore.cmd'):
         shutil.copy2(ROOT / 'scripts' / name, output / name)
-    for name in ('NOTICE.md', '开发记录20261006.md', '开发记录20261006-r2.md'):
+    for name in ('NOTICE.md', '开发记录20261006.md', '开发记录20261006-r2.md', '开发记录20261015-r3.md'):
         shutil.copy2(ROOT / name, output / name)
     (output / '使用说明.md').write_text(
-        '# 20261006 r2 功能补全候选版\n\n'
+        '# 20261015 r3 界面修复候选版\n\n'
         '解压到新目录，运行 GTASA_Center_ZH.exe。候选版已通过编译、原生测试和旧界面离线联调，真实游戏验收待进行。\n\n'
-        'r2 恢复玩家状态页 22 组开关及锁定按钮（含车辆稀少），修复防护显示、弹药锁定、车辆及拖车传送旋转，新增当前车辆车牌更新，修正普通汽车与特殊车型存车判断，并提供火车还原组件。保留 r1 已开发功能。\n\n'
+        'r3 修复生成载具按钮及提示的乱码，在玩家状态页右侧显示 Hot Coffee 脚本开关，并说明它的实际范围。保留 r2 已开发功能和原生接口。\n\n'
         '使用前关闭旧修改器并重启游戏，保留旧发行包及存档备份。首次启用代码功能、反馈和持续锁定时先按 Esc 暂停；女友和 Hot Coffee 修改也要求暂停。\n\n'
         '车库写入前关闭车库、在室外步行并暂停，然后读取车库、编辑、写入。飞机及直升机使用游戏原有还原流程；大型载具的空间、碰撞及读档表现待逐项实测。\n\n'
         '火车需要可选的 GTASA_TrainRestore_Steam.asi 组件。完全退出游戏后运行 Install-TrainRestore.cmd，输入游戏目录；游戏需已有 ASI 加载器。工具核对版本和文件，组件加载确认后车库才追加火车车型。本次开发未安装组件。移除前必须在组件仍启用时清空所有车库火车记录并重新保存。\n\n'
         '车牌仅支持 1 至 8 个英文字母、数字或空格。进入带车牌车辆后填写文字、点击修改按钮，再继续游戏等待更新；首次使用前先暂停。状态栏颜色和提示说明处理结果，画面效果仍待实机确认。\n\n'
-        'Hot Coffee 仅恢复已核对的脚本标志，画面、动画和完整小游戏仍待实机确认；游戏内汉字显示也待实机确认。其余限制和验收项目见开发记录。\n\n'
+        'Hot Coffee：载入稳定场景后按 Esc 暂停，在修改器的玩家状态页右侧点击，状态变为“开启（脚本）”后返回女友约会流程。它只修改审查标志，不会直接启动小游戏或补充游戏资源；完整小游戏仍待实机确认，不能保证仅开启就能进入。显示“脚本不支持”时无法开启。详见开发记录20261015-r3.md。游戏内中文反馈仍待实机确认。\n\n'
         '包内为全新默认配置。需沿用旧设置时，在旧配置的副本上运行快捷键恢复工具；工具保存完整备份，仅恢复原版 14 条驾驶辅助的启用状态。双击 CMD 工具会处理同目录的 GTASAConfig.dat。\n',
         encoding='utf8')
     metadata = {
-        'version': '20261006-feature-candidate-r2', 'source_commit': commit, 'branch': branch,
+        'version': '20261015-ui-fix-candidate-r3', 'source_commit': commit, 'branch': branch,
         'source_files_manifest_sha256': sha(ROOT / 'FILES.sha256'),
         'build': result, 'offline_ui': ui_result, 'native_warnings': 0,
         'exports': exports, 'shortcut_total': 69, 'shortcut_active': 65,

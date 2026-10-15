@@ -1,5 +1,8 @@
 // Compiled ONLY into the private offline UI fixture, never the release DLL.
 #ifdef OFFLINE_UI_FIXTURE
+extern "C" DWORD __stdcall SteamFixtureCoffeeSupported(DWORD supported){
+ if(supported>1)return 0;coffeeScriptsVerified=supported!=0;return 1;
+}
 static DWORD fixturePlateTexture=0;
 static DWORD __cdecl fixtureCreatePlate(const char* caption,DWORD){
  memcpy((void*)(fixturePlateTexture+16),caption,9);*(DWORD*)(fixturePlateTexture+0x54)=1;

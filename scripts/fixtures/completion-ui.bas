@@ -77,7 +77,7 @@ Private Sub OfflineCompletionTests(ByVal ReceiptFile As Integer)
 End Sub
 
 Private Sub OfflineCapturePages()
-    Dim i As Integer, j As Integer, Page As Integer, f As Integer, Ack As String, Start As Single
+    Dim i As Integer, j As Integer, Page As Integer, f As Integer, Ack As String, Start As Single, SpawnHwnd As Long
     For i = 0 To 7
         Page = i
         If i = 6 Or i = 7 Then Page = 1
@@ -85,9 +85,10 @@ Private Sub OfflineCapturePages()
         If i = 7 Then Me.Width = Me.Width - 600: Me.Height = Me.Height - 300
         sstMain.Tab = Page: EndMainTabRedraw: SyncPlayerStatusControls: Form_Resize: Me.Refresh: DoEvents: SyncPlayerStatusControls
         OfflineCheck sstMain.Tab = Page, "requested page selected"
+        If i = 0 Then SpawnHwnd = cmdSpawnCar(0).hWnd
         f = FreeFile
         Open App.Path & "\completion-page.ready" For Output As #f
-        Print #f, CStr(i) & "|" & CStr(Me.hWnd) & "|" & CStr(sstMain.hWnd) & "|" & CStr(sstMain.Tab)
+        Print #f, CStr(i) & "|" & CStr(Me.hWnd) & "|" & CStr(sstMain.hWnd) & "|" & CStr(sstMain.Tab) & "|" & CStr(SpawnHwnd) & "|" & CStr(chkCoffee.hWnd)
         For j = 0 To 31
             Print #f, CStr(j) & "|" & CStr(oCheatStates(j).OfflineCheatHandle) & "|" & CStr(oCheatStates(j).OfflineLockHandle)
         Next j
@@ -95,8 +96,8 @@ Private Sub OfflineCapturePages()
         Start = Timer
         Do
             Ack = ""
-            If Dir$(App.Path & "\completion-page.ack") <> "" Then
-                f = FreeFile: Open App.Path & "\completion-page.ack" For Input As #f
+            If Dir$(App.Path & "\completion-page-" & CStr(i) & ".ack") <> "" Then
+                f = FreeFile: Open App.Path & "\completion-page-" & CStr(i) & ".ack" For Input As #f
                 If Not EOF(f) Then Line Input #f, Ack
                 Close #f
             End If

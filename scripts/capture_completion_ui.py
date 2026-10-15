@@ -8,6 +8,8 @@ def capture_pages(project, output, process):
     for name,rest,args in (
         ('GetWindowThreadProcessId',W.DWORD,[W.HWND,C.POINTER(W.DWORD)]),
         ('IsWindowVisible',W.BOOL,[W.HWND]),
+        ('IsWindowEnabled',W.BOOL,[W.HWND]),
+        ('GetWindowTextW',C.c_int,[W.HWND,W.LPWSTR,C.c_int]),
         ('GetWindowRect',W.BOOL,[W.HWND,C.POINTER(W.RECT)]),
         ('GetWindowDC',C.c_void_p,[W.HWND]),('ReleaseDC',C.c_int,[W.HWND,C.c_void_p]),
         ('PrintWindow',W.BOOL,[W.HWND,C.c_void_p,W.UINT])):
@@ -55,7 +57,18 @@ def capture_pages(project, output, process):
             if len(lines)==33 and lines[0].startswith(str(page)+'|'):break
             time.sleep(.05)
         else:raise RuntimeError('Page capture timed out: '+str(page))
-        _,window,tab,actual_page=map(int,lines[0].split('|'));window&=0xffffffff;tab&=0xffffffff
+        _,window,tab,actual_page,spawn,coffee=map(int,lines[0].split('|'));window&=0xffffffff;tab&=0xffffffff
+        spawn&=0xffffffff;coffee&=0xffffffff;owned(spawn);owned(coffee)
+        caption=C.create_unicode_buffer(512);u.GetWindowTextW(spawn,caption,512)
+        expected='\u751f\u6210\u6240\u9009\u8f7d\u5177\uff08\u4f5c\u8005 Jacob\uff09'
+        assert caption.value==expected, 'Spawn caption did not match the Chinese translation: '+repr(caption.value)
+        assert bool(u.IsWindowVisible(coffee))==(actual_page==1), 'Coffee switch visibility differs'
+        if actual_page==1:
+            u.GetWindowTextW(coffee,caption,512)
+            assert caption.value=='Hot Coffee\uff1a\u5173\u95ed\uff08\u811a\u672c\uff09', 'Coffee caption differs'
+            assert u.IsWindowEnabled(coffee), 'Supported Coffee switch disabled'
+            bounds=rect(tab);r=rect(coffee)
+            assert bounds.left<=r.left<r.right<=bounds.right and bounds.top<=r.top<r.bottom<=bounds.bottom
         png(window,output/('page-'+str(page)+'.png'))
         state=[]
         for line in lines[1:]:
@@ -63,13 +76,14 @@ def capture_pages(project, output, process):
             owned(toggle);owned(lock)
             state.append((index,toggle,lock,bool(u.IsWindowVisible(toggle)),bool(u.IsWindowVisible(lock))))
         (output/('page-'+str(page)+'-visibility.txt')).write_text(str(actual_page)+'\n'+repr(state),encoding='ascii')
-        assert all(t== (actual_page==1) and l==(actual_page==1) for _,_,_,t,l in state), 'Native page visibility differs; see visibility receipt'
+        assert all(t==(actual_page==1 and index not in (22,23)) and l==(actual_page==1 and index not in (22,23)) for index,_,_,t,l in state), 'Native page visibility differs; see visibility receipt'
         if page in (1,6,7):
             bounds=rect(tab)
             for line in lines[1:]:
-                _,toggle,lock=map(int,line.split('|'))
+                index,toggle,lock=map(int,line.split('|'))
+                if index in (22,23):continue
                 for handle in (toggle,lock):
                     r=rect(handle&0xffffffff)
                     assert bounds.left<=r.left<r.right<=bounds.right and bounds.top<=r.top<r.bottom<=bounds.bottom, 'Control outside player page'
         time.sleep(.1);png(window,output/('page-'+str(page)+'.png'))
-        (project/'completion-page.ack').write_text(str(page),encoding='ascii')
+        (project/('completion-page-'+str(page)+'.ack')).write_text(str(page),encoding='ascii')

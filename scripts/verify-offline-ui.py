@@ -24,6 +24,7 @@ def main():
     os.environ.update(LEGACY_SOURCE_ROOT=str(ROOT),LEGACY_BUILD_OUTPUT=str(output),TEMP=str(output/'temp'),TMP=str(output/'temp'))
     project=output/'GTASAConsole';declares=project/'mdlGTASADeclares.bas';form=project/'frmSAConsole.frm'
     edit(declares,'Option Explicit','Option Explicit\r\nPublic Const LegacyOfflineBuild As Boolean = True\r\n'
+        'Declare Function SteamFixtureCoffeeSupported Lib "GTASASteam.dll" (ByVal Supported As Long) As Long\r\n'
         'Declare Function SteamFixtureTrain Lib "GTASASteam.dll" () As Long\r\n'
         'Declare Function SteamFixtureVehicle Lib "GTASASteam.dll" (ByVal Enabled As Long) As Long\r\n'
         'Declare Function SteamFixtureBegin Lib "GTASASteam.dll" () As Long\r\n'
@@ -105,11 +106,20 @@ Private Sub OfflineFeatureUiTest()
         OfflineCheck SteamGirlfriendSet(i, 0, 0) = 0, "girlfriend unlock ABI"
     Next i
     Print #f, "feature switches and six girlfriend UI/API calls passed"
-    OfflineCheck chkCoffee.Enabled, "Coffee capability"
-    chkCoffee.Value = vbChecked
+    sstMain.Tab = 1: EndMainTabRedraw: SyncPlayerStatusControls: Me.Refresh: DoEvents
+    OfflineCheck chkCoffee.Visible And chkCoffee.Enabled, "visible Coffee capability"
+    PerfSendMessage chkCoffee.hWnd, &HF5, 0, 0
     OfflineCheck SteamCoffeeGet() = 0, "Coffee enable click"
-    chkCoffee.Value = vbUnchecked
+    PerfSendMessage chkCoffee.hWnd, &HF5, 0, 0
     OfflineCheck SteamCoffeeGet() = 1, "Coffee disable click"
+    OfflineCheck SteamFixtureCoffeeSupported(0) = 1, "unsupported Coffee fixture"
+    RefreshSteamCoffeeUI
+    OfflineCheck Not chkCoffee.Enabled, "unsupported Coffee disabled"
+    PerfSendMessage chkCoffee.hWnd, &HF5, 0, 0
+    OfflineCheck SteamCoffeeGet() = 255, "unsupported native click stays unavailable"
+    OfflineCheck SteamFixtureCoffeeSupported(1) = 1, "restore supported Coffee"
+    RefreshSteamCoffeeUI
+    OfflineCheck SteamCoffeeGet() = 1, "unsupported click did not change script flag"
     Print #f, "Hot Coffee script switch click events passed"
     chkFeedback.Value = vbChecked
     OfflineCheck OnScreenText("Steam trainer feedback " & ChrW(&H4E2D) & ChrW(&H6587)), "feedback StrPtr/length ABI"
@@ -132,7 +142,7 @@ End Sub
 '''.replace('\n','\r\n')
     with form.open('ab') as file:file.write(fixture.encode('cp1252'))
     with form.open('ab') as file:file.write((ROOT/'scripts/fixtures/completion-ui.bas').read_bytes().decode('ascii').replace('\r\n','\n').replace('\n','\r\n').encode('cp1252'))
-    extra='\n SteamFixtureTrain=_SteamFixtureTrain@0\n SteamFixtureVehicle=_SteamFixtureVehicle@4\n SteamFixtureBegin=_SteamFixtureBegin@0\n SteamFixtureRun=_SteamFixtureRun@0\n SteamFixtureDisturbGarage=_SteamFixtureDisturbGarage@0\n'
+    extra='\n SteamFixtureCoffeeSupported=_SteamFixtureCoffeeSupported@4\n SteamFixtureTrain=_SteamFixtureTrain@0\n SteamFixtureVehicle=_SteamFixtureVehicle@4\n SteamFixtureBegin=_SteamFixtureBegin@0\n SteamFixtureRun=_SteamFixtureRun@0\n SteamFixtureDisturbGarage=_SteamFixtureDisturbGarage@0\n'
     (output/'offline-fixture.def').write_text((ROOT/'native/exports.def').read_text().replace('LIBRARY GTASASteam','LIBRARY OfflineUiFixture')+extra,encoding='utf8')
     subprocess.run([os.environ['COMSPEC'],'/d','/c',str(ROOT/'scripts/build-offline-fixture.cmd')],check=True)
     shutil.copy2(output/'OfflineUiFixture.dll',project/'GTASASteam.dll')
@@ -159,6 +169,6 @@ End Sub
             if '\nPASS' in text:break
             time.sleep(.1)
         else:raise RuntimeError('Offline UI test timed out: '+text)
-    result={'success':True,'private_desktop':True,'instrumented_ui_only':True,'real_game_discovery_or_access':False,'production_trainer_launched':False,'test_exe_sha256':hashlib.sha256(exe.read_bytes()).hexdigest(),'receipt':text,'source_inputs':source_receipt,'captured_pages':8,'native_cheat_and_lock_clicks':88,'player_controls_within_tab_bounds':True}
+    result={'success':True,'private_desktop':True,'instrumented_ui_only':True,'real_game_discovery_or_access':False,'production_trainer_launched':False,'test_exe_sha256':hashlib.sha256(exe.read_bytes()).hexdigest(),'receipt':text,'source_inputs':source_receipt,'localized_spawn_button_verified':True,'coffee_native_clicks_verified':True,'coffee_visibility_verified':True,'captured_pages':8,'native_cheat_and_lock_clicks':88,'player_controls_within_tab_bounds':True}
     (output/'offline-ui-result.json').write_text(json.dumps(result,indent=2),encoding='utf8');print(json.dumps(result))
 if __name__=='__main__':main()

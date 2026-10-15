@@ -241,7 +241,7 @@ Shortcut:	快捷键：
 Control Center Commands:	控制中心命令：
 GTASA internal Cheats:	游戏内置秘籍：
 Cheat string:	秘籍代码：
-Coffee: Censored	隐藏内容：关闭
+Coffee: Censored	Hot Coffee：关闭（脚本）
 Edit Label	编辑名称
 Move to Folder	移至分组
 Activate	启用
@@ -313,7 +313,7 @@ Click to assign new Location Data for selected Teleport-Location	更新所选传
 Click to insert this location data as a new entry to treeview	将当前坐标保存为新地点
 Click to read position data from GTASA	读取游戏中的当前位置
 Click to toggle 'Freeze All Mission Timers' On and Off (uses code injection)	开关所有任务计时器的冻结（需要代码注入）
-Click to toggle 'HotCoffee' On and Off (ie. Censored and Uncensored)	开关隐藏的约会内容
+Click to toggle 'HotCoffee' On and Off (ie. Censored and Uncensored)	切换约会脚本标志；不会直接启动小游戏，完整流程尚未验收。开启前请按 Esc 暂停。
 Click to toggle 'One Hit Kill' On and Off (uses code injection)	开关一击必杀（需要代码注入）
 Click to toggle 'Safe Cheats' On and Off (ie. clear 'cheated' status of game after inserting cheats)	开关秘籍使用后的作弊标记清除
 CriminalsKilled	击杀罪犯数
@@ -667,7 +667,7 @@ for proper syncronization!	以便正确同步数据！
 This Message will be shown 	此提示还将显示 
  more times.	 次。
 GTASA Control Center [Online - No Game in Progress]	圣安地列斯控制中心 [已连接，等待载入游戏]
-Coffee: Uncensored	咖啡小游戏：未屏蔽
+Coffee: Uncensored	Hot Coffee：开启（脚本）
 SCM Modded...	任务脚本功能不可用
 Current Car: No Specialities	当前载具：无特殊防护
 Hook Timer	游戏数据读取
@@ -1624,7 +1624,7 @@ Steam feature: the operation failed. The switch has been restored.	操作失败�
 Steam girlfriend: pause with Esc before changing or locking progress.	修改或锁定女友关系进度前，请按Esc暂停游戏。
 Steam girlfriend: the script does not match. Progress was not changed.	游戏脚本不匹配，未修改女友进度。
 Steam feedback: pause with Esc before enabling game messages.	启用游戏内反馈前，请先按Esc暂停游戏。
-Steam Coffee: pause before changing the verified script flag.	切换隐藏约会内容前，请按Esc暂停游戏。
+Steam Coffee: pause before changing the verified script flag.	先按 Esc 暂停，再切换约会脚本标志；不会直接启动小游戏，完整流程尚未验收。
 Steam Coffee: script package is not supported.	当前脚本包不支持隐藏约会开关。
 Steam Coffee: script validation or writing failed; the switch has been restored.	脚本校验或写入失败，已还原隐藏约会开关。
 Enter a vehicle with a license plate first.	请先进入一辆有车牌的车辆。
@@ -1636,3 +1636,8 @@ The plate request failed. No texture was renamed.	车牌修改提交失败，原
 The vehicle changed or plate generation failed. Retry on the current vehicle.	车辆已变化或车牌生成失败，请在当前车辆上重试。
 Update the current plate after continuing the game.	提交当前车牌文字，继续游戏后更新显示。
 Steam garage: install the train restore component and restart the game before storing trains.	Steam 车库：存放火车前，请安装火车还原组件并重启游戏。
+Hot Coffee: Not connected	Hot Coffee：等待连接
+Hot Coffee: Script unsupported	Hot Coffee：脚本不支持
+Hot Coffee changes a dating-script flag only. The complete minigame is not verified.	只修改约会脚本标志，完整小游戏尚未验收。请先连接受支持的游戏。
+Injection ASM Code by Jacob	生成器代码作者：Jacob
+Plate editing is available for Classic Steam vehicles.	车牌修改仅支持已适配的经典 Steam 版载具。
