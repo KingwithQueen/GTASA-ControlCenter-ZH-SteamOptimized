@@ -1,6 +1,6 @@
-<#
+﻿<#
 .SYNOPSIS
-Checks mouse and keyboard navigation in a running instance of the Win32 prototype.
+Checks navigation, vehicle colors, player protection and the location map in a running Win32 instance.
 .EXAMPLE
 powershell -File .\win32-ui\smoke-navigation.ps1
 .EXAMPLE
@@ -101,6 +101,10 @@ namespace GtasaUiSmoke
         public static extern bool IsWindowVisible(IntPtr window);
         [DllImport("user32.dll")]
         private static extern bool EnumChildWindows(IntPtr window, EnumerateWindow callback, IntPtr state);
+        [DllImport("user32.dll")]
+        private static extern bool EnumThreadWindows(uint thread, EnumerateWindow callback, IntPtr state);
+        [DllImport("user32.dll")]
+        private static extern uint GetWindowThreadProcessId(IntPtr window, IntPtr processId);
         [DllImport("user32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
         private static extern int GetClassName(IntPtr window, StringBuilder name, int capacity);
         [DllImport("user32.dll", SetLastError = true)]
@@ -116,6 +120,9 @@ namespace GtasaUiSmoke
         [DllImport("user32.dll", SetLastError = true)]
         private static extern IntPtr SendMessageTimeout(IntPtr window, uint message, IntPtr wParam,
             IntPtr lParam, uint flags, uint timeoutMs, out IntPtr result);
+        [DllImport("user32.dll", EntryPoint = "SendMessageTimeoutW", CharSet = CharSet.Unicode, SetLastError = true)]
+        private static extern IntPtr ReadText(IntPtr window, uint message, IntPtr capacity,
+            StringBuilder text, uint flags, uint timeoutMs, out IntPtr result);
         [DllImport("user32.dll")]
         private static extern IntPtr SetThreadDpiAwarenessContext(IntPtr context);
         [DllImport("user32.dll")]
@@ -161,6 +168,73 @@ namespace GtasaUiSmoke
         public static int TabCount(IntPtr window) { return ReadControlInt(window, TcmGetItemCount); }
         public static int SelectedTab(IntPtr window) { return ReadControlInt(window, TcmGetCurSel); }
         public static int ListCount(IntPtr window) { return ReadControlInt(window, LvmGetItemCount); }
+        public static int ComboCount(IntPtr window) { return ReadControlInt(window, 0x0146); }
+        public static int ComboSelection(IntPtr window) { return ReadControlInt(window, 0x0147); }
+        public static int CheckState(IntPtr window) { return ReadControlInt(window, 0x00F0); }
+        public static void Press(IntPtr button) { Post(button, 0x00F5, 0, 0); }
+
+        public static string ControlText(IntPtr window)
+        {
+            var text = new StringBuilder(256);
+            IntPtr result;
+            if (ReadText(window, 0x000D, new IntPtr(text.Capacity), text,
+                SmtoBlockAbortIfHungErrorOnExit, 1000, out result) == IntPtr.Zero)
+                throw Win32Failure("Could not read the control text.", Marshal.GetLastWin32Error());
+            return text.ToString();
+        }
+
+        public static IntPtr FindDialog(IntPtr main, string title)
+        {
+            IntPtr found = IntPtr.Zero;
+            EnumThreadWindows(GetWindowThreadProcessId(main, IntPtr.Zero), (window, state) => {
+                if (window != main && IsWindowVisible(window) && WindowClass(window) == "#32770" &&
+                    ControlText(window) == title)
+                {
+                    found = window;
+                    return false;
+                }
+                return true;
+            }, IntPtr.Zero);
+            return found;
+        }
+
+        public static void ClickInClient(IntPtr window, double xFraction, double yFraction)
+        {
+            IntPtr previous = EnterWindowDpi(window);
+            try
+            {
+                Rect rect;
+                if (!GetClientRect(window, out rect))
+                    throw Win32Failure("Could not read the map bounds.", Marshal.GetLastWin32Error());
+                int x = (int)(rect.Right * xFraction), y = (int)(rect.Bottom * yFraction);
+                int position = (x & 0xFFFF) | ((y & 0xFFFF) << 16);
+                Post(window, 0x0201, 1, position);
+                Post(window, 0x0202, 0, position);
+            }
+            finally
+            {
+                if (previous != IntPtr.Zero) SetThreadDpiAwarenessContext(previous);
+            }
+        }
+
+        public static void ScrollAtCenter(IntPtr window)
+        {
+            IntPtr previous = EnterWindowDpi(window);
+            try
+            {
+                Rect rect;
+                if (!GetClientRect(window, out rect))
+                    throw Win32Failure("Could not read the map bounds.", Marshal.GetLastWin32Error());
+                var point = new Point { X = rect.Right / 2, Y = rect.Bottom / 2 };
+                MapWindowPoints(window, IntPtr.Zero, ref point, 1);
+                int position = (point.X & 0xFFFF) | ((point.Y & 0xFFFF) << 16);
+                Post(window, 0x020A, 120 << 16, position);
+            }
+            finally
+            {
+                if (previous != IntPtr.Zero) SetThreadDpiAwarenessContext(previous);
+            }
+        }
 
         public static TabItem[] TabItems(IntPtr window)
         {
@@ -332,6 +406,113 @@ function Select-TabByClick([int] $Index) {
     Assert-SelectedPage $Index "Mouse click on tab $Index"
 }
 
+function Wait-Ui([scriptblock] $Check, [string] $Failure) {
+    $timer = [Diagnostics.Stopwatch]::StartNew()
+    do {
+        if (& $Check) { return }
+        Start-Sleep -Milliseconds 25
+    } while ($timer.ElapsedMilliseconds -lt 3000)
+    throw $Failure
+}
+
+function Get-VisibleControl([IntPtr] $Parent, [int] $Id) {
+    $control = [GtasaUiSmoke.Native]::GetDlgItem($Parent, $Id)
+    if ($control -eq [IntPtr]::Zero -or -not [GtasaUiSmoke.Native]::IsWindowVisible($control)) {
+        throw "Control $Id was missing or hidden."
+    }
+    $control
+}
+
+function Test-ColorPicker([IntPtr] $Button, [int] $Target, [int] $Color) {
+    $title = '车辆颜色'
+    $original = [GtasaUiSmoke.Native]::ControlText($Button)
+    [GtasaUiSmoke.Native]::Press($Button)
+    Wait-Ui { [GtasaUiSmoke.Native]::FindDialog($mainWindow, $title) -ne [IntPtr]::Zero } 'The vehicle palette did not open.'
+    $dialog = [GtasaUiSmoke.Native]::FindDialog($mainWindow, $title)
+    $selector = Get-VisibleControl $dialog $Target
+    if ([GtasaUiSmoke.Native]::CheckState($selector) -ne 1) { throw "The palette opened for the wrong color target." }
+    [GtasaUiSmoke.Native]::Press((Get-VisibleControl $dialog (300 + $Color)))
+    [GtasaUiSmoke.Native]::Press((Get-VisibleControl $dialog 1))
+    Wait-Ui { -not [GtasaUiSmoke.Native]::IsWindowVisible($dialog) } 'The palette did not accept the chosen color.'
+    Wait-Ui {
+        $actual = [GtasaUiSmoke.Native]::ControlText($Button)
+        $actual -ne $original -and $actual -match "(?<!\d)0*$Color(?!\d)"
+    } "Color target $Target did not retain color $Color."
+}
+
+function Test-PlayerFireControls {
+    Select-TabByClick 1
+    $playerPage = Get-Page 1
+    $overview = Get-VisibleControl $playerPage 7110
+    $damage = Get-VisibleControl $overview 7130
+    $cheat = Get-VisibleControl $overview 7131
+    $lock = Get-VisibleControl $overview 7132
+    $damageStart = [GtasaUiSmoke.Native]::CheckState($damage)
+    $cheatStart = [GtasaUiSmoke.Native]::CheckState($cheat)
+    $lockStart = [GtasaUiSmoke.Native]::CheckState($lock)
+    [GtasaUiSmoke.Native]::Press($damage)
+    Wait-Ui { [GtasaUiSmoke.Native]::CheckState($damage) -ne $damageStart } 'The player fire damage checkbox did not toggle.'
+    if ([GtasaUiSmoke.Native]::CheckState($cheat) -ne $cheatStart) {
+        throw 'Player fire damage protection unexpectedly changed the separate fireproof cheat.'
+    }
+    [GtasaUiSmoke.Native]::Press($cheat)
+    Wait-Ui { [GtasaUiSmoke.Native]::CheckState($cheat) -ne $cheatStart } 'The fireproof cheat did not toggle.'
+    [GtasaUiSmoke.Native]::Press($lock)
+    Wait-Ui { [GtasaUiSmoke.Native]::CheckState($lock) -ne $lockStart } 'The fireproof cheat lock did not toggle.'
+
+    [GtasaUiSmoke.Native]::Press((Get-VisibleControl $playerPage 7102))
+    $switches = [GtasaUiSmoke.Native]::GetDlgItem($playerPage, 7112)
+    Wait-Ui { [GtasaUiSmoke.Native]::IsWindowVisible($switches) } 'The player switch section was not shown.'
+    $mirror = Get-VisibleControl $switches 7131
+    $mirrorLock = Get-VisibleControl $switches 7132
+    if ([GtasaUiSmoke.Native]::CheckState($mirror) -eq $cheatStart -or
+        [GtasaUiSmoke.Native]::CheckState($mirrorLock) -eq $lockStart) {
+        throw 'The two player sections disagree about fireproof cheat or lock state.'
+    }
+    [GtasaUiSmoke.Native]::Press((Get-VisibleControl $playerPage 7100))
+    Wait-Ui { [GtasaUiSmoke.Native]::IsWindowVisible($overview) } 'The player overview section was not restored.'
+}
+
+function Test-LocationMap {
+    Select-TabByClick 4
+    $locationPage = Get-Page 4
+    $map = Get-VisibleControl $locationPage 1090
+    $zoom = Get-VisibleControl $locationPage 1091
+    $x = Get-VisibleControl $locationPage 1007
+    $y = Get-VisibleControl $locationPage 1008
+    $startX = [GtasaUiSmoke.Native]::ControlText($x)
+    $startY = [GtasaUiSmoke.Native]::ControlText($y)
+    if ([GtasaUiSmoke.Native]::WindowClass($map) -ne 'GTASAControlCenterLocationMap' -or
+        [GtasaUiSmoke.Native]::ComboCount($zoom) -ne 7) {
+        throw 'The location map or its seven zoom options were missing.'
+    }
+    $zoomStart = [GtasaUiSmoke.Native]::ComboSelection($zoom)
+    [GtasaUiSmoke.Native]::ScrollAtCenter($map)
+    Wait-Ui {
+        [GtasaUiSmoke.Native]::ComboSelection($zoom) -eq ($zoomStart + 1)
+    } 'The map mouse wheel did not advance the zoom.'
+    [GtasaUiSmoke.Native]::ClickInClient($map, 0.63, 0.38)
+    [GtasaUiSmoke.Native]::Press((Get-VisibleControl $locationPage 1096))
+    Wait-Ui {
+        [GtasaUiSmoke.Native]::ControlText($x) -ne $startX -or
+        [GtasaUiSmoke.Native]::ControlText($y) -ne $startY
+    } 'The map click did not supply coordinates.'
+    $targetX = [GtasaUiSmoke.Native]::ControlText($x)
+    $targetY = [GtasaUiSmoke.Native]::ControlText($y)
+    [GtasaUiSmoke.Native]::Press((Get-VisibleControl $locationPage 1097))
+    [GtasaUiSmoke.Native]::ClickInClient($map, 0.30, 0.67)
+    [GtasaUiSmoke.Native]::Press((Get-VisibleControl $locationPage 1096))
+    Wait-Ui {
+        [GtasaUiSmoke.Native]::ControlText($x) -ne $targetX -or
+        [GtasaUiSmoke.Native]::ControlText($y) -ne $targetY
+    } 'A second map click did not supply a different destination.'
+    [GtasaUiSmoke.Native]::Press((Get-VisibleControl $locationPage 1098))
+    Wait-Ui {
+        [GtasaUiSmoke.Native]::ControlText($x) -eq $targetX -and
+        [GtasaUiSmoke.Native]::ControlText($y) -eq $targetY
+    } 'Reading the offline player position did not return the saved teleport destination.'
+}
+
 $process = Start-Process -FilePath $exe -PassThru
 $mainWindow = [IntPtr]::Zero
 try {
@@ -399,6 +580,37 @@ try {
     }
     'PASS: Mouse and arrow-key navigation across six pages with cached page windows.'
     if ($TestGlobalShortcuts) { 'PASS: Ctrl+Tab and Shift+Ctrl+Tab wrap between the first and last pages.' }
+
+    $vehicle = Get-VisibleControl (Get-Page 0) 7110
+    $primary = Get-VisibleControl $vehicle 7120
+    $secondary = Get-VisibleControl $vehicle 7121
+    $secondaryStart = [GtasaUiSmoke.Native]::ControlText($secondary)
+    Test-ColorPicker $primary 200 113
+    if ([GtasaUiSmoke.Native]::ControlText($secondary) -ne $secondaryStart) {
+        throw 'Changing the primary color also changed the secondary color.'
+    }
+    $primarySaved = [GtasaUiSmoke.Native]::ControlText($primary)
+    Test-ColorPicker $secondary 201 84
+    if ([GtasaUiSmoke.Native]::ControlText($primary) -ne $primarySaved) {
+        throw 'Changing the secondary color also changed the primary color.'
+    }
+    $primaryLock = Get-VisibleControl $vehicle 7123
+    $secondaryLock = Get-VisibleControl $vehicle 7124
+    $primaryLockStart = [GtasaUiSmoke.Native]::CheckState($primaryLock)
+    $secondaryLockStart = [GtasaUiSmoke.Native]::CheckState($secondaryLock)
+    [GtasaUiSmoke.Native]::Press($primaryLock)
+    Wait-Ui {
+        [GtasaUiSmoke.Native]::CheckState($primaryLock) -ne $primaryLockStart
+    } 'The primary color lock did not toggle.'
+    if ([GtasaUiSmoke.Native]::CheckState($secondaryLock) -ne $secondaryLockStart) {
+        throw 'The primary color lock unexpectedly changed the secondary color lock.'
+    }
+    'PASS: Both vehicle colors open the palette and retain independent selections.'
+
+    Test-PlayerFireControls
+    'PASS: Player fire damage, fireproof cheat and its lock work independently.'
+    Test-LocationMap
+    'PASS: Location map zoom choices and coordinate-to-offline-teleport round trip.'
 }
 finally {
     $process.Refresh()

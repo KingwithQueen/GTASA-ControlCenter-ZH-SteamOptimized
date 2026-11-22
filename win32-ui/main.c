@@ -18,7 +18,7 @@ enum {
 static const WCHAR mainClass[] = L"GTASAControlCenterPrototype";
 static const WCHAR pageClass[] = L"GTASAControlCenterPage";
 static const WCHAR title[] = L"圣安地列斯控制中心";
-static const WCHAR offlineStatus[] = L"离线界面原型 · 控件仅使用示例数据";
+static const WCHAR offlineStatus[] = L"离线界面 · 当前未连接游戏";
 static LPCWSTR const pageNames[UI_PAGE_COUNT] = {
     L"载具与游戏", L"玩家状态", L"车库", L"游戏秘籍", L"传送地点", L"快捷键"
 };
@@ -61,7 +61,7 @@ HWND UiControl(UiPage *page, LPCWSTR className, LPCWSTR text, DWORD style,
 
 void UiSetStatus(UiPage *page, LPCWSTR text)
 {
-    HWND status = GetDlgItem(GetParent(page->window), ID_STATUS);
+    HWND status = GetDlgItem(GetAncestor(page->window, GA_ROOT), ID_STATUS);
     SendMessageW(status, SB_SETTEXTW, 0, (LPARAM)text);
 }
 
@@ -396,7 +396,8 @@ int WINAPI wWinMain(HINSTANCE instance, HINSTANCE previous, LPWSTR commandLine, 
                            DEFAULT_CHARSET, OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS,
                            DEFAULT_QUALITY, DEFAULT_PITCH, L"Tahoma");
     common.dwSize = sizeof(common);
-    common.dwICC = ICC_TAB_CLASSES | ICC_BAR_CLASSES | ICC_LISTVIEW_CLASSES | ICC_STANDARD_CLASSES;
+    common.dwICC = ICC_TAB_CLASSES | ICC_BAR_CLASSES | ICC_LISTVIEW_CLASSES
+                 | ICC_TREEVIEW_CLASSES | ICC_UPDOWN_CLASS | ICC_STANDARD_CLASSES;
     SetRect(&frame, 0, 0, MulDiv(UI_PAGE_WIDTH + 38, app.dpi, 96),
              MulDiv(UI_PAGE_HEIGHT + 90, app.dpi, 96));
     AdjustWindowRectEx(&frame, style, FALSE, 0);
@@ -414,6 +415,7 @@ int WINAPI wWinMain(HINSTANCE instance, HINSTANCE previous, LPWSTR commandLine, 
             MessageBoxW(NULL, L"无法创建控制中心界面。", title, MB_ICONERROR);
         if (app.font)
             DeleteObject(app.font);
+        UiFreeTranslations();
         return 1;
     }
 
@@ -440,6 +442,7 @@ int WINAPI wWinMain(HINSTANCE instance, HINSTANCE previous, LPWSTR commandLine, 
     if (accelerators)
         DestroyAcceleratorTable(accelerators);
     DeleteObject(app.font);
+    UiFreeTranslations();
     if (app.benchmark && fclose(app.benchmark) != 0)
         return 3;
     return result < 0 ? 3 : (int)message.wParam;

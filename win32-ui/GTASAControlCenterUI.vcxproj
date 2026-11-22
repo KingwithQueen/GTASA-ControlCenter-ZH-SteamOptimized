@@ -51,7 +51,7 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>comctl32.lib;user32.lib;gdi32.lib;shell32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>comctl32.lib;comdlg32.lib;user32.lib;gdi32.lib;shell32.lib;ole32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <EnableUAC>false</EnableUAC>
     </Link>
   </ItemDefinitionGroup>
@@ -74,12 +74,20 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="main.c" />
+    <ClCompile Include="data.c" />
     <ClCompile Include="dense_pages.c" />
+    <ClCompile Include="dialogs.c" />
     <ClCompile Include="list_pages.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ui.h" />
+    <ClInclude Include="dialogs.h" />
+    <ClInclude Include="legacy_list_data.h" />
+    <ClInclude Include="location_map.h" />
+    <ClInclude Include="resources.h" />
+    <ClInclude Include="shortcut_commands.h" />
     <Manifest Include="app.manifest" />
+    <ResourceCompile Include="resources.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
 </Project>

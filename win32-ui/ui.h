@@ -5,6 +5,8 @@
 #include <windows.h>
 #include <commctrl.h>
 
+#include "resources.h"
+
 enum { UI_PAGE_COUNT = 6, UI_PAGE_WIDTH = 920, UI_PAGE_HEIGHT = 530 };
 
 typedef struct UiPage {
@@ -20,6 +22,9 @@ HWND UiControl(UiPage *page, LPCWSTR className, LPCWSTR text,
                DWORD style, DWORD exStyle, int id,
                int x, int y, int width, int height);
 void UiSetStatus(UiPage *page, LPCWSTR text);
+const char *UiResourceBytes(int id, DWORD *size);
+LPCWSTR UiTranslate(LPCWSTR text);
+void UiFreeTranslations(void);
 
 void BuildDensePage(UiPage *page);
 BOOL DensePageCommand(UiPage *page, int id, int code, HWND control);
