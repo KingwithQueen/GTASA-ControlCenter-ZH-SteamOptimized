@@ -43,6 +43,7 @@ typedef DWORD (WINAPI *UiFieldFn)(int, int, double *, BOOL);
 typedef DWORD (WINAPI *UiPositionFn)(GamePosition *, BOOL);
 typedef DWORD (WINAPI *UiPlateFn)(const WCHAR *, DWORD);
 typedef DWORD (WINAPI *UiWeaponFn)(int, DWORD, DWORD, DWORD);
+typedef DWORD (WINAPI *FixtureStatsIntactFn)(DWORD, DWORD);
 
 typedef struct SteamAbi {
     AttachFn attach;
@@ -71,6 +72,7 @@ typedef struct FixtureAbi {
     ValueFn vehicle;
     ValueFn coffeeSupported;
     QueryFn disturbGarage;
+    FixtureStatsIntactFn playerStatsIntact;
 } FixtureAbi;
 
 static void Require(int condition, const char *expression, int line)
@@ -158,7 +160,7 @@ static void TestProduction(const WCHAR *path)
     static const char * const privateExports[] = {
         "SteamFixtureBegin", "SteamFixtureRun", "SteamFixtureVehicle", "SteamFixtureCoffeeSupported",
         "SteamFixtureTrain", "SteamFixtureDisturbGarage", "TrainerReadMemory", "TrainerWriteMemory",
-        "SteamPlateSet"
+        "SteamPlateSet", "_SteamFixturePlayerStatsIntact@8"
     };
     HMODULE library = OpenLibrary(path);
     HANDLE currentProcess = GetCurrentProcess(), duplicate = NULL;
@@ -279,6 +281,61 @@ static void TestPlayer(const SteamAbi *api)
     puts("PASS: typed health, armor, money, independent player proofs, and position/heading round trip.");
 }
 
+static void RejectField(const SteamAbi *api, GameField field, double value)
+{
+    CHECK(api->field(field, 0, &value, TRUE) == INVALID);
+}
+
+static void TestNumericPlayerStats(const SteamAbi *api, const FixtureAbi *fixture)
+{
+    int level;
+    double blockedWanted = 3.0;
+    CHECK(fixture->playerStatsIntact(TRUE, 0));
+    ExpectField(api, GAME_PLAYER_RESPECT, 0, 124.5);
+    ExpectField(api, GAME_PLAYER_APPEAL, 0, 75.25);
+    ExpectField(api, GAME_CRIMINALS, 0, 17.0);
+    ExpectField(api, GAME_PLAYER_WANTED, 0, 0.0);
+    CHECK(fixture->playerStatsIntact(TRUE, 0));
+
+    RejectField(api, GAME_PLAYER_RESPECT, 1000.25);
+    RejectField(api, GAME_PLAYER_RESPECT, -0.25);
+    RejectField(api, GAME_PLAYER_APPEAL, 1000.25);
+    RejectField(api, GAME_PLAYER_APPEAL, -0.25);
+    RejectField(api, GAME_CRIMINALS, -1.0);
+    RejectField(api, GAME_CRIMINALS, 17.5);
+    RejectField(api, GAME_CRIMINALS, 2147483648.0);
+    RejectField(api, GAME_PLAYER_WANTED, -1.0);
+    RejectField(api, GAME_PLAYER_WANTED, 7.0);
+    RejectField(api, GAME_PLAYER_WANTED, 2.5);
+    SetField(api, GAME_PLAYER_CHEAT, 0, 1.0);
+    CHECK(api->field(GAME_PLAYER_WANTED, 0, &blockedWanted, TRUE) == NOT_READY);
+    SetField(api, GAME_PLAYER_CHEAT, 0, 0.0);
+    CHECK(fixture->playerStatsIntact(TRUE, 0));
+
+    SetField(api, GAME_PLAYER_RESPECT, 0, 487.25);
+    SetField(api, GAME_PLAYER_APPEAL, 0, 812.5);
+    SetField(api, GAME_CRIMINALS, 0, 2147483647.0);
+    for (level = 1; level <= 6; ++level) {
+        SetField(api, GAME_PLAYER_WANTED, 0, level);
+        ExpectField(api, GAME_PLAYER_WANTED, 0, level);
+        CHECK(fixture->playerStatsIntact(FALSE, (DWORD)level));
+    }
+    SetField(api, GAME_PLAYER_WANTED, 0, 0.0);
+    ExpectField(api, GAME_PLAYER_WANTED, 0, 0.0);
+    ExpectField(api, GAME_PLAYER_RESPECT, 0, 487.25);
+    ExpectField(api, GAME_PLAYER_APPEAL, 0, 812.5);
+    ExpectField(api, GAME_CRIMINALS, 0, 2147483647.0);
+    CHECK(fixture->playerStatsIntact(FALSE, 0));
+    SetField(api, GAME_PLAYER_RESPECT, 0, 0.0);
+    SetField(api, GAME_PLAYER_APPEAL, 0, 1000.0);
+    SetField(api, GAME_CRIMINALS, 0, 0.0);
+    ExpectField(api, GAME_PLAYER_RESPECT, 0, 0.0);
+    ExpectField(api, GAME_PLAYER_APPEAL, 0, 1000.0);
+    ExpectField(api, GAME_CRIMINALS, 0, 0.0);
+    CHECK(fixture->playerStatsIntact(FALSE, 0));
+    puts("PASS: numeric respect, appeal, criminal count and wanted, with read-only and adjacent-field checks.");
+}
+
 static void TestWeapons(const SteamAbi *api)
 {
     static const int pistolSlot = 1;
@@ -360,12 +417,14 @@ static void TestFixture(const WCHAR *path)
     IMPORT(library, &fixture, vehicle, "SteamFixtureVehicle");
     IMPORT(library, &fixture, coffeeSupported, "SteamFixtureCoffeeSupported");
     IMPORT(library, &fixture, disturbGarage, "SteamFixtureDisturbGarage");
+    IMPORT(library, &fixture, playerStatsIntact, "_SteamFixturePlayerStatsIntact@8");
     TestDisconnected(&api);
     self = fixture.begin();
     CHECK(self == (DWORD)(ULONG_PTR)GetCurrentProcess());
     CHECK(api.attach((HANDLE)(ULONG_PTR)self) != 0);
     TestGarages(&api, &fixture);
     TestPlayer(&api);
+    TestNumericPlayerStats(&api, &fixture);
     TestWeapons(&api);
     TestFeatures(&api, &fixture);
     CHECK(FreeLibrary(library));

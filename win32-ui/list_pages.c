@@ -1756,6 +1756,11 @@ void ListPageGameEvent(UiPage *page, const GameEvent *event)
         else
             GameFeedback(page, event->result);
     } else if (page->index == PAGE_LOCATIONS && event->request == GAME_REQ_POSITION) {
+        if (event->mode == GAME_POSITION_REFRESH) {
+            if (event->result == GAME_OK && GameIsConnected())
+                ApplyGamePosition(page, &event->position, FALSE, FALSE);
+            return;
+        }
         if (event->result == GAME_OK && GameIsConnected()) {
             ApplyGamePosition(page, &event->position, positionFromEditor, positionFromEditor);
             if (pendingMarkup >= 0 && pendingMarkup < MARKUP_LOCATION_COUNT) {

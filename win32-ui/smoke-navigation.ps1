@@ -43,7 +43,7 @@ namespace GtasaUiSmoke
         private const uint TcmGetCurSel = 0x130B;
         private const uint LvmGetItemCount = 0x1004;
         private const uint SmtoBlockAbortIfHungErrorOnExit = 0x23;
-        private const uint CwpSkipInvisibleAndDisabled = 0x03;
+        private const uint CwpSkipInvisible = 0x01;
         private const uint KeyUp = 2;
         private delegate bool EnumerateWindow(IntPtr window, IntPtr state);
 
@@ -100,6 +100,8 @@ namespace GtasaUiSmoke
         [DllImport("user32.dll")]
         public static extern bool IsWindowVisible(IntPtr window);
         [DllImport("user32.dll")]
+        public static extern bool IsWindowEnabled(IntPtr window);
+        [DllImport("user32.dll")]
         private static extern bool EnumChildWindows(IntPtr window, EnumerateWindow callback, IntPtr state);
         [DllImport("user32.dll")]
         private static extern bool EnumThreadWindows(uint thread, EnumerateWindow callback, IntPtr state);
@@ -155,14 +157,14 @@ namespace GtasaUiSmoke
             return count;
         }
 
-        public static bool IsPageOnTopAtCenter(IntPtr parent, IntPtr page)
+        public static bool IsControlOnTopAtCenter(IntPtr parent, IntPtr control)
         {
             Rect rect;
-            if (!GetClientRect(page, out rect))
-                throw Win32Failure("Could not read the page bounds.", Marshal.GetLastWin32Error());
+            if (!GetClientRect(control, out rect))
+                throw Win32Failure("Could not read the control bounds.", Marshal.GetLastWin32Error());
             var center = new Point { X = (rect.Left + rect.Right) / 2, Y = (rect.Top + rect.Bottom) / 2 };
-            MapWindowPoints(page, parent, ref center, 1);
-            return ChildWindowFromPointEx(parent, center, CwpSkipInvisibleAndDisabled) == page;
+            MapWindowPoints(control, parent, ref center, 1);
+            return ChildWindowFromPointEx(parent, center, CwpSkipInvisible) == control;
         }
 
         public static int TabCount(IntPtr window) { return ReadControlInt(window, TcmGetItemCount); }
@@ -363,7 +365,7 @@ function Assert-SelectedPage([int] $Expected, [string] $InputDescription) {
     if ($selected -ne $Expected -or -not [GtasaUiSmoke.Native]::IsWindowVisible($page)) {
         throw "$InputDescription did not show tab $Expected (current selection $selected)."
     }
-    if (-not [GtasaUiSmoke.Native]::IsPageOnTopAtCenter($mainWindow, $page)) {
+    if (-not [GtasaUiSmoke.Native]::IsControlOnTopAtCenter($mainWindow, $page)) {
         throw "$InputDescription left the center of active page $Expected covered by another window."
     }
 
@@ -537,6 +539,10 @@ try {
     if ($tab -eq [IntPtr]::Zero -or -not [GtasaUiSmoke.Native]::IsWindowVisible($status)) {
         throw 'The main window is missing its tab control or status bar.'
     }
+    $refresh = Get-VisibleControl $mainWindow 303
+    if (-not [GtasaUiSmoke.Native]::IsControlOnTopAtCenter($mainWindow, $refresh)) {
+        throw 'The tab control or another window covers the refresh button.'
+    }
 
     $tabCount = [GtasaUiSmoke.Native]::TabCount($tab)
     if ($tabCount -ne 6) { throw "Expected six tabs but found $tabCount." }
@@ -609,6 +615,22 @@ try {
 
     Test-PlayerFireControls
     'PASS: Player fire damage, fireproof cheat and its lock work independently.'
+    [GtasaUiSmoke.Native]::Press((Get-VisibleControl (Get-Page 1) 7101))
+    $weapons = [GtasaUiSmoke.Native]::GetDlgItem((Get-Page 1), 7111)
+    Wait-Ui { [GtasaUiSmoke.Native]::IsWindowVisible($weapons) } 'The weapon section was not shown.'
+    [void](Get-VisibleControl $weapons 7259)
+    if ([GtasaUiSmoke.Native]::ComboCount((Get-VisibleControl $weapons 7255)) -ne 13) {
+        throw 'The current weapon selector must include all 13 game slots.'
+    }
+    Select-TabByClick 0
+    [GtasaUiSmoke.Native]::Press((Get-VisibleControl (Get-Page 0) 7102))
+    $world = [GtasaUiSmoke.Native]::GetDlgItem((Get-Page 0), 7112)
+    Wait-Ui { [GtasaUiSmoke.Native]::IsWindowVisible($world) } 'The world section was not shown.'
+    if ([GtasaUiSmoke.Native]::IsWindowEnabled((Get-VisibleControl $world 7453))) {
+        throw 'The unverified mission countdown editor is enabled.'
+    }
+    [void](Get-VisibleControl $world 7457)
+    'PASS: Global and weapon refresh are visible, all 13 weapon slots are available, and the mission countdown editor is disabled.'
     Test-LocationMap
     'PASS: Location map zoom choices and coordinate-to-offline-teleport round trip.'
 }

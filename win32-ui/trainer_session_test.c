@@ -170,7 +170,13 @@ static void VerifyOfflineRequests(void)
 {
     GamePosition coordinates = { 1.0, 2.0, 3.0, 90.0 };
     GameEvent event;
+    CHECK(GameSupportsField(GAME_PLAYER_WANTED, 0, TRUE));
+    CHECK(GameSupportsField(GAME_PLAYER_RESPECT, 0, TRUE));
+    CHECK(GameSupportsField(GAME_PLAYER_APPEAL, 0, TRUE));
+    CHECK(GameSupportsField(GAME_CRIMINALS, 0, TRUE));
+    CHECK(!GameSupportsField(GAME_MISSION_TIMER, 0, TRUE));
     CHECK(GameReadField(GAME_PLAYER_HEALTH, 0) == GAME_OFFLINE);
+    CHECK(GameRefreshPosition() == GAME_OFFLINE);
     CHECK(GameSetField(GAME_PLAYER_PROTECTION, GAME_PROOF_FIRE, 1) == GAME_OFFLINE);
     CHECK(GameTeleport(&coordinates) == GAME_OFFLINE);
     CHECK(!GameTakeEvent(&event));

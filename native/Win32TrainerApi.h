@@ -117,6 +117,10 @@ DWORD verifiedField(int which, int index, double* value, bool set)
     case GAME_PLAYER_BIKING: return fieldValue(gameGlobal(0xB791B4,Storage::Long,0,1000), value, set);
     case GAME_PLAYER_CYCLING: return fieldValue(gameGlobal(0xB791B8,Storage::Long,0,1000), value, set);
     case GAME_PLAYER_FLYING: return fieldValue(gameGlobal(0xB7919C,Storage::Long,0,1000), value, set);
+    // CStats IDs 64 (total respect), 25 (sex appeal), and 152 (lifetime Vigilante kills).
+    case GAME_PLAYER_RESPECT: return fieldValue(gameGlobal(0xB79480,Storage::Float,0,1000), value, set);
+    case GAME_PLAYER_APPEAL: return fieldValue(gameGlobal(0xB793E4,Storage::Float,0,1000), value, set);
+    case GAME_CRIMINALS: return fieldValue(gameGlobal(0xB79080,Storage::Long,0,0x7fffffff), value, set);
     case GAME_WEAPON_SKILL:
         if (index < 0 || index >= 10)
             return invalid;
@@ -469,6 +473,72 @@ DWORD applyWeapon(int index,DWORD type,DWORD total,DWORD loaded)
     return write(address,data,sizeof data) ? ok : failed;
 }
 
+DWORD playerWanted(DWORD ped)
+{
+    // CWorld::Players embeds CPlayerData after its ped pointer; the ped refers back to it.
+    const DWORD playerData = va(0xC100D0) + 4;
+    DWORD wanted = 0;
+    if (u32(ped + 0x480) != playerData || !read(playerData, &wanted, sizeof wanted)
+        || !privateWritable(wanted, 0x30))
+        return 0;
+    return wanted;
+}
+
+DWORD wantedField(DWORD ped, double* value, bool set)
+{
+    struct Pursuit { DWORD chaos; BYTE cops, cars; WORD roadblock; };
+    constexpr Pursuit levels[] = {
+        {0,0,0,0}, {70,1,1,0}, {200,3,2,0}, {570,4,2,12},
+        {1220,6,2,18}, {2420,8,3,24}, {4620,10,3,30}
+    };
+    const DWORD wanted = playerWanted(ped);
+    DWORD stars = 0;
+    if (!wanted || !read(wanted + 0x2C, &stars, sizeof stars) || stars > 6)
+        return notReady;
+    if (!set) {
+        *value = stars;
+        return ok;
+    }
+    if (*value < 0 || *value > 6 || std::floor(*value) != *value)
+        return invalid;
+    const DWORD nextStars = DWORD(*value);
+    BYTE neverWanted = 0, flags = 0;
+    const DWORD cheatAddress = mapped(0x969171, 1);
+    if (!cheatAddress || !read(cheatAddress, &neverWanted, 1) || (nextStars && neverWanted)
+        || !read(wanted + 0x1E, &flags, 1))
+        return notReady;
+
+    const Pursuit& next = levels[nextStars];
+    const BYTE caps[] = {BYTE(flags & 7 ? 0 : next.cops), BYTE(flags & 7 ? 0 : next.cars)};
+    const WORD roadblock = flags & 7 ? 0 : next.roadblock;
+    DWORD oldChaos = 0;
+    BYTE oldCaps[2] = {};
+    WORD oldRoadblock = 0;
+    if (!read(wanted, &oldChaos, sizeof oldChaos)
+        || !read(wanted + 0x19, oldCaps, sizeof oldCaps)
+        || !read(wanted + 0x1C, &oldRoadblock, sizeof oldRoadblock)
+        || uiPed() != ped || playerWanted(ped) != wanted)
+        return notReady;
+    if (!write(wanted, &next.chaos, sizeof next.chaos))
+        return failed;
+    if (write(wanted + 0x19, caps, sizeof caps)) {
+        if (write(wanted + 0x1C, &roadblock, sizeof roadblock)) {
+            if (write(wanted + 0x2C, &nextStars, sizeof nextStars))
+                return ok;
+            WORD current = 0;
+            if (read(wanted + 0x1C, &current, sizeof current) && current == roadblock)
+                write(wanted + 0x1C, &oldRoadblock, sizeof oldRoadblock);
+        }
+        BYTE current[2] = {};
+        if (read(wanted + 0x19, current, sizeof current)
+            && current[0] == caps[0] && current[1] == caps[1])
+            write(wanted + 0x19, oldCaps, sizeof oldCaps);
+    }
+    if (u32(wanted) == next.chaos)
+        write(wanted, &oldChaos, sizeof oldChaos);
+    return failed;
+}
+
 DWORD entityField(int which, int index, double* value, bool set)
 {
     DWORD ped = uiPed();
@@ -490,6 +560,7 @@ DWORD entityField(int which, int index, double* value, bool set)
         return fieldValue(field(ped+1344,Storage::Float,0,1000),value,set);
     }
     case GAME_PLAYER_ARMOR: return fieldValue(field(ped+1352,Storage::Float,0,1000),value,set);
+    case GAME_PLAYER_WANTED: return wantedField(ped,value,set);
     case GAME_PLAYER_PROTECTION: case GAME_VEHICLE_PROTECTION: {
         constexpr BYTE pedMasks[] = {128,64,4,8}, carMasks[] = {128,16,4,8};
         if (index < 0 || index > 3)

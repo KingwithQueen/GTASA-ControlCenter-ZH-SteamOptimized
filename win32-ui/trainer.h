@@ -46,6 +46,8 @@ enum {
     GAME_PROOF_EXPLOSION, GAME_PROOF_COLLISION, GAME_PROOF_BULLET, GAME_PROOF_FIRE
 };
 
+enum { GAME_POSITION_EDITOR, GAME_POSITION_REFRESH };
+
 typedef struct GamePosition {
     double x, y, z, heading;
 } GamePosition;
@@ -100,6 +102,7 @@ GameResult GameSetPlate(LPCWSTR plate);
 GameResult GameLockPlate(LPCWSTR plate, BOOL enabled);
 GameResult GameSetWeapon(int index, const GameWeapon *weapon);
 GameResult GameReadPosition(void);
+GameResult GameRefreshPosition(void);
 GameResult GameTeleport(const GamePosition *position);
 GameResult GameGarageRead(int index);
 GameResult GameGarageWrite(int index, const GameGarageSlot slots[4]);

@@ -676,6 +676,7 @@ BOOL GameSupportsField(GameField field, int index, BOOL write)
 {
     switch (field) {
     case GAME_PLAYER_HEALTH: case GAME_PLAYER_ARMOR: case GAME_PLAYER_MONEY:
+    case GAME_PLAYER_WANTED: case GAME_PLAYER_RESPECT: case GAME_PLAYER_APPEAL:
     case GAME_PLAYER_FAT: case GAME_PLAYER_STAMINA: case GAME_PLAYER_MUSCLE:
     case GAME_PLAYER_LUNG: case GAME_PLAYER_GAMBLING: case GAME_PLAYER_DRIVING:
     case GAME_PLAYER_BIKING: case GAME_PLAYER_CYCLING: case GAME_PLAYER_FLYING:
@@ -683,7 +684,7 @@ BOOL GameSupportsField(GameField field, int index, BOOL write)
     case GAME_VEHICLE_WEIGHT: case GAME_VEHICLE_PRIMARY: case GAME_VEHICLE_SECONDARY:
     case GAME_VEHICLE_DOORS: case GAME_VEHICLE_HEADING: case GAME_VEHICLE_RC:
     case GAME_VEHICLE_SPAWNER: case GAME_CLOCK_MINUTES: case GAME_CLOCK_DAY:
-    case GAME_CLOCK_SPEED: case GAME_WORLD_SPEED:
+    case GAME_CLOCK_SPEED: case GAME_WORLD_SPEED: case GAME_CRIMINALS:
         return index == 0;
     case GAME_PLAYER_PROTECTION: case GAME_VEHICLE_PROTECTION: return index >= 0 && index < 4;
     case GAME_PLAYER_CHEAT: return index >= 0 && index < 22;
@@ -774,7 +775,11 @@ GameResult GameSetWeapon(int index,const GameWeapon *weapon)
 }
 GameResult GameReadPosition(void)
 {
-    return Scalar(GAME_REQ_POSITION,GAME_FIELD_NONE,0,0,0);
+    return Scalar(GAME_REQ_POSITION,GAME_FIELD_NONE,0,0,GAME_POSITION_EDITOR);
+}
+GameResult GameRefreshPosition(void)
+{
+    return Scalar(GAME_REQ_POSITION,GAME_FIELD_NONE,0,0,GAME_POSITION_REFRESH);
 }
 GameResult GameTeleport(const GamePosition *position)
 {

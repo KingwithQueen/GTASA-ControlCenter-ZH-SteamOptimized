@@ -23,6 +23,7 @@ HWND UiControl(UiPage *page, LPCWSTR className, LPCWSTR text,
                DWORD style, DWORD exStyle, int id,
                int x, int y, int width, int height);
 void UiSetStatus(UiPage *page, LPCWSTR text);
+void UiRefreshGame(UiPage *page);
 const char *UiResourceBytes(int id, DWORD *size);
 LPCWSTR UiTranslate(LPCWSTR text);
 void UiFreeTranslations(void);
@@ -32,6 +33,7 @@ BOOL DensePageCommand(UiPage *page, int id, int code, HWND control);
 void DensePageScroll(HWND control);
 void DensePageGameEvent(UiPage *page, const GameEvent *event);
 void DensePageGameRefresh(UiPage *page);
+void DensePageGamePoll(UiPage *page);
 
 void BuildListPage(UiPage *page);
 BOOL ListPageCommand(UiPage *page, int id, int code, HWND control);

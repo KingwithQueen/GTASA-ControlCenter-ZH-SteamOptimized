@@ -2,6 +2,7 @@
 #include "dialogs.h"
 #include "trainer.h"
 
+#include <limits.h>
 #include <math.h>
 #include <stdlib.h>
 #include <wchar.h>
@@ -32,9 +33,11 @@ enum {
     ID_CLOCK_STOP, ID_CLOCK_REAL, ID_CLOCK_NORMAL, ID_GAME_SPEED_NORMAL,
     ID_WEAPON_LEVELS = 7250, ID_WEAPON_AVERAGE, ID_AMMO_REFILL, ID_BRASS_KNUCKLES,
     ID_LOADED_LOCK, ID_CURRENT_SLOT, ID_CURRENT_LOADED, ID_CURRENT_TOTAL,
+    ID_CURRENT_WEAPON, ID_READ_WEAPONS,
     ID_CHEAT_FIRST = 7300, ID_SAFE_CHEATS = 7364, ID_COFFEE,
     ID_STAT_FIRST = 7400, ID_WEAPON_FIRST = 7600,
-    WEAPON_SLOT_COUNT = 11, CHEAT_COUNT = 22,
+    WEAPON_SLOT_COUNT = 11, SLOT_UNARMED = 0, SLOT_DETONATOR = WEAPON_SLOT_COUNT + 1,
+    CHEAT_COUNT = 22,
     FIELD_ROW_HEIGHT = 27
 };
 
@@ -63,7 +66,9 @@ typedef struct WeaponSpec {
 } WeaponSpec;
 
 typedef struct WeaponSetting {
-    int selection, total, loaded;
+    int type, total, loaded;
+    unsigned editRevision, submittedRevision;
+    BOOL dirty, applying;
 } WeaponSetting;
 
 typedef struct DenseState {
@@ -71,6 +76,9 @@ typedef struct DenseState {
     int activePane;
     int colors[2], model, money, weather, gameDay;
     int heading, cheatsUsed, loadedLockSlot;
+    int currentWeaponSlot, requestedWeaponSlot, unarmedType;
+    ULONGLONG weaponReadsPending, weaponReadAgain;
+    BOOL weaponRendering;
     BOOL upsideDown, spawnerReady, preventExplosion, liveFailure, liveSession;
     WCHAR plate[9];
     int proficiency[10], relationship[6];
@@ -110,7 +118,7 @@ static const StatSpec worldStats[] = {
     { L"游戏速度（%）", 10, 1000, 100, 100, L"正常" },
     { L"金钱", 0, 9999999, 5000, 9999999, L"最大" },
     { L"任务显示计时", 0, 9999, 120, 0, L"清零" },
-    { L"已击杀罪犯", 0, 999, 0, 0, L"清零" }
+    { L"义警累计击杀", 0, INT_MAX, 0, 0, L"清零" }
 };
 static const StatSpec relationshipStats[] = {
     { L"丹妮丝", 0, 100, 50, 100, L"最大" },
@@ -141,8 +149,8 @@ static const StatSpec playerMotion[] = {
 };
 static const StatSpec otherPlayerStats[] = {
     { L"通缉等级", 0, 6, 0, 0, L"清除" },
-    { L"威望", 0, 1000, 300, 1000, L"最大" },
-    { L"性感度", 0, 1000, 300, 1000, L"最大" }
+    { L"总威望", 0, 1000, 300, 1000, L"最大" },
+    { L"总性感度", 0, 1000, 300, 1000, L"最大" }
 };
 static LPCWSTR const cheatNames[] = {
     L"永不通缉", L"不会饥饿", L"无限生命", L"无限氧气", L"无限弹药", L"坦克模式",
@@ -351,16 +359,19 @@ static void Stats(UiPage *view, LPCWSTR title, int x, int y, int firstSlot, int 
         int slot = firstSlot + index;
         int id = StatId(slot);
         const StatSpec *spec = GetStatSpec(view->index, slot);
+        BOOL wideValue = spec->maximum > 99999999;
         HWND slider, edit;
 
         Label(view, spec->name, 0, x + 12, top, 118);
         slider = UiControl(view, TRACKBAR_CLASSW, L"", WS_TABSTOP | TBS_NOTICKS,
-                           0, id, x + 128, top, 125, 22);
+                           0, id, x + 128, top, wideValue ? 94 : 125, 22);
         SendMessageW(slider, TBM_SETRANGEMIN, FALSE, spec->minimum);
         SendMessageW(slider, TBM_SETRANGEMAX, FALSE, spec->maximum);
         SendMessageW(slider, TBM_SETPOS, TRUE, spec->initial);
-        edit = Number(view, id + 1, x + 260, top, 59, spec->initial,
+        edit = Number(view, id + 1, x + (wideValue ? 229 : 260), top, wideValue ? 90 : 59, spec->initial,
                       spec->minimum < 0 || IsWeightStat(view->window, slot));
+        if (wideValue)
+            SendMessageW(edit, EM_SETLIMITTEXT, 10, 0);
         WriteStatText(view->window, slot, edit, spec->initial);
         Button(view, spec->action, id + 2, x + 326, top, 53);
         Check(view, L"锁定", id + 3, x + 386, top, 51);
@@ -572,25 +583,29 @@ static void BuildWorld(UiPage *view)
     int index;
 
     Stats(view, L"时间、游戏速度和统计", LEFT_COLUMN, 4, WORLD_TIME, ARRAYSIZE(worldStats));
-    Label(view, L"当前游戏时间 12:00 · 星期三", ID_CLOCK_LABEL, 24, 198, 252);
-    Label(view, L"游戏天数", 0, 286, 198, 66);
-    Number(view, ID_WORLD_DAY, 359, 198, 77, 0, FALSE);
-    Button(view, L"停止时钟", ID_CLOCK_STOP, 24, 231, 99);
-    Button(view, L"现实时间", ID_CLOCK_REAL, 128, 231, 99);
-    Button(view, L"正常时钟", ID_CLOCK_NORMAL, 232, 231, 99);
-    Button(view, L"正常游戏速度", ID_GAME_SPEED_NORMAL, 337, 231, 105);
+    for (index = 0; index < 4; ++index)
+        EnableWindow(GetDlgItem(view->window, StatId(WORLD_MISSION_TIMER) + index), FALSE);
+    SetDlgItemTextW(view->window, StatId(WORLD_MISSION_TIMER) + 1, L"—");
+    Label(view, L"任务计时读写待验证，可在「游戏开关」冻结计时。", 0, 24, 192, 416);
+    Label(view, L"当前游戏时间 12:00 · 星期三", ID_CLOCK_LABEL, 24, 219, 252);
+    Label(view, L"游戏天数", 0, 286, 219, 66);
+    Number(view, ID_WORLD_DAY, 359, 219, 77, 0, FALSE);
+    Button(view, L"停止时钟", ID_CLOCK_STOP, 24, 251, 99);
+    Button(view, L"现实时间", ID_CLOCK_REAL, 128, 251, 99);
+    Button(view, L"正常时钟", ID_CLOCK_NORMAL, 232, 251, 99);
+    Button(view, L"正常游戏速度", ID_GAME_SPEED_NORMAL, 337, 251, 105);
 
-    Group(view, L"天气和全局操作", LEFT_COLUMN, 266, GROUP_WIDTH, 181);
-    Label(view, L"选择天气", 0, 24, 290, 72);
-    FillCombo(Combo(view, ID_WEATHER, 103, 290, 224), weatherNames, ARRAYSIZE(weatherNames));
-    Button(view, L"应用天气", ID_APPLY_WEATHER, 338, 289, 97);
-    Check(view, L"锁定当前天气", ID_WEATHER_LOCK, 24, 321, 175);
-    Check(view, L"游戏画面反馈", ID_GAME_FEEDBACK, 225, 321, 183);
-    Button(view, L"应用金钱", ID_APPLY_MONEY, 24, 366, 112);
-    Button(view, L"清除作弊状态及次数", ID_CLEAR_CHEATS, 146, 366, 155);
-    Button(view, L"重新同步", ID_RESYNC, 310, 366, 125);
-    Label(view, L"作弊状态：未使用 · 次数 0", ID_CHEAT_STATUS, 24, 402, 254);
-    Label(view, L"Steam 版（离线）", ID_GAME_VERSION, 288, 402, 149);
+    Group(view, L"天气和全局操作", LEFT_COLUMN, 286, GROUP_WIDTH, 181);
+    Label(view, L"选择天气", 0, 24, 310, 72);
+    FillCombo(Combo(view, ID_WEATHER, 103, 310, 224), weatherNames, ARRAYSIZE(weatherNames));
+    Button(view, L"应用天气", ID_APPLY_WEATHER, 338, 309, 97);
+    Check(view, L"锁定当前天气", ID_WEATHER_LOCK, 24, 341, 175);
+    Check(view, L"游戏画面反馈", ID_GAME_FEEDBACK, 225, 341, 183);
+    Button(view, L"应用金钱", ID_APPLY_MONEY, 24, 386, 112);
+    Button(view, L"清除作弊状态及次数", ID_CLEAR_CHEATS, 146, 386, 155);
+    Button(view, L"刷新游戏数据", ID_RESYNC, 310, 386, 125);
+    Label(view, L"作弊状态：未使用 · 次数 0", ID_CHEAT_STATUS, 24, 422, 254);
+    Label(view, L"Steam 版（离线）", ID_GAME_VERSION, 288, 422, 149);
 
     Stats(view, L"六位女友的进度", RIGHT_COLUMN, 4, RELATIONSHIP_FIRST, ARRAYSIZE(relationshipStats));
     Button(view, L"同步进度", ID_SYNC_RELATIONSHIP, 478, 198, 126);
@@ -662,14 +677,21 @@ static void BuildWeaponControls(UiPage *view)
     Check(view, L"锁定弹匣弹药", ID_LOADED_LOCK, 192, 400, 155);
     Label(view, L"当前武器槽", 0, 362, 400, 96);
     combo = Combo(view, ID_CURRENT_SLOT, 468, 400, 132);
-    for (slot = 0; slot < WEAPON_SLOT_COUNT; ++slot)
-        SendMessageW(combo, CB_ADDSTRING, 0, (LPARAM)weaponSpecs[slot].category);
-    SendMessageW(combo, CB_SETCURSEL, 1, 0);
+    for (slot = SLOT_UNARMED; slot <= SLOT_DETONATOR; ++slot) {
+        LPCWSTR name = slot == SLOT_UNARMED ? L"空手／指虎" :
+                       slot == SLOT_DETONATOR ? L"引爆器" : weaponSpecs[slot - 1].category;
+        LRESULT item = SendMessageW(combo, CB_ADDSTRING, 0, (LPARAM)name);
+        if (item >= 0)
+            SendMessageW(combo, CB_SETITEMDATA, item, slot);
+    }
+    SendMessageW(combo, CB_SETCURSEL, states[1].currentWeaponSlot, 0);
     Label(view, L"当前弹匣 30", ID_CURRENT_LOADED, 614, 400, 132);
     Label(view, L"当前携带 120", ID_CURRENT_TOTAL, 753, 400, 132);
-    Button(view, L"补满弹药", ID_AMMO_REFILL, 24, 436, 135);
-    Button(view, L"详细武器熟练度…", ID_WEAPON_LEVELS, 174, 436, 183);
-    Label(view, L"平均武器熟练度 30%", ID_WEAPON_AVERAGE, 365, 437, 265);
+    Button(view, L"补满弹药", ID_AMMO_REFILL, 24, 436, 122);
+    Button(view, L"详细武器熟练度…", ID_WEAPON_LEVELS, 155, 436, 164);
+    Label(view, L"平均熟练度 30%", ID_WEAPON_AVERAGE, 331, 437, 145);
+    Label(view, L"当前武器：手枪", ID_CURRENT_WEAPON, 484, 437, 245);
+    Button(view, L"读取武器", ID_READ_WEAPONS, 752, 436, 128);
 }
 
 static void BuildCheatSwitches(UiPage *view)
@@ -793,6 +815,8 @@ void BuildDensePage(UiPage *page)
     }
     ZeroMemory(state, sizeof(*state));
     state->loadedLockSlot = -1;
+    state->currentWeaponSlot = 2;
+    state->requestedWeaponSlot = -1;
     state->model = 562;
     state->colors[0] = 36;
     state->colors[1] = 1;
@@ -804,7 +828,7 @@ void BuildDensePage(UiPage *page)
         state->proficiency[section] = 300;
     for (section = 0; section < (int)ARRAYSIZE(state->relationship); ++section)
         state->relationship[section] = relationshipStats[section].initial;
-    state->weapons[1].selection = 1;
+    state->weapons[1].type = 22;
     state->weapons[1].total = 120;
     state->weapons[1].loaded = 30;
     state->spawnerReady = TRUE;
@@ -904,15 +928,16 @@ static void ApplyDirection(UiPage *page, DenseState *state, HWND pane, BOOL kick
     UiSetStatus(page, status);
 }
 
-static void SetModelSelection(HWND combo, int model)
+static BOOL SetModelSelection(HWND combo, int model)
 {
     int index, count = (int)SendMessageW(combo, CB_GETCOUNT, 0, 0);
     for (index = 0; index < count; ++index) {
         if (SendMessageW(combo, CB_GETITEMDATA, index, 0) == model) {
             SendMessageW(combo, CB_SETCURSEL, index, 0);
-            return;
+            return TRUE;
         }
     }
+    return FALSE;
 }
 
 static void UpdateCurrentModel(HWND pane, int model)
@@ -949,15 +974,50 @@ static BOOL NormalizePlate(HWND edit, WCHAR plate[9])
     return TRUE;
 }
 
+static int ComboValue(HWND combo)
+{
+    LRESULT index = SendMessageW(combo, CB_GETCURSEL, 0, 0);
+    return index < 0 ? -1 : (int)SendMessageW(combo, CB_GETITEMDATA, index, 0);
+}
+
+static void ChangeLabel(HWND pane, int id, LPCWSTR text)
+{
+    WCHAR previous[96] = { 0 };
+    GetDlgItemTextW(pane, id, previous, ARRAYSIZE(previous));
+    if (wcscmp(previous, text) != 0)
+        SetDlgItemTextW(pane, id, text);
+}
+
+static LPCWSTR CurrentWeaponName(const DenseState *state)
+{
+    int slot = state->currentWeaponSlot - 1, option;
+    if (state->currentWeaponSlot == SLOT_UNARMED)
+        return state->unarmedType == 1 ? L"指虎" : L"空手";
+    if (state->currentWeaponSlot == SLOT_DETONATOR)
+        return L"引爆器";
+    if (slot < 0 || slot >= WEAPON_SLOT_COUNT || !state->weapons[slot].type)
+        return L"无";
+    for (option = 0; weaponSpecs[slot].options[option]; ++option) {
+        if (weaponSpecs[slot].gameIds[option] == state->weapons[slot].type)
+            return weaponSpecs[slot].options[option];
+    }
+    return L"未知武器";
+}
+
 static void UpdateCurrentWeapon(HWND pane, const DenseState *state)
 {
-    WCHAR label[48];
-    int slot = (int)SendDlgItemMessageW(pane, ID_CURRENT_SLOT, CB_GETCURSEL, 0, 0);
-    if (slot >= 0 && slot < WEAPON_SLOT_COUNT) {
+    WCHAR label[96];
+    int slot = state->currentWeaponSlot - 1;
+    wsprintfW(label, L"当前武器：%s", CurrentWeaponName(state));
+    ChangeLabel(pane, ID_CURRENT_WEAPON, label);
+    if (slot >= 0 && slot < WEAPON_SLOT_COUNT && state->weapons[slot].type && weaponSpecs[slot].hasAmmo) {
         wsprintfW(label, L"当前弹匣 %d", state->weapons[slot].loaded);
-        SetDlgItemTextW(pane, ID_CURRENT_LOADED, label);
+        ChangeLabel(pane, ID_CURRENT_LOADED, label);
         wsprintfW(label, L"当前携带 %d", state->weapons[slot].total);
-        SetDlgItemTextW(pane, ID_CURRENT_TOTAL, label);
+        ChangeLabel(pane, ID_CURRENT_TOTAL, label);
+    } else {
+        ChangeLabel(pane, ID_CURRENT_LOADED, L"当前弹匣 —");
+        ChangeLabel(pane, ID_CURRENT_TOTAL, L"当前携带 —");
     }
 }
 
@@ -965,8 +1025,8 @@ static void ApplyWeapon(HWND pane, DenseState *state, int slot)
 {
     int id = ID_WEAPON_FIRST + slot * 5;
     WeaponSetting *setting = &state->weapons[slot];
-    int current = (int)SendDlgItemMessageW(pane, id, CB_GETCURSEL, 0, 0);
-    setting->selection = current >= 0 ? current : 0;
+    int current = ComboValue(GetDlgItem(pane, id));
+    setting->type = current > 0 ? current : 0;
     if (weaponSpecs[slot].hasAmmo) {
         HWND total = GetDlgItem(pane, id + 1), loaded = GetDlgItem(pane, id + 2);
         setting->total = current > 0 ? ReadNumber(total, setting->total, 0, 99999) : 0;
@@ -975,6 +1035,12 @@ static void ApplyWeapon(HWND pane, DenseState *state, int slot)
         SetNumber(loaded, setting->loaded);
     }
     UpdateCurrentWeapon(pane, state);
+}
+
+static void UpdateWeaponAction(HWND pane, int slot, const WeaponSetting *setting)
+{
+    LPCWSTR text = setting->applying ? L"正在应用…" : setting->dirty ? L"应用修改" : L"应用";
+    ChangeLabel(pane, ID_WEAPON_FIRST + slot * 5 + 4, text);
 }
 
 static void RefillAmmo(HWND pane, DenseState *state)
@@ -996,8 +1062,8 @@ static void UpdateWeaponAverage(HWND pane, const DenseState *state)
     WCHAR label[64];
     for (slot = 0; slot < (int)ARRAYSIZE(state->proficiency); ++slot)
         sum += state->proficiency[slot];
-    wsprintfW(label, L"平均武器熟练度 %d%%", sum / ((int)ARRAYSIZE(state->proficiency) * 10));
-    SetDlgItemTextW(pane, ID_WEAPON_AVERAGE, label);
+    wsprintfW(label, L"平均熟练度 %d%%", sum / ((int)ARRAYSIZE(state->proficiency) * 10));
+    ChangeLabel(pane, ID_WEAPON_AVERAGE, label);
 }
 
 static GameResult QueueWeaponField(GameField field, int slot, int value, int lock)
@@ -1008,11 +1074,7 @@ static GameResult QueueWeaponField(GameField field, int slot, int value, int loc
 static BOOL ReadWeaponRequest(HWND pane, int slot, GameWeapon *weapon)
 {
     int id = ID_WEAPON_FIRST + slot * 5;
-    int selection = (int)SendDlgItemMessageW(pane, id, CB_GETCURSEL, 0, 0);
-    int type;
-    if (selection < 0)
-        return FALSE;
-    type = (int)SendDlgItemMessageW(pane, id, CB_GETITEMDATA, selection, 0);
+    int type = ComboValue(GetDlgItem(pane, id));
     if (type < 0 || type > 46)
         return FALSE;
     weapon->type = (unsigned)type;
@@ -1051,7 +1113,7 @@ static GameResult QueueRefill(HWND pane, const DenseState *state)
     int slot;
     for (slot = 0; slot < WEAPON_SLOT_COUNT; ++slot) {
         int id = ID_WEAPON_FIRST + slot * 5;
-        if (weaponSpecs[slot].hasAmmo && state->weapons[slot].selection > 0) {
+        if (weaponSpecs[slot].hasAmmo && state->weapons[slot].type > 0) {
             int lock = Checked(GetDlgItem(pane, id + 3)) ? 1 : -1;
             result = MergeGameResult(result, QueueWeaponField(GAME_WEAPON_TOTAL, slot, 99999, lock));
             if (state->loadedLockSlot == slot && Checked(GetDlgItem(pane, ID_LOADED_LOCK)))
@@ -1129,7 +1191,8 @@ static void RecordCheat(const DenseState *player)
     UpdateCheatStatus(states[0].cheatsUsed);
 }
 
-static void ReadDensePage(UiPage *page);
+static void ReadDensePage(UiPage *page, BOOL newer);
+static void ReadWeaponSlots(DenseState *state, BOOL newer);
 
 static GameResult QueuePaintLock(HWND pane, const DenseState *state)
 {
@@ -1379,8 +1442,7 @@ static BOOL VehicleCommand(UiPage *page, DenseState *state, HWND pane, int id)
         return TRUE;
     case ID_RESYNC:
         if (GameIsConnected()) {
-            ReadDensePage(page);
-            UiSetStatus(page, L"已请求重新读取 Steam 游戏状态。");
+            UiRefreshGame(page);
             return TRUE;
         }
         SetStat(pane, WORLD_MONEY, state->money);
@@ -1417,11 +1479,34 @@ static BOOL VehicleCommand(UiPage *page, DenseState *state, HWND pane, int id)
 static BOOL PlayerCommand(UiPage *page, DenseState *state, HWND pane, int id, int code, HWND control)
 {
     if (id == ID_CURRENT_SLOT && code == CBN_SELCHANGE) {
-        int slot = (int)SendMessageW(control, CB_GETCURSEL, 0, 0);
-        if (slot >= 0 && SetLiveField(page, GAME_WEAPON_SLOT, 0, slot))
+        int rawSlot = ComboValue(control);
+        if (rawSlot < SLOT_UNARMED || rawSlot > SLOT_DETONATOR)
             return TRUE;
+        if (GameIsConnected()) {
+            GameResult result = GameSetField(GAME_WEAPON_SLOT, 0, rawSlot);
+            if (DisplayGameResult(page, result)) {
+                if (result == GAME_QUEUED || result == GAME_OK)
+                    state->requestedWeaponSlot = rawSlot;
+                else if (!SetModelSelection(control, state->currentWeaponSlot))
+                    SendMessageW(control, CB_SETCURSEL, (WPARAM)-1, 0);
+                return TRUE;
+            }
+        }
+        state->currentWeaponSlot = rawSlot;
         UpdateCurrentWeapon(pane, state);
         return TRUE;
+    }
+    if (id >= ID_WEAPON_FIRST && id < ID_WEAPON_FIRST + WEAPON_SLOT_COUNT * 5 && GameIsConnected()) {
+        int field = (id - ID_WEAPON_FIRST) % 5;
+        int slot = (id - ID_WEAPON_FIRST) / 5;
+        if (!state->weaponRendering && ((field == 0 && code == CBN_SELCHANGE) ||
+                                        ((field == 1 || field == 2) && code == EN_CHANGE))) {
+            WeaponSetting *setting = &state->weapons[slot];
+            ++setting->editRevision;
+            setting->dirty = TRUE;
+            UpdateWeaponAction(pane, slot, setting);
+            return TRUE;
+        }
     }
     if (code != BN_CLICKED)
         return FALSE;
@@ -1451,7 +1536,16 @@ static BOOL PlayerCommand(UiPage *page, DenseState *state, HWND pane, int id, in
         int field = (id - ID_WEAPON_FIRST) % 5;
         int slot = (id - ID_WEAPON_FIRST) / 5;
         if (GameIsConnected() && (field == 3 || field == 4)) {
-            GameResult result = field == 3 ? QueueWeaponLock(pane, slot, Checked(control)) : QueueWeaponApply(pane, slot);
+            WeaponSetting *setting = &state->weapons[slot];
+            GameResult result;
+            if (field == 4 && setting->applying)
+                return TRUE;
+            result = field == 3 ? QueueWeaponLock(pane, slot, Checked(control)) : QueueWeaponApply(pane, slot);
+            if (field == 4 && (result == GAME_OK || result == GAME_QUEUED)) {
+                setting->submittedRevision = setting->editRevision;
+                setting->applying = TRUE;
+                UpdateWeaponAction(pane, slot, setting);
+            }
             if (field == 3 ? DisplayCheckedResult(page, control, result) : DisplayGameResult(page, result))
                 return TRUE;
         }
@@ -1498,6 +1592,17 @@ static BOOL PlayerCommand(UiPage *page, DenseState *state, HWND pane, int id, in
         RefillAmmo(pane, state);
         UiSetStatus(page, L"已补满已选择武器的示例弹药。");
         return TRUE;
+    case ID_READ_WEAPONS:
+        if (GameIsConnected()) {
+            int skill;
+            ReadWeaponSlots(state, TRUE);
+            for (skill = 0; skill < UI_WEAPON_SKILLS; ++skill)
+                ReadLiveField(GAME_WEAPON_SKILL, skill);
+            UiSetStatus(page, L"已请求读取武器和弹药，未应用的修改会保留。");
+        } else {
+            UiSetStatus(page, GameResultText(GAME_OFFLINE));
+        }
+        return TRUE;
     case ID_WEAPON_LEVELS:
         {
             int proposed[UI_WEAPON_SKILLS], skill;
@@ -1531,8 +1636,7 @@ static BOOL PlayerCommand(UiPage *page, DenseState *state, HWND pane, int id, in
     case ID_LOADED_LOCK:
         if (GameIsConnected()) {
             BOOL enabled = Checked(control);
-            int slot = enabled ? (int)SendDlgItemMessageW(pane, ID_CURRENT_SLOT, CB_GETCURSEL, 0, 0) :
-                                 state->loadedLockSlot;
+            int slot = enabled ? state->currentWeaponSlot - 1 : state->loadedLockSlot;
             if (slot < 0 || slot >= WEAPON_SLOT_COUNT || !weaponSpecs[slot].hasAmmo) {
                 if (enabled)
                     DisplayCheckedResult(page, control, GAME_INVALID);
@@ -1607,7 +1711,66 @@ BOOL DensePageCommand(UiPage *page, int id, int code, HWND control)
     return PlayerCommand(page, state, pane, id, code, control);
 }
 
-static void ReadDensePage(UiPage *page)
+static ULONGLONG WeaponReadBit(GameField field, int index)
+{
+    int part;
+    if (field == GAME_WEAPON_SLOT)
+        return 1;
+    if (field == GAME_WEAPON_TYPE && index == -1)
+        return 2;
+    if (index < 0 || index >= WEAPON_SLOT_COUNT)
+        return 0;
+    switch (field) {
+    case GAME_WEAPON_TYPE: part = 0; break;
+    case GAME_WEAPON_TOTAL: part = 1; break;
+    case GAME_WEAPON_LOADED: part = 2; break;
+    default: return 0;
+    }
+    return (ULONGLONG)1 << (2 + index * 3 + part);
+}
+
+static BOOL ReadWeaponField(DenseState *state, GameField field, int index, BOOL newer)
+{
+    ULONGLONG bit = WeaponReadBit(field, index);
+    if (!bit)
+        return FALSE;
+    if (state->weaponReadsPending & bit) {
+        if (newer && !(state->weaponReadAgain & bit) && GameReadField(field, index) == GAME_QUEUED)
+            state->weaponReadAgain |= bit;
+        return TRUE;
+    }
+    if (!GameSupportsField(field, index, FALSE) || GameReadField(field, index) != GAME_QUEUED)
+        return FALSE;
+    state->weaponReadsPending |= bit;
+    return TRUE;
+}
+
+static void ReadWeaponSlots(DenseState *state, BOOL newer)
+{
+    int index;
+    ReadWeaponField(state, GAME_WEAPON_SLOT, 0, newer);
+    ReadWeaponField(state, GAME_WEAPON_TYPE, -1, newer);
+    for (index = 0; index < WEAPON_SLOT_COUNT; ++index) {
+        ReadWeaponField(state, GAME_WEAPON_TYPE, index, newer);
+        if (weaponSpecs[index].hasAmmo) {
+            ReadWeaponField(state, GAME_WEAPON_TOTAL, index, newer);
+            ReadWeaponField(state, GAME_WEAPON_LOADED, index, newer);
+        }
+    }
+}
+
+static BOOL AcceptWeaponRead(DenseState *state, GameField field, int index)
+{
+    ULONGLONG bit = WeaponReadBit(field, index);
+    if (state->weaponReadAgain & bit) {
+        state->weaponReadAgain &= ~bit;
+        return FALSE;
+    }
+    state->weaponReadsPending &= ~bit;
+    return TRUE;
+}
+
+static void ReadDensePage(UiPage *page, BOOL newer)
 {
     const FlagBinding *flags = page->index == 0 ? vehicleFlags : playerFlags;
     int count = page->index == 0 ? (int)ARRAYSIZE(vehicleFlags) : (int)ARRAYSIZE(playerFlags);
@@ -1615,7 +1778,7 @@ static void ReadDensePage(UiPage *page)
 
     for (index = 0; index < STAT_SLOT_COUNT; ++index) {
         const GameBinding *binding = &gameStats[page->index][index];
-        if (binding->field != GAME_FIELD_NONE)
+        if (binding->field != GAME_FIELD_NONE && binding->field != GAME_MISSION_TIMER)
             ReadLiveField(binding->field, binding->index);
     }
     for (index = 0; index < count; ++index)
@@ -1631,15 +1794,7 @@ static void ReadDensePage(UiPage *page)
     } else {
         ReadLiveField(GAME_PLAYER_HEADING, 0);
         ReadLiveField(GAME_PLAYER_COFFEE, 0);
-        ReadLiveField(GAME_WEAPON_SLOT, 0);
-        ReadLiveField(GAME_WEAPON_TYPE, -1);
-        for (index = 0; index < WEAPON_SLOT_COUNT; ++index) {
-            ReadLiveField(GAME_WEAPON_TYPE, index);
-            if (weaponSpecs[index].hasAmmo) {
-                ReadLiveField(GAME_WEAPON_TOTAL, index);
-                ReadLiveField(GAME_WEAPON_LOADED, index);
-            }
-        }
+        ReadWeaponSlots(&states[1], newer);
         for (index = 0; index < UI_WEAPON_SKILLS; ++index)
             ReadLiveField(GAME_WEAPON_SKILL, index);
         for (index = 0; index < CHEAT_COUNT; ++index)
@@ -1650,7 +1805,13 @@ static void ReadDensePage(UiPage *page)
 void DensePageGameRefresh(UiPage *page)
 {
     if (GameIsConnected())
-        ReadDensePage(page);
+        ReadDensePage(page, TRUE);
+}
+
+void DensePageGamePoll(UiPage *page)
+{
+    if (page->index == 1 && states[1].activePane == 1 && GameIsConnected())
+        ReadWeaponSlots(&states[1], FALSE);
 }
 
 static void ClearLiveLocks(UiPage *page, const DenseState *state)
@@ -1739,37 +1900,67 @@ static BOOL LiveFlagEvent(UiPage *page, DenseState *state, const GameEvent *even
 
 static void UpdateLiveWeaponField(DenseState *state, GameField field, int index, int value)
 {
-    HWND pane = state->pane[1], control;
+    HWND pane = state->pane[1];
     int id;
     WeaponSetting *setting;
-    if (field == GAME_WEAPON_SLOT) {
-        SendDlgItemMessageW(pane, ID_CURRENT_SLOT, CB_SETCURSEL, value, 0);
-    } else if (field == GAME_WEAPON_SKILL) {
+    if (field == GAME_WEAPON_SKILL) {
         if (index >= 0 && index < UI_WEAPON_SKILLS) {
             state->proficiency[index] = value;
             UpdateWeaponAverage(pane, state);
         }
     } else if (field == GAME_WEAPON_TYPE && index == -1) {
+        state->unarmedType = value;
         SetChecked(GetDlgItem(pane, ID_BRASS_KNUCKLES), value != 0);
     } else if (index >= 0 && index < WEAPON_SLOT_COUNT) {
+        WCHAR text[16];
         id = ID_WEAPON_FIRST + index * 5;
         setting = &state->weapons[index];
+        state->weaponRendering = TRUE;
         if (field == GAME_WEAPON_TYPE) {
             HWND combo = GetDlgItem(pane, id);
-            SetModelSelection(combo, value);
-            setting->selection = (int)SendMessageW(combo, CB_GETCURSEL, 0, 0);
+            setting->type = value;
+            if (!setting->dirty && !SendMessageW(combo, CB_GETDROPPEDSTATE, 0, 0) &&
+                ComboValue(combo) != value && !SetModelSelection(combo, value))
+                SendMessageW(combo, CB_SETCURSEL, (WPARAM)-1, 0);
         } else if (field == GAME_WEAPON_TOTAL) {
             setting->total = value;
-            control = GetDlgItem(pane, id + 1);
-            if (GetFocus() != control)
-                SetNumber(control, value);
+            if (weaponSpecs[index].hasAmmo && !setting->dirty && GetFocus() != GetDlgItem(pane, id + 1)) {
+                wsprintfW(text, L"%d", value);
+                ChangeLabel(pane, id + 1, text);
+            }
         } else if (field == GAME_WEAPON_LOADED) {
             setting->loaded = value;
-            control = GetDlgItem(pane, id + 2);
-            if (GetFocus() != control)
-                SetNumber(control, value);
+            if (weaponSpecs[index].hasAmmo && !setting->dirty && GetFocus() != GetDlgItem(pane, id + 2)) {
+                wsprintfW(text, L"%d", value);
+                ChangeLabel(pane, id + 2, text);
+            }
         }
+        state->weaponRendering = FALSE;
     }
+}
+
+static void ApplyCurrentWeaponRead(DenseState *state, const GameEvent *event, int value)
+{
+    HWND pane = state->pane[1];
+    HWND combo = GetDlgItem(pane, ID_CURRENT_SLOT);
+    if (event->request == GAME_REQ_SET_FIELD) {
+        if (state->requestedWeaponSlot >= 0 && value != state->requestedWeaponSlot)
+            return;
+        state->requestedWeaponSlot = -1;
+    } else if (state->requestedWeaponSlot >= 0) {
+        return;
+    }
+    if (event->result == GAME_OK && value >= SLOT_UNARMED && value <= SLOT_DETONATOR)
+        state->currentWeaponSlot = value;
+    else if (event->request == GAME_REQ_READ_FIELD && event->result == GAME_NOT_READY)
+        state->currentWeaponSlot = -1;
+    if (!SendMessageW(combo, CB_GETDROPPEDSTATE, 0, 0)) {
+        if (state->currentWeaponSlot < 0)
+            SendMessageW(combo, CB_SETCURSEL, (WPARAM)-1, 0);
+        else if (ComboValue(combo) != state->currentWeaponSlot)
+            SetModelSelection(combo, state->currentWeaponSlot);
+    }
+    UpdateCurrentWeapon(pane, state);
 }
 
 static void ShowLiveCheat(DenseState *state, int index, BOOL checked, BOOL lock)
@@ -1806,9 +1997,15 @@ static BOOL ReadPlayerEvent(DenseState *state, const GameEvent *event, int value
     }
     if (event->field == GAME_WEAPON_SLOT || event->field == GAME_WEAPON_SKILL || event->field == GAME_WEAPON_TYPE ||
         event->field == GAME_WEAPON_TOTAL || event->field == GAME_WEAPON_LOADED) {
-        if (event->result == GAME_OK && (event->request != GAME_REQ_LOCK_FIELD || event->mode) &&
-            !(event->field == GAME_WEAPON_TYPE && event->index == -1 && event->request == GAME_REQ_READ_FIELD)) {
-            UpdateLiveWeaponField(state, event->field, event->index, value);
+        if (event->request == GAME_REQ_READ_FIELD && !AcceptWeaponRead(state, event->field, event->index))
+            return TRUE;
+        if (event->field == GAME_WEAPON_SLOT) {
+            ApplyCurrentWeaponRead(state, event, value);
+        } else if (event->result == GAME_OK && (event->request != GAME_REQ_LOCK_FIELD || event->mode)) {
+            if (event->field == GAME_WEAPON_TYPE && event->index == -1 && event->request == GAME_REQ_READ_FIELD)
+                state->unarmedType = value;
+            else
+                UpdateLiveWeaponField(state, event->field, event->index, value);
             UpdateCurrentWeapon(state->pane[1], state);
         }
         if (event->result != GAME_OK && event->request == GAME_REQ_LOCK_FIELD) {
@@ -1951,15 +2148,28 @@ void DensePageGameEvent(UiPage *page, const GameEvent *event)
     BOOL handled = FALSE;
     int value = 0;
 
-    if (event->value >= -2147483647.0 && event->value <= 2147483646.0)
+    if (event->value >= (double)INT_MAX - 0.5)
+        value = INT_MAX;
+    else if (event->value <= (double)INT_MIN + 0.5)
+        value = INT_MIN;
+    else if (event->value == event->value)
         value = (int)(event->value < 0 ? event->value - 0.5 : event->value + 0.5);
     if (event->request == GAME_REQ_SESSION) {
         BOOL connected = event->result == GAME_OK && value != 0;
+        int slot;
         if (connected == state->liveSession)
             return;
         state->liveSession = connected;
         state->liveFailure = FALSE;
         state->loadedLockSlot = -1;
+        state->requestedWeaponSlot = -1;
+        state->weaponReadsPending = state->weaponReadAgain = 0;
+        if (page->index == 1) {
+            for (slot = 0; slot < WEAPON_SLOT_COUNT; ++slot) {
+                state->weapons[slot].applying = FALSE;
+                UpdateWeaponAction(state->pane[1], slot, &state->weapons[slot]);
+            }
+        }
         ClearLiveLocks(page, state);
         if (page->index == 0) {
             SetDlgItemTextW(state->pane[2], ID_GAME_VERSION, connected ? L"Steam 版（已连接）" : L"Steam 版（离线）");
@@ -1967,7 +2177,7 @@ void DensePageGameEvent(UiPage *page, const GameEvent *event)
                             L"生成器状态：等待可用性确认" : L"生成器状态：就绪（离线）");
         }
         if (connected)
-            ReadDensePage(page);
+            ReadDensePage(page, FALSE);
         return;
     }
     if (!GameIsConnected())
@@ -2020,17 +2230,24 @@ void DensePageGameEvent(UiPage *page, const GameEvent *event)
     case GAME_REQ_WEAPON:
         if (page->index == 1 && event->index >= 0 && event->index < WEAPON_SLOT_COUNT) {
             int slot = event->index;
+            WeaponSetting *setting = &state->weapons[slot];
             if (event->result == GAME_OK) {
+                if (setting->applying && setting->submittedRevision == setting->editRevision)
+                    setting->dirty = FALSE;
                 UpdateLiveWeaponField(state, GAME_WEAPON_TYPE, slot, (int)event->weapon.type);
                 UpdateLiveWeaponField(state, GAME_WEAPON_TOTAL, slot, (int)event->weapon.total);
                 UpdateLiveWeaponField(state, GAME_WEAPON_LOADED, slot, (int)event->weapon.loaded);
                 UpdateCurrentWeapon(state->pane[1], state);
             } else if (event->result != GAME_QUEUED) {
-                ReadLiveField(GAME_WEAPON_TYPE, slot);
+                ReadWeaponField(state, GAME_WEAPON_TYPE, slot, TRUE);
                 if (weaponSpecs[slot].hasAmmo) {
-                    ReadLiveField(GAME_WEAPON_TOTAL, slot);
-                    ReadLiveField(GAME_WEAPON_LOADED, slot);
+                    ReadWeaponField(state, GAME_WEAPON_TOTAL, slot, TRUE);
+                    ReadWeaponField(state, GAME_WEAPON_LOADED, slot, TRUE);
                 }
+            }
+            if (event->result != GAME_QUEUED) {
+                setting->applying = FALSE;
+                UpdateWeaponAction(state->pane[1], slot, setting);
             }
             handled = TRUE;
         }
@@ -2039,8 +2256,12 @@ void DensePageGameEvent(UiPage *page, const GameEvent *event)
     if (handled && event->request != GAME_REQ_READ_FIELD) {
         if (event->result != GAME_OK && event->result != GAME_QUEUED) {
             state->liveFailure = TRUE;
-            if (event->request == GAME_REQ_SET_FIELD || event->request == GAME_REQ_LOCK_FIELD)
-                ReadLiveField(event->field, event->index);
+            if (event->request == GAME_REQ_SET_FIELD || event->request == GAME_REQ_LOCK_FIELD) {
+                if (page->index == 1 && WeaponReadBit(event->field, event->index))
+                    ReadWeaponField(state, event->field, event->index, TRUE);
+                else
+                    ReadLiveField(event->field, event->index);
+            }
         }
         if (event->result != GAME_OK || !state->liveFailure)
             UiSetStatus(page, GameResultText(event->result));

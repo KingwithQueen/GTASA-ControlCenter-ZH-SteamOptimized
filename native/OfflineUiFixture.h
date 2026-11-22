@@ -36,12 +36,84 @@ extern "C" DWORD __stdcall SteamFixtureVehicle(DWORD enable){
  d=(DWORD)&fixtureDestroyPlate-va(0x828060+sizeof destroy);memcpy(destroy+10,&d,4);memcpy((void*)va(0x828060),destroy,sizeof destroy);
  return car;
 }
+
+#ifdef WIN32_UI_BACKEND
+struct FixtureFloatTriplet {
+ int stat;
+ float values[3];
+};
+
+static constexpr FixtureFloatTriplet fixtureNumericFloats[]={
+ {25,{24.125f,75.25f,26.5f}},
+ {64,{63.75f,124.5f,65.875f}},
+};
+static constexpr DWORD fixtureNumericInts[]={0x0f11662fu,17,0x1ac29119u};
+static constexpr DWORD fixtureWantedBefore=0x12347ca1,fixtureWantedAfter=0x681254bb;
+static constexpr BYTE fixtureBeating=0x9b,fixtureWantedFlags=0x80,fixtureWantedPadding=0x5e;
+static DWORD fixtureWanted;
+
+static bool seedFixturePlayerStats(DWORD ped)
+{
+ void* wanted=VirtualAlloc(nullptr,4096,MEM_COMMIT|MEM_RESERVE,PAGE_READWRITE);
+ if(!wanted)
+  return false;
+ const DWORD playerData=va(0xc100d4);
+ fixtureWanted=(DWORD)wanted;
+ *(DWORD*)(ped+0x480)=playerData;
+ *(DWORD*)playerData=fixtureWanted;
+ *(DWORD*)(fixtureWanted+0x28)=fixtureWantedBefore;
+ *(DWORD*)(fixtureWanted+0x30)=fixtureWantedAfter;
+ *(BYTE*)(fixtureWanted+0x1b)=fixtureBeating;
+ *(BYTE*)(fixtureWanted+0x1e)=fixtureWantedFlags;
+ *(BYTE*)(fixtureWanted+0x1f)=fixtureWantedPadding;
+
+ for(const auto& slot:fixtureNumericFloats)
+  memcpy((void*)va(0xc0c5a8+(slot.stat-1)*sizeof(float)),slot.values,sizeof slot.values);
+ memcpy((void*)va(0xc0c048+(152-1)*sizeof(DWORD)),fixtureNumericInts,sizeof fixtureNumericInts);
+ return true;
+}
+
+// Fixed fixture-only assertion for these seeded stats and their neighbors.
+extern "C" __declspec(dllexport) DWORD __stdcall SteamFixturePlayerStatsIntact(DWORD initial,DWORD level)
+{
+ static constexpr struct {
+  DWORD chaos;
+  BYTE cops,cars;
+  WORD roadblock;
+ } pursuit[]={
+  {0,0,0,0},{70,1,1,0},{200,3,2,0},{570,4,2,12},{1220,6,2,18},{2420,8,3,24},{4620,10,3,30}
+ };
+ if(!base||!fixtureWanted||initial>1||level>6)
+  return 0;
+ for(const auto& slot:fixtureNumericFloats){
+  const auto* values=(const float*)va(0xc0c5a8+(slot.stat-1)*sizeof(float));
+  if(values[0]!=slot.values[0]||values[2]!=slot.values[2]||(initial&&values[1]!=slot.values[1]))
+   return 0;
+ }
+ const auto* counts=(const DWORD*)va(0xc0c048+(152-1)*sizeof(DWORD));
+ const auto* wanted=(const DWORD*)fixtureWanted;
+ const auto* bytes=(const BYTE*)fixtureWanted;
+ WORD roadblock=0;
+ memcpy(&roadblock,bytes+0x1c,sizeof roadblock);
+ return counts[0]==fixtureNumericInts[0]&&counts[2]==fixtureNumericInts[2]
+     &&(!initial||counts[1]==fixtureNumericInts[1])
+     &&wanted[0]==pursuit[level].chaos&&bytes[0x19]==pursuit[level].cops
+     &&bytes[0x1a]==pursuit[level].cars&&roadblock==pursuit[level].roadblock
+     &&bytes[0x1b]==fixtureBeating&&bytes[0x1e]==fixtureWantedFlags&&bytes[0x1f]==fixtureWantedPadding
+     &&wanted[0x28/sizeof(DWORD)]==fixtureWantedBefore&&wanted[0x2c/sizeof(DWORD)]==level
+     &&wanted[0x30/sizeof(DWORD)]==fixtureWantedAfter;
+}
+#endif
+
 extern "C" DWORD __stdcall SteamFixtureBegin(){
  game=GetCurrentProcess();gamePid=GetCurrentProcessId();remote=0;enabled=false;
  base=(DWORD)VirtualAlloc(nullptr,0xa00000,MEM_COMMIT|MEM_RESERVE,PAGE_EXECUTE_READWRITE);
  DWORD ped=(DWORD)VirtualAlloc(nullptr,8192,MEM_COMMIT|MEM_RESERVE,PAGE_READWRITE);
  DWORD info=(DWORD)VirtualAlloc(nullptr,65536,MEM_COMMIT|MEM_RESERVE,PAGE_READWRITE);if(!base||!ped||!info)return 0;
  *(DWORD*)va(0xc100d0)=ped;*(float*)(ped+0x540)=100;*(DWORD*)(ped+0x530)=1;
+#ifdef WIN32_UI_BACKEND
+ if(!seedFixturePlayerStats(ped))return 0;
+#endif
  DWORD matrix=(DWORD)VirtualAlloc(nullptr,4096,MEM_COMMIT|MEM_RESERVE,PAGE_READWRITE);if(!matrix)return 0;
  *(DWORD*)(ped+20)=matrix;*(float*)matrix=*(float*)(matrix+20)=*(float*)(matrix+40)=1;
  for(int i=0;i<11;i++)*(DWORD*)(va(0x44b1dc)+i*4)=va(trainRestoreTable[i]);

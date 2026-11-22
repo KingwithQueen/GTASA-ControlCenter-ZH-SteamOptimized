@@ -13,6 +13,7 @@ enum {
     ID_NEXT_TAB = 300,
     ID_PREVIOUS_TAB = 301,
     ID_GAME_TIMER = 302,
+    ID_REFRESH_GAME = 303,
     WM_BENCHMARK_STEP = WM_APP + 1,
     BENCHMARK_SWITCHES = 600,
     BENCHMARK_TOTAL_STEPS = BENCHMARK_SWITCHES + UI_PAGE_COUNT - 1
@@ -30,6 +31,7 @@ typedef struct App {
     HWND window;
     HWND tabs;
     HWND status;
+    HWND refreshGame;
     UiPage pages[UI_PAGE_COUNT];
     HFONT font;
     int dpi;
@@ -37,6 +39,8 @@ typedef struct App {
     SIZE minimumWindow;
     int exitCode;
     DWORD lastGameRefresh;
+    DWORD lastWeaponPoll;
+    BOOL refreshingGame;
 
     FILE *benchmark;
     LARGE_INTEGER frequency;
@@ -67,6 +71,11 @@ void UiSetStatus(UiPage *page, LPCWSTR text)
 {
     HWND status = GetDlgItem(GetAncestor(page->window, GA_ROOT), ID_STATUS);
     SendMessageW(status, SB_SETTEXTW, 0, (LPARAM)text);
+}
+
+void UiRefreshGame(UiPage *page)
+{
+    SendMessageW(GetAncestor(page->window, GA_ROOT), WM_COMMAND, ID_REFRESH_GAME, 0);
 }
 
 static LRESULT CALLBACK PageProc(HWND window, UINT message, WPARAM wParam, LPARAM lParam)
@@ -110,7 +119,7 @@ static LRESULT CALLBACK PageProc(HWND window, UINT message, WPARAM wParam, LPARA
 static void LayoutPages(App *app)
 {
     RECT client, tab, status;
-    int index, x, y, margin, width, height;
+    int index, x, y, margin, width, height, refreshWidth;
 
     if (!app->tabs || !app->status || IsIconic(app->window))
         return;
@@ -121,6 +130,10 @@ static void LayoutPages(App *app)
     margin = UiScale(&app->pages[0], 12);
     SetRect(&tab, 0, 0, client.right - 2 * margin, client.bottom - status.bottom - 2 * margin);
     SetWindowPos(app->tabs, NULL, margin, margin, tab.right, tab.bottom,
+                 SWP_NOACTIVATE | SWP_NOZORDER);
+    refreshWidth = UiScale(&app->pages[0], 146);
+    SetWindowPos(app->refreshGame, NULL, client.right - margin - refreshWidth - UiScale(&app->pages[0], 4),
+                 margin + UiScale(&app->pages[0], 5), refreshWidth, UiScale(&app->pages[0], 25),
                  SWP_NOACTIVATE | SWP_NOZORDER);
     TabCtrl_AdjustRect(app->tabs, FALSE, &tab);
     width = UiScale(&app->pages[0], UI_PAGE_WIDTH);
@@ -170,10 +183,14 @@ static BOOL BuildWindow(App *app, HINSTANCE instance)
                                 app->window, (HMENU)ID_MAIN_TAB, instance, NULL);
     app->status = CreateWindowExW(0, STATUSCLASSNAMEW, L"", WS_CHILD | WS_VISIBLE | SBARS_SIZEGRIP,
                                   0, 0, 0, 0, app->window, (HMENU)ID_STATUS, instance, NULL);
-    if (!app->tabs || !app->status)
+    app->refreshGame = CreateWindowExW(0, L"BUTTON", L"刷新游戏数据（F5）",
+                                       WS_CHILD | WS_VISIBLE | WS_TABSTOP | WS_CLIPSIBLINGS | WS_DISABLED,
+                                       0, 0, 0, 0, app->window, (HMENU)ID_REFRESH_GAME, instance, NULL);
+    if (!app->tabs || !app->status || !app->refreshGame)
         return FALSE;
     SendMessageW(app->tabs, WM_SETFONT, (WPARAM)app->font, FALSE);
     SendMessageW(app->status, WM_SETFONT, (WPARAM)app->font, FALSE);
+    SendMessageW(app->refreshGame, WM_SETFONT, (WPARAM)app->font, FALSE);
     SendMessageW(app->status, SB_SETTEXTW, 0, (LPARAM)offlineStatus);
 
     for (index = 0; index < UI_PAGE_COUNT; ++index) {
@@ -203,7 +220,9 @@ static BOOL BuildWindow(App *app, HINSTANCE instance)
             return FALSE;
     }
 
-    TabCtrl_SetItemSize(app->tabs, UiScale(&app->pages[0], 136), UiScale(&app->pages[0], 31));
+    SetWindowPos(app->refreshGame, HWND_TOP, 0, 0, 0, 0,
+                 SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE);
+    TabCtrl_SetItemSize(app->tabs, UiScale(&app->pages[0], 128), UiScale(&app->pages[0], 31));
     TabCtrl_SetCurSel(app->tabs, 0);
     LayoutPages(app);
     ShowWindow(app->pages[0].window, SW_SHOWNA);
@@ -273,6 +292,25 @@ static void RunBenchmarkStep(App *app)
     }
 }
 
+static void RefreshGameData(App *app)
+{
+    GameResult result;
+    if (app->refreshingGame)
+        return;
+    if (GameIsConnected()) {
+        DensePageGameRefresh(&app->pages[0]);
+        DensePageGameRefresh(&app->pages[1]);
+    }
+    result = GameRefreshPosition();
+    if (result == GAME_QUEUED) {
+        app->refreshingGame = TRUE;
+        app->lastGameRefresh = app->lastWeaponPoll = GetTickCount();
+        EnableWindow(app->refreshGame, FALSE);
+    }
+    SendMessageW(app->status, SB_SETTEXTW, 0, (LPARAM)(result == GAME_QUEUED
+                 ? L"正在重新读取游戏数据…" : GameResultText(result)));
+}
+
 static LRESULT CALLBACK MainProc(HWND window, UINT message, WPARAM wParam, LPARAM lParam)
 {
     App *app;
@@ -306,7 +344,7 @@ static LRESULT CALLBACK MainProc(HWND window, UINT message, WPARAM wParam, LPARA
         SetFocus(app->tabs);
         return 0;
     case WM_ACTIVATEAPP:
-        if (wParam && GameIsConnected()) {
+        if (wParam && !app->refreshingGame && GameIsConnected()) {
             DWORD now = GetTickCount();
             if (now - app->lastGameRefresh > 1000) {
                 app->lastGameRefresh = now;
@@ -327,6 +365,8 @@ static LRESULT CALLBACK MainProc(HWND window, UINT message, WPARAM wParam, LPARA
             SelectPage(app, (app->currentPage + 1) % UI_PAGE_COUNT, TRUE);
         else if (LOWORD(wParam) == ID_PREVIOUS_TAB)
             SelectPage(app, (app->currentPage + UI_PAGE_COUNT - 1) % UI_PAGE_COUNT, TRUE);
+        else if (LOWORD(wParam) == ID_REFRESH_GAME)
+            RefreshGameData(app);
         return 0;
     case WM_BENCHMARK_STEP:
         if (app->benchmark)
@@ -341,6 +381,8 @@ static LRESULT CALLBACK MainProc(HWND window, UINT message, WPARAM wParam, LPARA
                 LPCWSTR text = event.result == GAME_OK
                     ? L"已连接经典 Steam 版 GTA SA · 请在游戏中检查实际效果"
                     : GameResultText(event.result);
+                app->refreshingGame = FALSE;
+                EnableWindow(app->refreshGame, event.result == GAME_OK);
                 SendMessageW(app->status,SB_SETTEXTW,0,(LPARAM)text);
                 if (event.result == GAME_OK)
                     SetTimer(window,ID_GAME_TIMER,25,NULL);
@@ -353,12 +395,25 @@ static LRESULT CALLBACK MainProc(HWND window, UINT message, WPARAM wParam, LPARA
                 else
                     ListPageGameEvent(&app->pages[index],&event);
             }
+            if (event.request == GAME_REQ_POSITION && event.mode == GAME_POSITION_REFRESH
+                && app->refreshingGame) {
+                app->refreshingGame = FALSE;
+                EnableWindow(app->refreshGame, GameIsConnected());
+                SendMessageW(app->status, SB_SETTEXTW, 0, (LPARAM)(event.result == GAME_OK
+                             ? L"已重新读取游戏数据" : GameResultText(event.result)));
+            }
         }
         return 0;
     }
     case WM_TIMER:
         if (wParam == ID_GAME_TIMER) {
+            DWORD now = GetTickCount();
             ListPageGameTick(&app->pages[5]);
+            if (!app->refreshingGame && app->currentPage == 1 && !IsIconic(window)
+                && now - app->lastWeaponPoll >= 1000) {
+                app->lastWeaponPoll = now;
+                DensePageGamePoll(&app->pages[1]);
+            }
             return 0;
         }
         break;
@@ -416,7 +471,8 @@ int WINAPI wWinMain(HINSTANCE instance, HINSTANCE previous, LPWSTR commandLine, 
 {
     static ACCEL shortcuts[] = {
         { FVIRTKEY | FCONTROL, VK_TAB, ID_NEXT_TAB },
-        { FVIRTKEY | FCONTROL | FSHIFT, VK_TAB, ID_PREVIOUS_TAB }
+        { FVIRTKEY | FCONTROL | FSHIFT, VK_TAB, ID_PREVIOUS_TAB },
+        { FVIRTKEY, VK_F5, ID_REFRESH_GAME }
     };
     const DWORD style = WS_OVERLAPPEDWINDOW | WS_CLIPCHILDREN;
     INITCOMMONCONTROLSEX common;
