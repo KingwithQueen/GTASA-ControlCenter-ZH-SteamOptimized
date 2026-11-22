@@ -65,9 +65,10 @@ $repo = Split-Path -Parent $PSScriptRoot
 $solution = Join-Path $PSScriptRoot 'GTASAControlCenterUI.sln'
 $release = Join-Path $repo '.work\win32-ui\Release'
 $guide = Join-Path $PSScriptRoot 'STEAM-ACCEPTANCE.md'
+$version = & (Join-Path $PSScriptRoot 'version.ps1')
 if ([string]::IsNullOrWhiteSpace($OutputDirectory)) {
     $stamp = Get-Date -Format 'yyyyMMdd-HHmmss-fff'
-    $OutputDirectory = Join-Path $repo ".work\win32-ui\steam-preview-$stamp"
+    $OutputDirectory = Join-Path $repo ".work\win32-ui\steam-v$version-$stamp"
 } elseif (-not [IO.Path]::IsPathRooted($OutputDirectory)) {
     $OutputDirectory = Join-Path (Get-Location).ProviderPath $OutputDirectory
 }
@@ -106,8 +107,14 @@ foreach ($path in @($exe, $dll, $guide)) {
 }
 Confirm-Win32Image $exe $false
 Confirm-Win32Image $dll $true
+foreach ($image in @($exe, $dll)) {
+    $versionInfo = [Diagnostics.FileVersionInfo]::GetVersionInfo($image)
+    if ($versionInfo.FileVersion -cne $version -or $versionInfo.ProductVersion -cne $version) {
+        throw "文件版本与源码中的 $version 不符。路径为 $image。"
+    }
+}
 
-$packageName = 'GTASAControlCenter-SteamPreview-Win32'
+$packageName = "GTASAControlCenter-Steam-v$version-Win32"
 $parent = [IO.Path]::GetDirectoryName($OutputDirectory)
 $stage = Join-Path $parent ('.gtasa-steam-preview-' + [Guid]::NewGuid().ToString('N'))
 $package = Join-Path $stage $packageName
@@ -183,6 +190,7 @@ try {
 }
 
 [pscustomobject]@{
+    Version = $version
     PackageDirectory = Join-Path $OutputDirectory $packageName
     Zip = Join-Path $OutputDirectory "$packageName.zip"
     SHA256 = Join-Path $OutputDirectory 'SHA256SUMS.txt'

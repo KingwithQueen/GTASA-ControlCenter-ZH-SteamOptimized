@@ -90,8 +90,10 @@
     <ClInclude Include="shortcut_game.h" />
     <ClInclude Include="trainer.h" />
     <ClInclude Include="trainer_commands.h" />
+    <ClInclude Include="version.h" />
     <Manifest Include="app.manifest" />
     <ResourceCompile Include="resources.rc" />
+    <ResourceCompile Include="version.rc" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="GTASASteam.vcxproj">

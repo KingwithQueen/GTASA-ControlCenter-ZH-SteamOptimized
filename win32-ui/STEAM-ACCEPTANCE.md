@@ -17,7 +17,7 @@
 如需校验下载，在 ZIP 和 `SHA256SUMS.txt` 所在目录执行以下命令，把输出与清单的 ZIP 条目对照。
 
 ```powershell
-Get-FileHash -LiteralPath '.\GTASAControlCenter-SteamPreview-Win32.zip' -Algorithm SHA256
+Get-ChildItem -File -Filter 'GTASAControlCenter-Steam-v*-Win32.zip' | Get-FileHash -Algorithm SHA256
 ```
 
 ## 六个标签页
@@ -54,4 +54,4 @@ Get-FileHash -LiteralPath '.\GTASAControlCenter-SteamPreview-Win32.zip' -Algorit
 powershell -NoProfile -File .\win32-ui\package-steam-preview.ps1
 ```
 
-脚本用解决方案生成 Win32 Release，校验两个二进制均为 x86，再生成便携目录、ZIP 和独立的 `SHA256SUMS.txt`。输出默认位于仓库的 `.work\win32-ui` 下，也可以用 `-OutputDirectory` 指定一个新目录或空目录。旧版 Windows 以源码兼容为目标，应使用对应工具链重建并单独验证运行。
+脚本用解决方案生成 Win32 Release，校验两个二进制均为 x86，且其文件版本和产品版本都与源码一致。便携目录和 ZIP 的名称包含版本号，同时生成独立的 `SHA256SUMS.txt`。输出默认位于仓库的 `.work\win32-ui` 下，也可以用 `-OutputDirectory` 指定一个新目录或空目录。旧版 Windows 以源码兼容为目标，应使用对应工具链重建并单独验证运行。

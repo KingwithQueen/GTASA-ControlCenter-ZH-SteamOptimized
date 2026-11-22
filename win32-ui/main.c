@@ -1,6 +1,7 @@
 ﻿#include "ui.h"
 
 #include "trainer.h"
+#include "version.h"
 
 #include <shellapi.h>
 #include <stdio.h>
@@ -21,7 +22,7 @@ enum {
 
 static const WCHAR mainClass[] = L"GTASAControlCenterPrototype";
 static const WCHAR pageClass[] = L"GTASAControlCenterPage";
-static const WCHAR title[] = L"圣安地列斯控制中心";
+static const WCHAR title[] = L"圣安地列斯控制中心 v" GTASA_VERSION_TEXT;
 static const WCHAR offlineStatus[] = L"等待游戏 · 经典 Steam 版 GTA SA";
 static LPCWSTR const pageNames[UI_PAGE_COUNT] = {
     L"载具与游戏", L"玩家状态", L"车库", L"游戏秘籍", L"传送地点", L"快捷键"

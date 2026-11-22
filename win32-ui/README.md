@@ -31,6 +31,8 @@ msbuild win32-ui\GTASAControlCenterUI.sln /m /p:Configuration=Release /p:Platfor
 
 程序 `GTASAControlCenterUI.exe` 和后端 `GTASASteam.dll` 都位于 `.work\win32-ui\Release\`。复制时将两者放在同一目录。窗口按缩放后至少 1024×768 的桌面设计。
 
+窗口标题、两个二进制的产品版本和便携 ZIP 名称共用 [`version.h`](version.h) 中的版本号。运行 `powershell -NoProfile -File .\win32-ui\version.ps1` 可读取当前版本。开发时的进位规则见 [版本规则](../AGENTS.md)。
+
 完成构建后还可执行 `powershell -NoProfile -File .\win32-ui\smoke-steam-abi.ps1 -ProductionDll .\.work\win32-ui\Release\GTASASteam.dll`。该测试检查生产 DLL 的导出和拒绝不兼容目标的行为，并用独立的 x86 夹具测试类型化游戏操作。夹具不进入便携包。
 
 ## 复测切页
