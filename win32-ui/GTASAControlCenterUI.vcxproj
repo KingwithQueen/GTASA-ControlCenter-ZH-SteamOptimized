@@ -78,6 +78,7 @@
     <ClCompile Include="dense_pages.c" />
     <ClCompile Include="dialogs.c" />
     <ClCompile Include="list_pages.c" />
+    <ClCompile Include="trainer.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ui.h" />
@@ -86,8 +87,17 @@
     <ClInclude Include="location_map.h" />
     <ClInclude Include="resources.h" />
     <ClInclude Include="shortcut_commands.h" />
+    <ClInclude Include="shortcut_game.h" />
+    <ClInclude Include="trainer.h" />
+    <ClInclude Include="trainer_commands.h" />
     <Manifest Include="app.manifest" />
     <ResourceCompile Include="resources.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="GTASASteam.vcxproj">
+      <Project>{1DD12229-431A-44B6-8BD7-A4C715B96C60}</Project>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
 </Project>

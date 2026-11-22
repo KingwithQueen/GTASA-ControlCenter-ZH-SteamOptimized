@@ -1,5 +1,7 @@
 ﻿#include "ui.h"
 
+#include "trainer.h"
+
 #include <shellapi.h>
 #include <stdio.h>
 #include <wchar.h>
@@ -10,6 +12,7 @@ enum {
     ID_PAGE_FIRST = 200,
     ID_NEXT_TAB = 300,
     ID_PREVIOUS_TAB = 301,
+    ID_GAME_TIMER = 302,
     WM_BENCHMARK_STEP = WM_APP + 1,
     BENCHMARK_SWITCHES = 600,
     BENCHMARK_TOTAL_STEPS = BENCHMARK_SWITCHES + UI_PAGE_COUNT - 1
@@ -18,7 +21,7 @@ enum {
 static const WCHAR mainClass[] = L"GTASAControlCenterPrototype";
 static const WCHAR pageClass[] = L"GTASAControlCenterPage";
 static const WCHAR title[] = L"圣安地列斯控制中心";
-static const WCHAR offlineStatus[] = L"离线界面 · 当前未连接游戏";
+static const WCHAR offlineStatus[] = L"等待游戏 · 经典 Steam 版 GTA SA";
 static LPCWSTR const pageNames[UI_PAGE_COUNT] = {
     L"载具与游戏", L"玩家状态", L"车库", L"游戏秘籍", L"传送地点", L"快捷键"
 };
@@ -33,6 +36,7 @@ typedef struct App {
     int currentPage;
     SIZE minimumWindow;
     int exitCode;
+    DWORD lastGameRefresh;
 
     FILE *benchmark;
     LARGE_INTEGER frequency;
@@ -301,6 +305,16 @@ static LRESULT CALLBACK MainProc(HWND window, UINT message, WPARAM wParam, LPARA
     case WM_SETFOCUS:
         SetFocus(app->tabs);
         return 0;
+    case WM_ACTIVATEAPP:
+        if (wParam && GameIsConnected()) {
+            DWORD now = GetTickCount();
+            if (now - app->lastGameRefresh > 1000) {
+                app->lastGameRefresh = now;
+                DensePageGameRefresh(&app->pages[0]);
+                DensePageGameRefresh(&app->pages[1]);
+            }
+        }
+        break;
     case WM_NOTIFY:
     {
         NMHDR *notification = (NMHDR *)lParam;
@@ -318,7 +332,39 @@ static LRESULT CALLBACK MainProc(HWND window, UINT message, WPARAM wParam, LPARA
         if (app->benchmark)
             RunBenchmarkStep(app);
         return 0;
+    case WM_TRAINER_EVENT:
+    {
+        GameEvent event;
+        int index;
+        while (GameTakeEvent(&event)) {
+            if (event.request == GAME_REQ_SESSION) {
+                LPCWSTR text = event.result == GAME_OK
+                    ? L"已连接经典 Steam 版 GTA SA · 请在游戏中检查实际效果"
+                    : GameResultText(event.result);
+                SendMessageW(app->status,SB_SETTEXTW,0,(LPARAM)text);
+                if (event.result == GAME_OK)
+                    SetTimer(window,ID_GAME_TIMER,25,NULL);
+                else
+                    KillTimer(window,ID_GAME_TIMER);
+            }
+            for (index = 0; index < UI_PAGE_COUNT; ++index) {
+                if (index < 2)
+                    DensePageGameEvent(&app->pages[index],&event);
+                else
+                    ListPageGameEvent(&app->pages[index],&event);
+            }
+        }
+        return 0;
+    }
+    case WM_TIMER:
+        if (wParam == ID_GAME_TIMER) {
+            ListPageGameTick(&app->pages[5]);
+            return 0;
+        }
+        break;
     case WM_DESTROY:
+        KillTimer(window,ID_GAME_TIMER);
+        GameStop();
         if (app->benchmark && app->benchmarkStep < BENCHMARK_TOTAL_STEPS)
             app->exitCode = 3;
         PostQuitMessage(app->exitCode);
@@ -421,6 +467,8 @@ int WINAPI wWinMain(HINSTANCE instance, HINSTANCE previous, LPWSTR commandLine, 
 
     accelerators = CreateAcceleratorTableW(shortcuts, ARRAYSIZE(shortcuts));
     ShowWindow(app.window, app.benchmark ? SW_SHOWNORMAL : show);
+    if (!app.benchmark && !GameStart(app.window))
+        SendMessageW(app.status,SB_SETTEXTW,0,(LPARAM)GameResultText(GAME_BACKEND_MISSING));
     if (app.benchmark) {
         double startupMilliseconds = FinishPaint(&app, start);
         for (index = 0; index < UI_PAGE_COUNT; ++index)

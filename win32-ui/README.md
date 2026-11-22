@@ -1,6 +1,8 @@
-# 圣安地列斯控制中心 Win32 界面原型
+# 圣安地列斯控制中心 Win32 Steam 版
 
-此阶段按旧版窗体和操作手册核对原生 C/Win32 界面。六个中文标签页为载具与游戏、玩家状态、车库、游戏秘籍、传送地点和快捷键。修改车辆、玩家和位置时使用本次会话的离线状态。随程序嵌入原项目的车辆数据、色表、中文词典、秘籍、地点和默认快捷键，启动时无需准备外部数据文件。
+六个中文标签页按原版窗体、弹窗和操作手册核对。游戏联动使用原项目的经典 Steam 后端。游戏进程发现、版本校验、读取、写入和锁定由独立工作线程处理，前台线程负责界面和切页。程序在可用的游戏进程通过校验后连接，切回控制中心时会异步刷新当前载具与玩家数据。未连接时仍可查看地图和编辑配置。
+
+随程序嵌入原项目的车辆数据、色表、中文词典、秘籍、地点和默认快捷键。支持的游戏指纹、两个二进制文件的便携打包方式、六页的单人存档验收步骤及已知限制见 [经典 Steam 版实机验收](STEAM-ACCEPTANCE.md)。
 
 鼠标可直接点击标签，键盘可用 `Ctrl+Tab` 或 `Ctrl+Shift+Tab` 循环切换。标签栏获得焦点时也可用左右方向键。顶层切页沿用预建页面容器，保留输入与页面选择状态。
 
@@ -25,7 +27,9 @@
 msbuild win32-ui\GTASAControlCenterUI.sln /m /p:Configuration=Release /p:Platform=Win32
 ```
 
-可执行文件位于 `.work\win32-ui\Release\GTASAControlCenterUI.exe`。它使用 Windows 自带的控件和静态 C 运行库，可从该目录直接启动。窗口按缩放后至少 1024×768 的桌面设计。
+程序 `GTASAControlCenterUI.exe` 和后端 `GTASASteam.dll` 都位于 `.work\win32-ui\Release\`。复制时将两者放在同一目录。窗口按缩放后至少 1024×768 的桌面设计。
+
+完成构建后还可执行 `powershell -NoProfile -File .\win32-ui\smoke-steam-abi.ps1 -ProductionDll .\.work\win32-ui\Release\GTASASteam.dll`。该测试检查生产 DLL 的导出和拒绝不兼容目标的行为，并用独立的 x86 夹具测试类型化游戏操作。夹具不进入便携包。
 
 ## 复测切页
 
@@ -46,8 +50,8 @@ $p95 = $warm[569]
 
 TSV 记录启动到首屏绘制、其余各页的首次切换，以及 600 次循环切页。`selection_ms` 记录从开始切页到提交页面显示状态的耗时，`ms` 还包括处理窗口绘制和提交 GDI 批处理。这两项度量应用内响应，桌面合成、显示器刷新和鼠标设备延迟都在该计时范围之外。冒烟脚本另行验证页面层级、句柄复用、列表行数，以及两种车辆颜色、两项防火设置和地图选点。
 
-本机在 Windows Server 2025 Hyper-V 远程会话、150% 显示缩放下，用 Release Win32 构建连续切换 600 次。含应用内绘制的中位数约 53 ms，P95 约 92 ms，最慢约 112 ms。启动到首屏约 1.89 秒。载具页预建 185 个子窗口，玩家页预建 268 个，这两个数字包含各自隐藏分区的控件。
+本机在 Windows Server 2025 Hyper-V 远程会话、150% 显示缩放下，用最终便携包连续切换 600 次。提交页面显示状态的中位数约 5.1 ms。含应用内绘制的中位数约 77 ms，P95 约 132 ms，最慢约 202 ms。启动到首屏约 2.71 秒。载具页预建 189 个子窗口，玩家页预建 268 个，这两个数字包含各自隐藏分区的控件。此项在无游戏进程的基准模式下测量。
 
 ## 旧版 Windows 源码兼容
 
-工程默认使用 v145。C 源码采用 XP 时代的 Win32 API 和旧工具集支持的 C 写法，中文源码保存为带 BOM 的 UTF-8。旧系统要用适合目标系统的编译器、SDK 和 C 运行库重新构建。以 Windows XP 为例，Microsoft 提供了 v141_xp 与配套 Windows 7 SDK 的方案，可用 MSBuild 的 `/p:PlatformToolset` 和 `/p:WindowsTargetPlatformVersion` 覆盖工程设置。本次只验证了当前工具链与系统。 [Microsoft 的 Windows XP 构建说明](https://learn.microsoft.com/en-us/cpp/build/configuring-programs-for-windows-xp)
+工程默认使用 v145。C 界面源码以 XP 时代的 Win32 API 为基线，配套 C++ 后端还依赖 Windows CryptoAPI 的 SHA-256 支持。旧系统需要选择支持目标系统的编译器、SDK 和 C 运行库重编译，再分别验证界面与后端。当前预编译产物按本机现代 Windows 环境验证。 [Microsoft 的 Windows XP 构建说明](https://learn.microsoft.com/en-us/cpp/build/configuring-programs-for-windows-xp)

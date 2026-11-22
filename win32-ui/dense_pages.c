@@ -1,5 +1,6 @@
 ﻿#include "ui.h"
 #include "dialogs.h"
+#include "trainer.h"
 
 #include <math.h>
 #include <stdlib.h>
@@ -14,10 +15,15 @@ enum {
     ID_PLAYER_DAMAGE_LOCK, ID_PLAYER_DAMAGE_EXPLOSION,
     ID_PLAYER_DAMAGE_COLLISION, ID_PLAYER_DAMAGE_BULLET,
     ID_DONT_BURN = 7140, ID_DONT_EXPLODE,
+    ID_VEHICLE_DAMAGE_LOCK, ID_VEHICLE_DAMAGE_EXPLOSION, ID_VEHICLE_DAMAGE_COLLISION,
+    ID_VEHICLE_DAMAGE_BULLET, ID_VEHICLE_DAMAGE_FIRE, ID_VEHICLE_WHEELS, ID_VEHICLE_DOORS,
+    ID_VEHICLE_DOOR_LOCK,
     ID_MODEL = 7150, ID_CURRENT_MODEL, ID_PICK_MODEL, ID_SPAWN_MODEL,
     ID_PLATE, ID_APPLY_PLATE, ID_PLATE_LOCK, ID_SPAWNER_AUTO, ID_SPAWNER_READY, ID_CHECK_SPAWNER,
+    ID_VEHICLE_ALARM, ID_VEHICLE_RESTART, ID_VEHICLE_REMOTE,
     ID_WEATHER = 7170, ID_APPLY_WEATHER, ID_WEATHER_LOCK, ID_CLOCK_LABEL,
     ID_APPLY_MONEY, ID_CLEAR_CHEATS, ID_RESYNC, ID_SYNC_RELATIONSHIP, ID_CHEAT_STATUS, ID_WORLD_DAY,
+    ID_GAME_FEEDBACK, ID_GAME_VERSION, ID_RELATIONSHIP_DATE, ID_PREPARE_DATE,
     ID_STOP_VEHICLE_SPEED = 7200, ID_STOP_VEHICLE_SPIN,
     ID_FREEZE_VEHICLE, ID_FLIP_VEHICLE, ID_REPAIR_VEHICLE,
     ID_STOP_PED_SPEED, ID_VEHICLE_DIRECTION, ID_VEHICLE_DIRECTION_APPLY,
@@ -52,6 +58,7 @@ enum {
 typedef struct WeaponSpec {
     LPCWSTR category;
     LPCWSTR options[9];
+    int gameIds[9];
     BOOL hasAmmo;
 } WeaponSpec;
 
@@ -62,13 +69,24 @@ typedef struct WeaponSetting {
 typedef struct DenseState {
     HWND pane[SECTION_COUNT];
     int activePane;
-    int colors[2], model, money, weather;
-    int heading, cheatsUsed;
-    BOOL upsideDown, spawnerReady, preventExplosion;
+    int colors[2], model, money, weather, gameDay;
+    int heading, cheatsUsed, loadedLockSlot;
+    BOOL upsideDown, spawnerReady, preventExplosion, liveFailure, liveSession;
     WCHAR plate[9];
     int proficiency[10], relationship[6];
     WeaponSetting weapons[WEAPON_SLOT_COUNT];
 } DenseState;
+
+typedef struct GameBinding {
+    GameField field;
+    int index;
+} GameBinding;
+
+typedef struct FlagBinding {
+    int id;
+    GameField field;
+    int index;
+} FlagBinding;
 
 static DenseState states[2];
 static const WCHAR sectionClass[] = L"GTASAControlCenterDenseSection";
@@ -103,8 +121,8 @@ static const StatSpec relationshipStats[] = {
     { L"米莉", 0, 100, 25, 100, L"最大" }
 };
 static const StatSpec playerStats[] = {
-    { L"护甲值", 0, 100, 50, 100, L"最大" },
-    { L"生命值", 0, 100, 100, 100, L"最大" },
+    { L"护甲值", 0, 1000, 50, 1000, L"最大" },
+    { L"生命值", 0, 1000, 100, 1000, L"最大" },
     { L"脂肪", 0, 1000, 100, 1000, L"最大" },
     { L"耐力", 0, 1000, 400, 1000, L"最大" },
     { L"肌肉", 0, 1000, 250, 1000, L"最大" },
@@ -149,17 +167,56 @@ static LPCWSTR const compass[] = {
     L"南（180°）", L"西南（225°）", L"西（270°）", L"西北（315°）"
 };
 static const WeaponSpec weaponSpecs[WEAPON_SLOT_COUNT] = {
-    { L"近战", { L"高尔夫球杆", L"警棍", L"匕首", L"棒球棍", L"铲子", L"武士刀", L"台球杆", L"电锯" }, FALSE },
-    { L"手枪", { L"手枪", L"消音手枪", L"沙漠之鹰" }, TRUE },
-    { L"霰弹枪", { L"霰弹枪", L"短管霰弹枪", L"战斗霰弹枪" }, TRUE },
-    { L"冲锋枪", { L"Micro Uzi", L"MP5", L"Tec-9" }, TRUE },
-    { L"突击步枪", { L"AK-47", L"M4" }, TRUE },
-    { L"步枪", { L"乡村步枪", L"狙击步枪" }, TRUE },
-    { L"重型武器", { L"火箭筒", L"热追踪火箭筒", L"火焰喷射器", L"加特林机枪" }, TRUE },
-    { L"投掷武器", { L"手榴弹", L"催泪弹", L"燃烧瓶", L"遥控炸药" }, TRUE },
-    { L"特殊道具", { L"喷漆罐", L"灭火器", L"照相机" }, TRUE },
-    { L"礼物", { L"鲜花", L"成人道具 1", L"成人道具 2", L"成人道具 3", L"成人道具 4", L"手杖" }, FALSE },
-    { L"特殊装备", { L"夜视仪", L"热成像仪", L"降落伞" }, FALSE }
+    { L"近战", { L"高尔夫球杆", L"警棍", L"匕首", L"棒球棍", L"铲子", L"武士刀", L"台球杆", L"电锯" },
+      { 2, 3, 4, 5, 6, 8, 7, 9 }, FALSE },
+    { L"手枪", { L"手枪", L"消音手枪", L"沙漠之鹰" }, { 22, 23, 24 }, TRUE },
+    { L"霰弹枪", { L"霰弹枪", L"短管霰弹枪", L"战斗霰弹枪" }, { 25, 26, 27 }, TRUE },
+    { L"冲锋枪", { L"Micro Uzi", L"MP5", L"Tec-9" }, { 28, 29, 32 }, TRUE },
+    { L"突击步枪", { L"AK-47", L"M4" }, { 30, 31 }, TRUE },
+    { L"步枪", { L"乡村步枪", L"狙击步枪" }, { 33, 34 }, TRUE },
+    { L"重型武器", { L"火箭筒", L"热追踪火箭筒", L"火焰喷射器", L"加特林机枪" }, { 35, 36, 37, 38 }, TRUE },
+    { L"投掷武器", { L"手榴弹", L"催泪弹", L"燃烧瓶", L"遥控炸药" }, { 16, 17, 18, 39 }, TRUE },
+    { L"特殊道具", { L"喷漆罐", L"灭火器", L"照相机" }, { 41, 42, 43 }, TRUE },
+    { L"礼物", { L"鲜花", L"成人道具 1", L"成人道具 2", L"成人道具 3", L"成人道具 4", L"手杖" },
+      { 14, 10, 11, 12, 13, 15 }, FALSE },
+    { L"特殊装备", { L"夜视仪", L"热成像仪", L"降落伞" }, { 44, 45, 46 }, FALSE }
+};
+
+static const GameBinding gameStats[2][STAT_SLOT_COUNT] = {
+    {
+        { GAME_VEHICLE_ENGINE, 0 }, { GAME_VEHICLE_WEIGHT, 0 }, { GAME_VEHICLE_FLIGHT_ASSIST, 0 },
+        { GAME_VEHICLE_SPEED, GAME_AXIS_X }, { GAME_VEHICLE_SPEED, GAME_AXIS_Y }, { GAME_VEHICLE_SPEED, GAME_AXIS_Z },
+        { GAME_VEHICLE_SPIN, GAME_AXIS_X }, { GAME_VEHICLE_SPIN, GAME_AXIS_Y }, { GAME_VEHICLE_SPIN, GAME_AXIS_Z },
+        { GAME_CLOCK_MINUTES, 0 }, { GAME_CLOCK_SPEED, 0 }, { GAME_WORLD_SPEED, 0 },
+        { GAME_PLAYER_MONEY, 0 }, { GAME_MISSION_TIMER, 0 }, { GAME_CRIMINALS, 0 },
+        { GAME_RELATIONSHIP, 0 }, { GAME_RELATIONSHIP, 1 }, { GAME_RELATIONSHIP, 2 },
+        { GAME_RELATIONSHIP, 3 }, { GAME_RELATIONSHIP, 4 }, { GAME_RELATIONSHIP, 5 }
+    },
+    {
+        { GAME_PLAYER_ARMOR, 0 }, { GAME_PLAYER_HEALTH, 0 }, { GAME_PLAYER_FAT, 0 },
+        { GAME_PLAYER_STAMINA, 0 }, { GAME_PLAYER_MUSCLE, 0 }, { GAME_PLAYER_LUNG, 0 },
+        { GAME_PLAYER_GAMBLING, 0 }, { GAME_PLAYER_DRIVING, 0 }, { GAME_PLAYER_BIKING, 0 },
+        { GAME_PLAYER_CYCLING, 0 }, { GAME_PLAYER_FLYING, 0 },
+        { GAME_PLAYER_SPEED, GAME_AXIS_X }, { GAME_PLAYER_SPEED, GAME_AXIS_Y }, { GAME_PLAYER_SPEED, GAME_AXIS_Z },
+        { GAME_PLAYER_FLIGHT_ASSIST, 0 }, { GAME_PLAYER_WANTED, 0 }, { GAME_PLAYER_RESPECT, 0 }, { GAME_PLAYER_APPEAL, 0 }
+    }
+};
+
+static const FlagBinding vehicleFlags[] = {
+    { ID_VEHICLE_DAMAGE_EXPLOSION, GAME_VEHICLE_PROTECTION, GAME_PROOF_EXPLOSION },
+    { ID_VEHICLE_DAMAGE_COLLISION, GAME_VEHICLE_PROTECTION, GAME_PROOF_COLLISION },
+    { ID_VEHICLE_DAMAGE_BULLET, GAME_VEHICLE_PROTECTION, GAME_PROOF_BULLET },
+    { ID_VEHICLE_DAMAGE_FIRE, GAME_VEHICLE_PROTECTION, GAME_PROOF_FIRE },
+    { ID_VEHICLE_WHEELS, GAME_VEHICLE_WHEELS, 0 }, { ID_VEHICLE_ALARM, GAME_VEHICLE_AUTO_ALARM, 0 },
+    { ID_VEHICLE_RESTART, GAME_VEHICLE_AUTO_RESTART, 0 }, { ID_VEHICLE_REMOTE, GAME_VEHICLE_RC, 0 },
+    { ID_DONT_BURN, GAME_VEHICLE_DONT_BURN, 0 }, { ID_DONT_EXPLODE, GAME_VEHICLE_DONT_EXPLODE, 0 }
+};
+
+static const FlagBinding playerFlags[] = {
+    { ID_PLAYER_DAMAGE_EXPLOSION, GAME_PLAYER_PROTECTION, GAME_PROOF_EXPLOSION },
+    { ID_PLAYER_DAMAGE_COLLISION, GAME_PLAYER_PROTECTION, GAME_PROOF_COLLISION },
+    { ID_PLAYER_DAMAGE_BULLET, GAME_PLAYER_PROTECTION, GAME_PROOF_BULLET },
+    { ID_PLAYER_DAMAGE_FIRE, GAME_PLAYER_PROTECTION, GAME_PROOF_FIRE }
 };
 
 static HWND Label(UiPage *view, LPCWSTR text, int id, int x, int y, int width)
@@ -352,6 +409,71 @@ static void SetStat(HWND pane, int slot, int value)
     DensePageScroll(slider);
 }
 
+static HWND StatPane(int page, int slot)
+{
+    int section = page == 1 || slot < VEH_SPEED_X ? 0 : slot < WORLD_TIME ? 1 : 2;
+    return states[page].pane[section];
+}
+
+static double LiveStatValue(int page, int slot, int value)
+{
+    return page == 0 && slot == VEH_WEIGHT ? value / 10.0 : value;
+}
+
+static GameResult QueueStat(UiPage *page, HWND pane, int slot, int value, int lock)
+{
+    const GameBinding *binding = &gameStats[page->index][slot];
+    BOOL locked = lock >= 0 ? lock != 0 : Checked(GetDlgItem(pane, StatId(slot) + 3));
+    double liveValue = LiveStatValue(page->index, slot, value);
+
+    if (binding->field == GAME_RELATIONSHIP)
+        return GameSetGirlfriend(binding->index, value, lock == 0 ? 0 : locked ? 1 : 2);
+    if (lock >= 0 || locked)
+        return GameLockField(binding->field, binding->index, liveValue, locked);
+    return GameSetField(binding->field, binding->index, liveValue);
+}
+
+static BOOL DisplayGameResult(UiPage *page, GameResult result)
+{
+    if (result == GAME_OFFLINE)
+        return FALSE;
+    states[page->index].liveFailure = result != GAME_OK && result != GAME_QUEUED;
+    UiSetStatus(page, GameResultText(result));
+    return TRUE;
+}
+
+static BOOL SetLiveField(UiPage *page, GameField field, int index, double value)
+{
+    return GameIsConnected() && DisplayGameResult(page, GameSetField(field, index, value));
+}
+
+static GameResult MergeGameResult(GameResult current, GameResult next)
+{
+    if (current != GAME_OK && current != GAME_QUEUED)
+        return current;
+    return next == GAME_OK ? current : next;
+}
+
+static void ReadLiveField(GameField field, int index)
+{
+    if (GameSupportsField(field, index, FALSE))
+        GameReadField(field, index);
+}
+
+static void CommitLiveScroll(HWND pane, HWND slider, UINT action)
+{
+    UiPage *page = (UiPage *)GetWindowLongPtrW(GetParent(pane), GWLP_USERDATA);
+    int id = slider ? GetDlgCtrlID(slider) : 0;
+    int slot, value;
+
+    if (!page || action != TB_ENDTRACK || id < ID_STAT_FIRST || id >= ID_STAT_FIRST + STAT_SLOT_COUNT * 4 ||
+        (id - ID_STAT_FIRST) % 4 != 0 || !GameIsConnected())
+        return;
+    slot = (id - ID_STAT_FIRST) / 4;
+    value = (int)SendMessageW(slider, TBM_GETPOS, 0, 0);
+    DisplayGameResult(page, QueueStat(page, pane, slot, value, -1));
+}
+
 static void DirectionPanel(UiPage *view, int x, int y, BOOL vehicle)
 {
     int heading = vehicle ? ID_VEHICLE_DIRECTION : ID_PED_DIRECTION;
@@ -401,11 +523,11 @@ static void BuildVehicleControls(UiPage *view)
 
     Stats(view, L"引擎、重量和飞行", LEFT_COLUMN, 208, VEH_HEALTH, ARRAYSIZE(vehicleStats));
     Group(view, L"自动维护", LEFT_COLUMN, 325, GROUP_WIDTH, 101);
-    Check(view, L"自动关闭防盗警报", 0, 24, 346, 181);
-    Check(view, L"熄火后自动重启", 0, 218, 346, 196);
+    Check(view, L"自动关闭防盗警报", ID_VEHICLE_ALARM, 24, 346, 181);
+    Check(view, L"熄火后自动重启", ID_VEHICLE_RESTART, 218, 346, 196);
     Check(view, L"燃烧时自动修复", ID_DONT_BURN, 24, 372, 181);
     Check(view, L"锁定燃烧计时防止爆炸", ID_DONT_EXPLODE, 218, 372, 218);
-    Check(view, L"同时控制遥控载具", 0, 24, 398, 205);
+    Check(view, L"同时控制遥控载具", ID_VEHICLE_REMOTE, 24, 398, 205);
 
     Group(view, L"车身颜色", RIGHT_COLUMN, 4, GROUP_WIDTH, 146);
     UiControl(view, WC_BUTTONW, L"车身主色", WS_TABSTOP | BS_OWNERDRAW, 0,
@@ -417,18 +539,18 @@ static void BuildVehicleControls(UiPage *view)
     Check(view, L"在换车后继续应用主色与副色", ID_COLOR_LOCK, 478, 105, 333);
 
     Group(view, L"载具防护和门锁", RIGHT_COLUMN, 160, GROUP_WIDTH, 180);
-    Check(view, L"锁定载具伤害防护", 0, 478, 182, 265);
-    Check(view, L"载具防爆", 0, 478, 209, 101);
-    Check(view, L"载具防撞", 0, 584, 209, 101);
-    Check(view, L"载具防弹", 0, 690, 209, 101);
-    Check(view, L"载具防火", 0, 795, 209, 101);
-    Check(view, L"保护车辆及拖车车轮", 0, 478, 240, 285);
+    Check(view, L"锁定载具伤害防护", ID_VEHICLE_DAMAGE_LOCK, 478, 182, 265);
+    Check(view, L"载具防爆", ID_VEHICLE_DAMAGE_EXPLOSION, 478, 209, 101);
+    Check(view, L"载具防撞", ID_VEHICLE_DAMAGE_COLLISION, 584, 209, 101);
+    Check(view, L"载具防弹", ID_VEHICLE_DAMAGE_BULLET, 690, 209, 101);
+    Check(view, L"载具防火", ID_VEHICLE_DAMAGE_FIRE, 795, 209, 101);
+    Check(view, L"保护车辆及拖车车轮", ID_VEHICLE_WHEELS, 478, 240, 285);
     Label(view, L"车门状态", 0, 478, 270, 76);
     {
         static LPCWSTR const doorStates[] = { L"解锁", L"上锁" };
-        FillCombo(Combo(view, 0, 556, 270, 133), doorStates, ARRAYSIZE(doorStates));
+        FillCombo(Combo(view, ID_VEHICLE_DOORS, 556, 270, 133), doorStates, ARRAYSIZE(doorStates));
     }
-    Check(view, L"锁定车门状态", 0, 705, 269, 175);
+    Check(view, L"锁定车门状态", ID_VEHICLE_DOOR_LOCK, 705, 269, 175);
     Button(view, L"修复载具", ID_REPAIR_VEHICLE, 478, 303, 108);
 }
 
@@ -446,6 +568,9 @@ static void BuildVehicleMotion(UiPage *view)
 
 static void BuildWorld(UiPage *view)
 {
+    HWND date;
+    int index;
+
     Stats(view, L"时间、游戏速度和统计", LEFT_COLUMN, 4, WORLD_TIME, ARRAYSIZE(worldStats));
     Label(view, L"当前游戏时间 12:00 · 星期三", ID_CLOCK_LABEL, 24, 198, 252);
     Label(view, L"游戏天数", 0, 286, 198, 66);
@@ -460,15 +585,22 @@ static void BuildWorld(UiPage *view)
     FillCombo(Combo(view, ID_WEATHER, 103, 290, 224), weatherNames, ARRAYSIZE(weatherNames));
     Button(view, L"应用天气", ID_APPLY_WEATHER, 338, 289, 97);
     Check(view, L"锁定当前天气", ID_WEATHER_LOCK, 24, 321, 175);
-    Check(view, L"游戏画面反馈", 0, 225, 321, 183);
+    Check(view, L"游戏画面反馈", ID_GAME_FEEDBACK, 225, 321, 183);
     Button(view, L"应用金钱", ID_APPLY_MONEY, 24, 366, 112);
     Button(view, L"清除作弊状态及次数", ID_CLEAR_CHEATS, 146, 366, 155);
     Button(view, L"重新同步", ID_RESYNC, 310, 366, 125);
     Label(view, L"作弊状态：未使用 · 次数 0", ID_CHEAT_STATUS, 24, 402, 254);
-    Label(view, L"Steam 版（离线）", 0, 288, 402, 149);
+    Label(view, L"Steam 版（离线）", ID_GAME_VERSION, 288, 402, 149);
 
     Stats(view, L"六位女友的进度", RIGHT_COLUMN, 4, RELATIONSHIP_FIRST, ARRAYSIZE(relationshipStats));
     Button(view, L"同步进度", ID_SYNC_RELATIONSHIP, 478, 198, 126);
+    Group(view, L"准备约会", RIGHT_COLUMN, 237, GROUP_WIDTH, 79);
+    Label(view, L"选择约会对象", 0, 478, 264, 104);
+    date = Combo(view, ID_RELATIONSHIP_DATE, 588, 264, 152);
+    for (index = 0; index < (int)ARRAYSIZE(relationshipStats); ++index)
+        SendMessageW(date, CB_ADDSTRING, 0, (LPARAM)relationshipStats[index].name);
+    SendMessageW(date, CB_SETCURSEL, 0, 0);
+    Button(view, L"准备约会", ID_PREPARE_DATE, 752, 263, 128);
 }
 
 static void BuildPlayerControls(UiPage *view)
@@ -508,8 +640,11 @@ static void BuildWeaponControls(UiPage *view)
         Label(view, weaponSpecs[slot].category, 0, 24, y, 112);
         combo = Combo(view, id, 141, y, 279);
         SendMessageW(combo, CB_ADDSTRING, 0, (LPARAM)L"无");
-        for (option = 0; weaponSpecs[slot].options[option]; ++option)
-            SendMessageW(combo, CB_ADDSTRING, 0, (LPARAM)weaponSpecs[slot].options[option]);
+        for (option = 0; weaponSpecs[slot].options[option]; ++option) {
+            LRESULT item = SendMessageW(combo, CB_ADDSTRING, 0, (LPARAM)weaponSpecs[slot].options[option]);
+            if (item >= 0)
+                SendMessageW(combo, CB_SETITEMDATA, item, weaponSpecs[slot].gameIds[option]);
+        }
         SendMessageW(combo, CB_SETCURSEL, slot == 1 ? 1 : 0, 0);
         if (weaponSpecs[slot].hasAmmo) {
             Number(view, id + 1, 435, y, 101, slot == 1 ? 120 : 0, FALSE);
@@ -608,7 +743,11 @@ static LRESULT CALLBACK DenseSectionProc(HWND window, UINT message, WPARAM wPara
     if (message == WM_NCCREATE) {
         CREATESTRUCTW *create = (CREATESTRUCTW *)lParam;
         SetWindowLongPtrW(window, GWLP_USERDATA, (LONG_PTR)create->lpCreateParams);
-    } else if (message == WM_COMMAND || message == WM_HSCROLL) {
+    } else if (message == WM_HSCROLL) {
+        LRESULT result = SendMessageW(GetParent(window), message, wParam, lParam);
+        CommitLiveScroll(window, (HWND)lParam, LOWORD(wParam));
+        return result;
+    } else if (message == WM_COMMAND) {
         return SendMessageW(GetParent(window), message, wParam, lParam);
     } else if (message == WM_DRAWITEM && (wParam == ID_COLOR_PRIMARY || wParam == ID_COLOR_SECONDARY)) {
         DrawColor((const DenseState *)GetWindowLongPtrW(window, GWLP_USERDATA), (const DRAWITEMSTRUCT *)lParam);
@@ -653,6 +792,7 @@ void BuildDensePage(UiPage *page)
         return;
     }
     ZeroMemory(state, sizeof(*state));
+    state->loadedLockSlot = -1;
     state->model = 562;
     state->colors[0] = 36;
     state->colors[1] = 1;
@@ -746,10 +886,14 @@ static void ApplyDirection(UiPage *page, DenseState *state, HWND pane, BOOL kick
     selection = (int)SendDlgItemMessageW(pane, controlId, CB_GETCURSEL, 0, 0);
     if (selection < 0 || selection >= (int)ARRAYSIZE(compass))
         return;
+    speed = kick ? ReadNumber(GetDlgItem(pane, controlId + 1), 0, 0, 400) : 0;
+    if (kick)
+        SetNumber(GetDlgItem(pane, controlId + 1), speed);
+    if (kick ? SetLiveField(page, vehicle ? GAME_VEHICLE_KICK : GAME_PLAYER_KICK, selection * 45, speed) :
+               SetLiveField(page, vehicle ? GAME_VEHICLE_HEADING : GAME_PLAYER_HEADING, 0, selection * 45))
+        return;
     state->heading = selection * 45;
     if (kick) {
-        speed = ReadNumber(GetDlgItem(pane, controlId + 1), 0, 0, 400);
-        SetNumber(GetDlgItem(pane, controlId + 1), speed);
         radians = selection * 0.7853981633974483;
         SetTriple(pane, vehicle ? VEH_SPEED_X : PED_SPEED_X,
                   (int)(speed * cos(radians)), (int)(speed * sin(radians)), 0);
@@ -785,6 +929,7 @@ static BOOL NormalizePlate(HWND edit, WCHAR plate[9])
 {
     WCHAR text[9];
     int count = GetWindowTextW(edit, text, ARRAYSIZE(text)), index;
+    BOOL hasText = FALSE;
     if (!count)
         return FALSE;
     for (index = 0; index < count; ++index) {
@@ -793,8 +938,12 @@ static BOOL NormalizePlate(HWND edit, WCHAR plate[9])
             c -= L'a' - L'A';
         if ((c < L'A' || c > L'Z') && (c < L'0' || c > L'9') && c != L' ')
             return FALSE;
+        if (c != L' ')
+            hasText = TRUE;
         plate[index] = c;
     }
+    if (!hasText)
+        return FALSE;
     plate[count] = L'\0';
     SetWindowTextW(edit, plate);
     return TRUE;
@@ -851,6 +1000,121 @@ static void UpdateWeaponAverage(HWND pane, const DenseState *state)
     SetDlgItemTextW(pane, ID_WEAPON_AVERAGE, label);
 }
 
+static GameResult QueueWeaponField(GameField field, int slot, int value, int lock)
+{
+    return lock < 0 ? GameSetField(field, slot, value) : GameLockField(field, slot, value, lock != 0);
+}
+
+static BOOL ReadWeaponRequest(HWND pane, int slot, GameWeapon *weapon)
+{
+    int id = ID_WEAPON_FIRST + slot * 5;
+    int selection = (int)SendDlgItemMessageW(pane, id, CB_GETCURSEL, 0, 0);
+    int type;
+    if (selection < 0)
+        return FALSE;
+    type = (int)SendDlgItemMessageW(pane, id, CB_GETITEMDATA, selection, 0);
+    if (type < 0 || type > 46)
+        return FALSE;
+    weapon->type = (unsigned)type;
+    weapon->total = weapon->loaded = 0;
+    if (type && weaponSpecs[slot].hasAmmo) {
+        weapon->total = (unsigned)ReadNumber(GetDlgItem(pane, id + 1), 0, 0, 99999);
+        weapon->loaded = (unsigned)ReadNumber(GetDlgItem(pane, id + 2), 0, 0, (int)weapon->total);
+    }
+    return TRUE;
+}
+
+static GameResult QueueWeaponApply(HWND pane, int slot)
+{
+    GameWeapon weapon;
+    return ReadWeaponRequest(pane, slot, &weapon) ? GameSetWeapon(slot, &weapon) : GAME_INVALID;
+}
+
+static GameResult QueueWeaponLock(HWND pane, int slot, BOOL enabled)
+{
+    GameWeapon weapon;
+    GameResult result;
+    if (!ReadWeaponRequest(pane, slot, &weapon))
+        return GAME_INVALID;
+    result = GameLockField(GAME_WEAPON_TYPE, slot, weapon.type, enabled);
+    if ((result != GAME_OK && result != GAME_QUEUED) || !weaponSpecs[slot].hasAmmo)
+        return result;
+    result = MergeGameResult(result, GameLockField(GAME_WEAPON_TOTAL, slot, weapon.total, enabled));
+    if (states[1].loadedLockSlot == slot && Checked(GetDlgItem(pane, ID_LOADED_LOCK)))
+        enabled = TRUE;
+    return MergeGameResult(result, GameLockField(GAME_WEAPON_LOADED, slot, weapon.loaded, enabled));
+}
+
+static GameResult QueueRefill(HWND pane, const DenseState *state)
+{
+    GameResult result = GAME_OK;
+    int slot;
+    for (slot = 0; slot < WEAPON_SLOT_COUNT; ++slot) {
+        int id = ID_WEAPON_FIRST + slot * 5;
+        if (weaponSpecs[slot].hasAmmo && state->weapons[slot].selection > 0) {
+            int lock = Checked(GetDlgItem(pane, id + 3)) ? 1 : -1;
+            result = MergeGameResult(result, QueueWeaponField(GAME_WEAPON_TOTAL, slot, 99999, lock));
+            if (state->loadedLockSlot == slot && Checked(GetDlgItem(pane, ID_LOADED_LOCK)))
+                lock = 1;
+            result = MergeGameResult(result, QueueWeaponField(GAME_WEAPON_LOADED, slot, 100, lock));
+        }
+    }
+    return result;
+}
+
+static const FlagBinding *FindFlag(int page, int id)
+{
+    const FlagBinding *flags = page == 0 ? vehicleFlags : playerFlags;
+    size_t count = page == 0 ? ARRAYSIZE(vehicleFlags) : ARRAYSIZE(playerFlags), index;
+    for (index = 0; index < count; ++index) {
+        if (flags[index].id == id)
+            return &flags[index];
+    }
+    return NULL;
+}
+
+static BOOL DisplayCheckedResult(UiPage *page, HWND control, GameResult result)
+{
+    if (!DisplayGameResult(page, result))
+        return FALSE;
+    if (result != GAME_QUEUED && result != GAME_OK)
+        SetChecked(control, !Checked(control));
+    return TRUE;
+}
+
+static GameResult QueueProofs(UiPage *page, HWND pane, BOOL locked)
+{
+    const FlagBinding *flags = page->index == 0 ? vehicleFlags : playerFlags;
+    GameResult result = GAME_OK;
+    int proof;
+    for (proof = GAME_PROOF_EXPLOSION; proof <= GAME_PROOF_FIRE; ++proof)
+        result = MergeGameResult(result, GameLockField(flags[proof].field, flags[proof].index,
+                                                       Checked(GetDlgItem(pane, flags[proof].id)), locked));
+    return result;
+}
+
+static BOOL QueueLiveProtection(UiPage *page, HWND pane, int id, HWND control)
+{
+    const FlagBinding *binding = FindFlag(page->index, id);
+    int master = page->index == 0 ? ID_VEHICLE_DAMAGE_LOCK : ID_PLAYER_DAMAGE_LOCK;
+    BOOL value = Checked(control);
+    GameResult result;
+
+    if (!GameIsConnected())
+        return FALSE;
+    if (id == master)
+        return DisplayCheckedResult(page, control, QueueProofs(page, pane, value));
+    if (!binding)
+        return FALSE;
+    if ((binding->field == GAME_PLAYER_PROTECTION || binding->field == GAME_VEHICLE_PROTECTION) &&
+        Checked(GetDlgItem(pane, master))) {
+        result = GameLockField(binding->field, binding->index, value, TRUE);
+    } else {
+        result = GameSetField(binding->field, binding->index, value);
+    }
+    return DisplayCheckedResult(page, control, result);
+}
+
 static void UpdateCheatStatus(int count)
 {
     WCHAR label[64];
@@ -865,31 +1129,97 @@ static void RecordCheat(const DenseState *player)
     UpdateCheatStatus(states[0].cheatsUsed);
 }
 
+static void ReadDensePage(UiPage *page);
+
+static GameResult QueuePaintLock(HWND pane, const DenseState *state)
+{
+    BOOL carry = Checked(GetDlgItem(pane, ID_COLOR_LOCK));
+    BOOL primary = Checked(GetDlgItem(pane, ID_PRIMARY_LOCK));
+    BOOL secondary = Checked(GetDlgItem(pane, ID_SECONDARY_LOCK));
+    GameResult first = GameLockField(GAME_VEHICLE_PRIMARY, 0, state->colors[0], primary || (carry && !secondary));
+    GameResult second = GameLockField(GAME_VEHICLE_SECONDARY, 0, state->colors[1], secondary || (carry && !primary));
+    return MergeGameResult(first, second);
+}
+
+static BOOL QueueLivePaint(UiPage *page, HWND pane, const DenseState *state, int primary, int secondary)
+{
+    BOOL carry, lockPrimary, lockSecondary;
+    GameResult result = GAME_OK;
+    if (!GameIsConnected())
+        return FALSE;
+    carry = Checked(GetDlgItem(pane, ID_COLOR_LOCK));
+    lockPrimary = Checked(GetDlgItem(pane, ID_PRIMARY_LOCK));
+    lockSecondary = Checked(GetDlgItem(pane, ID_SECONDARY_LOCK));
+    if (primary != state->colors[0])
+        result = lockPrimary || (carry && !lockSecondary) ?
+                 GameLockField(GAME_VEHICLE_PRIMARY, 0, primary, TRUE) : GameSetField(GAME_VEHICLE_PRIMARY, 0, primary);
+    if (secondary != state->colors[1])
+        result = MergeGameResult(result, lockSecondary || (carry && !lockPrimary) ?
+                 GameLockField(GAME_VEHICLE_SECONDARY, 0, secondary, TRUE) : GameSetField(GAME_VEHICLE_SECONDARY, 0, secondary));
+    return DisplayGameResult(page, result);
+}
+
 static BOOL VehicleCommand(UiPage *page, DenseState *state, HWND pane, int id)
 {
     HWND owner = GetAncestor(page->window, GA_ROOT);
-    int selected, model, slot;
+    int selected, model, slot, primary, secondary;
     WCHAR text[100], modelName[81], plate[9];
 
     switch (id) {
     case ID_COLOR_PRIMARY:
     case ID_COLOR_SECONDARY:
-        if (UiPickVehicleColors(owner, &state->colors[0], &state->colors[1], id == ID_COLOR_SECONDARY)) {
+        primary = state->colors[0];
+        secondary = state->colors[1];
+        if (UiPickVehicleColors(owner, &primary, &secondary, id == ID_COLOR_SECONDARY) &&
+            !QueueLivePaint(page, pane, state, primary, secondary)) {
+            state->colors[0] = primary;
+            state->colors[1] = secondary;
             UpdateColorLabels(pane, state);
             wsprintfW(text, L"离线车身颜色已应用 · 主色 %03d · 副色 %03d", state->colors[0], state->colors[1]);
             UiSetStatus(page, text);
         }
         return TRUE;
+    case ID_COLOR_LOCK:
+    case ID_PRIMARY_LOCK:
+    case ID_SECONDARY_LOCK:
+        if (GameIsConnected())
+            DisplayCheckedResult(page, GetDlgItem(pane, id), QueuePaintLock(pane, state));
+        return TRUE;
+    case ID_GAME_FEEDBACK:
+        if (GameIsConnected())
+            DisplayCheckedResult(page, GetDlgItem(pane, id), GameSetFeedback(Checked(GetDlgItem(pane, id))));
+        return TRUE;
     case ID_DONT_BURN:
         {
             HWND explode = GetDlgItem(pane, ID_DONT_EXPLODE);
             BOOL burnProtection = Checked(GetDlgItem(pane, ID_DONT_BURN));
+            if (GameIsConnected()) {
+                GameResult result = GameSetField(GAME_VEHICLE_DONT_BURN, 0, burnProtection);
+                if (result == GAME_QUEUED || result == GAME_OK)
+                    result = MergeGameResult(result, GameSetField(GAME_VEHICLE_DONT_EXPLODE, 0,
+                                                                  burnProtection || state->preventExplosion));
+                if (DisplayCheckedResult(page, GetDlgItem(pane, id), result)) {
+                    burnProtection = Checked(GetDlgItem(pane, id));
+                    SetChecked(explode, burnProtection || state->preventExplosion);
+                    EnableWindow(explode, !burnProtection);
+                    return TRUE;
+                }
+            }
             SetChecked(explode, burnProtection || state->preventExplosion);
             EnableWindow(explode, !burnProtection);
         }
         return TRUE;
     case ID_DONT_EXPLODE:
+        if (QueueLiveProtection(page, pane, id, GetDlgItem(pane, id)))
+            return TRUE;
         state->preventExplosion = Checked(GetDlgItem(pane, ID_DONT_EXPLODE));
+        return TRUE;
+    case ID_VEHICLE_DOOR_LOCK:
+        if (GameIsConnected()) {
+            HWND control = GetDlgItem(pane, id);
+            selected = (int)SendDlgItemMessageW(pane, ID_VEHICLE_DOORS, CB_GETCURSEL, 0, 0);
+            DisplayCheckedResult(page, control, GameLockField(GAME_VEHICLE_DOORS, 0, selected, Checked(control)));
+        }
         return TRUE;
     case ID_PICK_MODEL:
         selected = (int)SendDlgItemMessageW(pane, ID_MODEL, CB_GETCURSEL, 0, 0);
@@ -898,25 +1228,32 @@ static BOOL VehicleCommand(UiPage *page, DenseState *state, HWND pane, int id)
             SetModelSelection(GetDlgItem(pane, ID_MODEL), model);
         return TRUE;
     case ID_CHECK_SPAWNER:
+        if (SetLiveField(page, GAME_VEHICLE_SPAWNER, 0, 1))
+            return TRUE;
         state->spawnerReady = TRUE;
         SetDlgItemTextW(pane, ID_SPAWNER_READY, L"生成器状态：就绪（离线）");
         UiSetStatus(page, L"离线生成器已准备。");
         return TRUE;
     case ID_SPAWNER_AUTO:
+        if (GameIsConnected() && DisplayCheckedResult(page, GetDlgItem(pane, id), GameSetField(
+                GAME_VEHICLE_SPAWNER, 0, Checked(GetDlgItem(pane, id)))))
+            return TRUE;
         state->spawnerReady = Checked(GetDlgItem(pane, id));
         SetDlgItemTextW(pane, ID_SPAWNER_READY, state->spawnerReady ?
                         L"生成器状态：就绪（离线）" : L"生成器状态：等待手动准备（离线）");
         return TRUE;
     case ID_SPAWN_MODEL:
         selected = (int)SendDlgItemMessageW(pane, ID_MODEL, CB_GETCURSEL, 0, 0);
+        model = selected >= 0 ? (int)SendDlgItemMessageW(pane, ID_MODEL, CB_GETITEMDATA, selected, 0) : 0;
+        if (selected >= 0 && SetLiveField(page, GAME_VEHICLE_SPAWN, 0, model))
+            return TRUE;
         if (!state->spawnerReady) {
             UiSetStatus(page, L"请先准备离线生成器。");
         } else if (selected >= 0) {
             BOOL primaryLocked = Checked(GetDlgItem(pane, ID_PRIMARY_LOCK));
             BOOL secondaryLocked = Checked(GetDlgItem(pane, ID_SECONDARY_LOCK));
             BOOL carryColors = Checked(GetDlgItem(pane, ID_COLOR_LOCK));
-            int primary, secondary;
-            state->model = (int)SendDlgItemMessageW(pane, ID_MODEL, CB_GETITEMDATA, selected, 0);
+            state->model = model;
             if (UiVehicleDefaultColors(state->model, &primary, &secondary)) {
                 if (!carryColors || (!primaryLocked && secondaryLocked))
                     state->colors[0] = primary;
@@ -933,8 +1270,11 @@ static BOOL VehicleCommand(UiPage *page, DenseState *state, HWND pane, int id)
         return TRUE;
     case ID_APPLY_PLATE:
     case ID_PLATE_LOCK:
-        if (id == ID_PLATE_LOCK && !Checked(GetDlgItem(pane, ID_PLATE_LOCK)))
+        if (id == ID_PLATE_LOCK && !Checked(GetDlgItem(pane, ID_PLATE_LOCK))) {
+            if (GameIsConnected())
+                DisplayCheckedResult(page, GetDlgItem(pane, id), GameLockPlate(state->plate, FALSE));
             return TRUE;
+        }
         if (!NormalizePlate(GetDlgItem(pane, ID_PLATE), plate)) {
             if (id == ID_PLATE_LOCK)
                 SetChecked(GetDlgItem(pane, ID_PLATE_LOCK), FALSE);
@@ -943,10 +1283,18 @@ static BOOL VehicleCommand(UiPage *page, DenseState *state, HWND pane, int id)
             return TRUE;
         }
         lstrcpyW(state->plate, plate);
+        if (GameIsConnected()) {
+            GameResult result = id == ID_PLATE_LOCK ? GameLockPlate(plate, TRUE) : GameSetPlate(plate);
+            if (id == ID_PLATE_LOCK ? DisplayCheckedResult(page, GetDlgItem(pane, id), result) :
+                                     DisplayGameResult(page, result))
+                return TRUE;
+        }
         wsprintfW(text, L"离线车牌已应用为「%s」", plate);
         UiSetStatus(page, text);
         return TRUE;
     case ID_REPAIR_VEHICLE:
+        if (SetLiveField(page, GAME_VEHICLE_ENGINE, 0, 100))
+            return TRUE;
         SetStat(pane, VEH_HEALTH, 100);
         UiSetStatus(page, L"示例载具耐久已恢复。");
         return TRUE;
@@ -954,6 +1302,19 @@ static BOOL VehicleCommand(UiPage *page, DenseState *state, HWND pane, int id)
     case ID_STOP_VEHICLE_SPIN:
     case ID_FREEZE_VEHICLE:
     case ID_FLIP_VEHICLE:
+        if (GameIsConnected()) {
+            GameResult result = GAME_OK;
+            if (id == ID_FLIP_VEHICLE) {
+                result = GameSetField(GAME_VEHICLE_FLIP, 0, 1);
+            } else {
+                if (id == ID_STOP_VEHICLE_SPEED || id == ID_FREEZE_VEHICLE)
+                    result = GameSetField(GAME_VEHICLE_SPEED, GAME_AXIS_ALL, 0);
+                if (id == ID_STOP_VEHICLE_SPIN || id == ID_FREEZE_VEHICLE)
+                    result = MergeGameResult(result, GameSetField(GAME_VEHICLE_SPIN, GAME_AXIS_ALL, 0));
+            }
+            if (DisplayGameResult(page, result))
+                return TRUE;
+        }
         if (id == ID_STOP_VEHICLE_SPEED || id == ID_FREEZE_VEHICLE)
             SetTriple(pane, VEH_SPEED_X, 0, 0, 0);
         if (id == ID_STOP_VEHICLE_SPIN || id == ID_FREEZE_VEHICLE || id == ID_FLIP_VEHICLE)
@@ -972,16 +1333,29 @@ static BOOL VehicleCommand(UiPage *page, DenseState *state, HWND pane, int id)
     case ID_CLOCK_STOP:
     case ID_CLOCK_REAL:
     case ID_CLOCK_NORMAL:
-        SetStat(pane, WORLD_CLOCK_SPEED, id == ID_CLOCK_STOP ? 0 : id == ID_CLOCK_REAL ? 6 : 100);
+        selected = id == ID_CLOCK_STOP ? 0 : id == ID_CLOCK_REAL ? 6 : 100;
+        if (!SetLiveField(page, GAME_CLOCK_SPEED, 0, selected))
+            SetStat(pane, WORLD_CLOCK_SPEED, selected);
         return TRUE;
     case ID_GAME_SPEED_NORMAL:
-        SetStat(pane, WORLD_GAME_SPEED, 100);
+        if (!SetLiveField(page, GAME_WORLD_SPEED, 0, 100))
+            SetStat(pane, WORLD_GAME_SPEED, 100);
         return TRUE;
     case ID_APPLY_WEATHER:
     case ID_WEATHER_LOCK:
+        selected = (int)SendDlgItemMessageW(pane, ID_WEATHER, CB_GETCURSEL, 0, 0);
+        if (selected < 0 || selected >= (int)ARRAYSIZE(weatherNames))
+            return TRUE;
+        if (GameIsConnected()) {
+            BOOL locked = Checked(GetDlgItem(pane, ID_WEATHER_LOCK));
+            GameResult result = id == ID_WEATHER_LOCK || locked ? GameLockField(GAME_WEATHER, 0, selected, locked) :
+                                                                  GameSetField(GAME_WEATHER, 0, selected);
+            if (id == ID_WEATHER_LOCK ? DisplayCheckedResult(page, GetDlgItem(pane, id), result) :
+                                       DisplayGameResult(page, result))
+                return TRUE;
+        }
         if (id == ID_WEATHER_LOCK && !Checked(GetDlgItem(pane, id)))
             return TRUE;
-        selected = (int)SendDlgItemMessageW(pane, ID_WEATHER, CB_GETCURSEL, 0, 0);
         if (selected >= 0 && selected < (int)ARRAYSIZE(weatherNames)) {
             state->weather = selected;
             wsprintfW(text, L"离线天气已设为「%s」", weatherNames[selected]);
@@ -989,16 +1363,26 @@ static BOOL VehicleCommand(UiPage *page, DenseState *state, HWND pane, int id)
         }
         return TRUE;
     case ID_APPLY_MONEY:
-        state->money = ReadStat(pane, WORLD_MONEY, GetStatSpec(0, WORLD_MONEY));
+        selected = ReadStat(pane, WORLD_MONEY, GetStatSpec(0, WORLD_MONEY));
+        if (SetLiveField(page, GAME_PLAYER_MONEY, 0, selected))
+            return TRUE;
+        state->money = selected;
         wsprintfW(text, L"离线金钱已更新为 %d", state->money);
         UiSetStatus(page, text);
         return TRUE;
     case ID_CLEAR_CHEATS:
+        if (SetLiveField(page, GAME_PLAYER_CHEATED, 0, 0))
+            return TRUE;
         state->cheatsUsed = 0;
         UpdateCheatStatus(0);
         UiSetStatus(page, L"离线作弊状态与使用次数已清除。");
         return TRUE;
     case ID_RESYNC:
+        if (GameIsConnected()) {
+            ReadDensePage(page);
+            UiSetStatus(page, L"已请求重新读取 Steam 游戏状态。");
+            return TRUE;
+        }
         SetStat(pane, WORLD_MONEY, state->money);
         SendDlgItemMessageW(pane, ID_WEATHER, CB_SETCURSEL, state->weather, 0);
         for (slot = 0; slot < (int)ARRAYSIZE(state->relationship); ++slot)
@@ -1006,32 +1390,72 @@ static BOOL VehicleCommand(UiPage *page, DenseState *state, HWND pane, int id)
         UiSetStatus(page, L"已读取示例会话中的世界与女友进度。");
         return TRUE;
     case ID_SYNC_RELATIONSHIP:
+        if (GameIsConnected()) {
+            GameResult result = GAME_OK;
+            for (slot = 0; slot < (int)ARRAYSIZE(state->relationship); ++slot) {
+                int stat = RELATIONSHIP_FIRST + slot;
+                result = MergeGameResult(result, QueueStat(page, pane, stat, ReadStat(pane, stat, &relationshipStats[slot]), -1));
+            }
+            if (DisplayGameResult(page, result))
+                return TRUE;
+        }
         for (slot = 0; slot < (int)ARRAYSIZE(state->relationship); ++slot)
             state->relationship[slot] = ReadStat(pane, RELATIONSHIP_FIRST + slot, &relationshipStats[slot]);
         UiSetStatus(page, L"六位女友的进度已同步到示例会话。");
         return TRUE;
+    case ID_PREPARE_DATE:
+        selected = (int)SendDlgItemMessageW(pane, ID_RELATIONSHIP_DATE, CB_GETCURSEL, 0, 0);
+        if (selected < 0 || selected >= (int)ARRAYSIZE(relationshipStats))
+            return TRUE;
+        if (!GameIsConnected() || !DisplayGameResult(page, GameRunCommand(79 + selected, 17, L"0")))
+            UiSetStatus(page, L"连接经典 Steam 版游戏后可准备所选约会。");
+        return TRUE;
     }
-    return FALSE;
+    return QueueLiveProtection(page, pane, id, GetDlgItem(pane, id));
 }
 
 static BOOL PlayerCommand(UiPage *page, DenseState *state, HWND pane, int id, int code, HWND control)
 {
     if (id == ID_CURRENT_SLOT && code == CBN_SELCHANGE) {
+        int slot = (int)SendMessageW(control, CB_GETCURSEL, 0, 0);
+        if (slot >= 0 && SetLiveField(page, GAME_WEAPON_SLOT, 0, slot))
+            return TRUE;
         UpdateCurrentWeapon(pane, state);
         return TRUE;
     }
     if (code != BN_CLICKED)
         return FALSE;
-    if ((id >= ID_CHEAT_FIRST && id < ID_CHEAT_FIRST + CHEAT_COUNT * 2 &&
-         (id - ID_CHEAT_FIRST) % 2 == 0) || id == ID_COFFEE) {
-        if (Checked(control))
+    if (id >= ID_CHEAT_FIRST && id < ID_CHEAT_FIRST + CHEAT_COUNT * 2) {
+        int index = (id - ID_CHEAT_FIRST) / 2;
+        BOOL lockControl = (id - ID_CHEAT_FIRST) % 2 != 0;
+        BOOL value = Checked(control);
+        if (GameIsConnected()) {
+            GameResult result;
+            if (lockControl) {
+                result = GameLockField(GAME_PLAYER_CHEAT, index, Checked(GetDlgItem(pane, id - 1)), value);
+            } else if (index >= 20) {
+                result = GameSetFeature(index - 20, value);
+            } else if (Checked(GetDlgItem(pane, id + 1))) {
+                result = GameLockField(GAME_PLAYER_CHEAT, index, value, TRUE);
+            } else {
+                result = GameSetField(GAME_PLAYER_CHEAT, index, value);
+            }
+            if (DisplayCheckedResult(page, control, result))
+                return TRUE;
+        }
+        if (!lockControl && value)
             RecordCheat(state);
         return TRUE;
     }
     if (id >= ID_WEAPON_FIRST && id < ID_WEAPON_FIRST + WEAPON_SLOT_COUNT * 5) {
         int field = (id - ID_WEAPON_FIRST) % 5;
+        int slot = (id - ID_WEAPON_FIRST) / 5;
+        if (GameIsConnected() && (field == 3 || field == 4)) {
+            GameResult result = field == 3 ? QueueWeaponLock(pane, slot, Checked(control)) : QueueWeaponApply(pane, slot);
+            if (field == 3 ? DisplayCheckedResult(page, control, result) : DisplayGameResult(page, result))
+                return TRUE;
+        }
         if (field == 4 || (field == 3 && Checked(control))) {
-            int slot = (id - ID_WEAPON_FIRST) / 5;
             WCHAR status[80];
             ApplyWeapon(pane, state, slot);
             wsprintfW(status, L"已应用离线%s槽。", weaponSpecs[slot].category);
@@ -1042,12 +1466,25 @@ static BOOL PlayerCommand(UiPage *page, DenseState *state, HWND pane, int id, in
     switch (id) {
     case ID_CHEAT_FIRE:
     case ID_CHEAT_FIRE_LOCK:
+        if (GameIsConnected()) {
+            BOOL locked = Checked(GetDlgItem(pane, ID_CHEAT_FIRE_LOCK));
+            GameResult result = id == ID_CHEAT_FIRE_LOCK || locked ?
+                                GameLockField(GAME_PLAYER_CHEAT, 13, Checked(GetDlgItem(pane, ID_CHEAT_FIRE)), locked) :
+                                GameSetField(GAME_PLAYER_CHEAT, 13, Checked(control));
+            if (DisplayCheckedResult(page, control, result)) {
+                SetChecked(GetDlgItem(state->pane[0], id), Checked(control));
+                SetChecked(GetDlgItem(state->pane[2], id), Checked(control));
+                return TRUE;
+            }
+        }
         SetChecked(GetDlgItem(state->pane[0], id), Checked(control));
         SetChecked(GetDlgItem(state->pane[2], id), Checked(control));
         if (id == ID_CHEAT_FIRE && Checked(control))
             RecordCheat(state);
         return TRUE;
     case ID_STOP_PED_SPEED:
+        if (SetLiveField(page, GAME_PLAYER_SPEED, GAME_AXIS_ALL, 0))
+            return TRUE;
         SetTriple(pane, PED_SPEED_X, 0, 0, 0);
         UiSetStatus(page, L"示例主角的各轴速度已清零。");
         return TRUE;
@@ -1056,17 +1493,65 @@ static BOOL PlayerCommand(UiPage *page, DenseState *state, HWND pane, int id, in
         ApplyDirection(page, state, pane, id == ID_PED_KICK_APPLY);
         return TRUE;
     case ID_AMMO_REFILL:
+        if (GameIsConnected() && DisplayGameResult(page, QueueRefill(pane, state)))
+            return TRUE;
         RefillAmmo(pane, state);
         UiSetStatus(page, L"已补满已选择武器的示例弹药。");
         return TRUE;
     case ID_WEAPON_LEVELS:
-        if (UiEditWeaponProficiency(GetAncestor(page->window, GA_ROOT), state->proficiency)) {
+        {
+            int proposed[UI_WEAPON_SKILLS], skill;
+            GameResult result = GAME_OK;
+            CopyMemory(proposed, state->proficiency, sizeof(proposed));
+            if (!UiEditWeaponProficiency(GetAncestor(page->window, GA_ROOT), proposed))
+                return TRUE;
+            if (GameIsConnected()) {
+                for (skill = 0; skill < (int)ARRAYSIZE(proposed); ++skill) {
+                    if (proposed[skill] != state->proficiency[skill])
+                        result = MergeGameResult(result, GameSetField(GAME_WEAPON_SKILL, skill, proposed[skill]));
+                }
+                if (DisplayGameResult(page, result))
+                    return TRUE;
+            }
+            CopyMemory(state->proficiency, proposed, sizeof(proposed));
             UpdateWeaponAverage(pane, state);
             UiSetStatus(page, L"详细武器熟练度已更新。");
         }
         return TRUE;
+    case ID_COFFEE:
+        if (GameIsConnected() && DisplayCheckedResult(page, control, GameSetCoffee(Checked(control))))
+            return TRUE;
+        if (Checked(control))
+            RecordCheat(state);
+        return TRUE;
+    case ID_BRASS_KNUCKLES:
+        if (GameIsConnected())
+            DisplayCheckedResult(page, control, GameLockField(GAME_WEAPON_TYPE, -1, 1, Checked(control)));
+        return TRUE;
+    case ID_LOADED_LOCK:
+        if (GameIsConnected()) {
+            BOOL enabled = Checked(control);
+            int slot = enabled ? (int)SendDlgItemMessageW(pane, ID_CURRENT_SLOT, CB_GETCURSEL, 0, 0) :
+                                 state->loadedLockSlot;
+            if (slot < 0 || slot >= WEAPON_SLOT_COUNT || !weaponSpecs[slot].hasAmmo) {
+                if (enabled)
+                    DisplayCheckedResult(page, control, GAME_INVALID);
+            } else {
+                int weapon = ID_WEAPON_FIRST + slot * 5;
+                int value = ReadNumber(GetDlgItem(pane, weapon + 2), 0, 0, 99999);
+                if (!enabled && Checked(GetDlgItem(pane, weapon + 3))) {
+                    state->loadedLockSlot = -1;
+                } else {
+                    GameResult result = GameLockField(GAME_WEAPON_LOADED, slot, value, enabled);
+                    if (result == GAME_OK || result == GAME_QUEUED)
+                        state->loadedLockSlot = slot;
+                    DisplayCheckedResult(page, control, result);
+                }
+            }
+        }
+        return TRUE;
     }
-    return FALSE;
+    return QueueLiveProtection(page, pane, id, control);
 }
 
 BOOL DensePageCommand(UiPage *page, int id, int code, HWND control)
@@ -1079,7 +1564,10 @@ BOOL DensePageCommand(UiPage *page, int id, int code, HWND control)
         return TRUE;
     }
     if (page->index == 0 && id == ID_WORLD_DAY && code == EN_KILLFOCUS) {
-        SetNumber(control, ReadNumber(control, 0, 0, 99999));
+        int day = ReadNumber(control, state->gameDay, 0, 99999);
+        SetNumber(control, day);
+        if (day != state->gameDay && !SetLiveField(page, GAME_CLOCK_DAY, 0, day))
+            state->gameDay = day;
         UpdateClockLabel(pane, (int)SendDlgItemMessageW(pane, StatId(WORLD_TIME), TBM_GETPOS, 0, 0));
         return TRUE;
     }
@@ -1087,15 +1575,474 @@ BOOL DensePageCommand(UiPage *page, int id, int code, HWND control)
         int slot = (id - ID_STAT_FIRST) / 4, field = (id - ID_STAT_FIRST) % 4;
         const StatSpec *spec = GetStatSpec(page->index, slot);
         if (spec && field == 1 && code == EN_KILLFOCUS) {
-            SetStat(pane, slot, ReadStat(pane, slot, spec));
+            int previous = (int)SendDlgItemMessageW(pane, StatId(slot), TBM_GETPOS, 0, 0);
+            int value = ReadStat(pane, slot, spec);
+            SetStat(pane, slot, value);
+            if (value != previous && GameIsConnected())
+                DisplayGameResult(page, QueueStat(page, pane, slot, value, -1));
             return TRUE;
         }
         if (spec && field == 2 && code == BN_CLICKED) {
-            SetStat(pane, slot, spec->actionValue);
+            if (!GameIsConnected() || !DisplayGameResult(page, QueueStat(page, pane, slot, spec->actionValue, -1)))
+                SetStat(pane, slot, spec->actionValue);
+            return TRUE;
+        }
+        if (spec && field == 3 && code == BN_CLICKED && GameIsConnected()) {
+            DisplayCheckedResult(page, control, QueueStat(page, pane, slot, ReadStat(pane, slot, spec), Checked(control)));
             return TRUE;
         }
     }
-    if (page->index == 0)
+    if (page->index == 0) {
+        if (id == ID_VEHICLE_DOORS && code == CBN_SELCHANGE && GameIsConnected()) {
+            int position = (int)SendMessageW(control, CB_GETCURSEL, 0, 0);
+            if (position >= 0) {
+                BOOL locked = Checked(GetDlgItem(pane, ID_VEHICLE_DOOR_LOCK));
+                DisplayGameResult(page, locked ? GameLockField(GAME_VEHICLE_DOORS, 0, position, TRUE) :
+                                                GameSetField(GAME_VEHICLE_DOORS, 0, position));
+            }
+            return TRUE;
+        }
         return code == BN_CLICKED && VehicleCommand(page, state, pane, id);
+    }
     return PlayerCommand(page, state, pane, id, code, control);
+}
+
+static void ReadDensePage(UiPage *page)
+{
+    const FlagBinding *flags = page->index == 0 ? vehicleFlags : playerFlags;
+    int count = page->index == 0 ? (int)ARRAYSIZE(vehicleFlags) : (int)ARRAYSIZE(playerFlags);
+    int index;
+
+    for (index = 0; index < STAT_SLOT_COUNT; ++index) {
+        const GameBinding *binding = &gameStats[page->index][index];
+        if (binding->field != GAME_FIELD_NONE)
+            ReadLiveField(binding->field, binding->index);
+    }
+    for (index = 0; index < count; ++index)
+        ReadLiveField(flags[index].field, flags[index].index);
+    if (page->index == 0) {
+        static const GameField fields[] = {
+            GAME_VEHICLE_MODEL, GAME_VEHICLE_PRIMARY, GAME_VEHICLE_SECONDARY, GAME_VEHICLE_DOORS,
+            GAME_VEHICLE_HEADING, GAME_VEHICLE_SPAWNER, GAME_WEATHER, GAME_CLOCK_DAY
+        };
+        for (index = 0; index < (int)ARRAYSIZE(fields); ++index)
+            ReadLiveField(fields[index], 0);
+        ReadLiveField(GAME_PLAYER_CHEATED, 1);
+    } else {
+        ReadLiveField(GAME_PLAYER_HEADING, 0);
+        ReadLiveField(GAME_PLAYER_COFFEE, 0);
+        ReadLiveField(GAME_WEAPON_SLOT, 0);
+        ReadLiveField(GAME_WEAPON_TYPE, -1);
+        for (index = 0; index < WEAPON_SLOT_COUNT; ++index) {
+            ReadLiveField(GAME_WEAPON_TYPE, index);
+            if (weaponSpecs[index].hasAmmo) {
+                ReadLiveField(GAME_WEAPON_TOTAL, index);
+                ReadLiveField(GAME_WEAPON_LOADED, index);
+            }
+        }
+        for (index = 0; index < UI_WEAPON_SKILLS; ++index)
+            ReadLiveField(GAME_WEAPON_SKILL, index);
+        for (index = 0; index < CHEAT_COUNT; ++index)
+            ReadLiveField(GAME_PLAYER_CHEAT, index);
+    }
+}
+
+void DensePageGameRefresh(UiPage *page)
+{
+    if (GameIsConnected())
+        ReadDensePage(page);
+}
+
+static void ClearLiveLocks(UiPage *page, const DenseState *state)
+{
+    int slot;
+    for (slot = 0; slot < STAT_SLOT_COUNT; ++slot)
+        SetChecked(GetDlgItem(StatPane(page->index, slot), StatId(slot) + 3), FALSE);
+    if (page->index == 0) {
+        SetChecked(GetDlgItem(state->pane[0], ID_COLOR_LOCK), FALSE);
+        SetChecked(GetDlgItem(state->pane[0], ID_PRIMARY_LOCK), FALSE);
+        SetChecked(GetDlgItem(state->pane[0], ID_SECONDARY_LOCK), FALSE);
+        SetChecked(GetDlgItem(state->pane[0], ID_VEHICLE_DOOR_LOCK), FALSE);
+        SetChecked(GetDlgItem(state->pane[0], ID_VEHICLE_DAMAGE_LOCK), FALSE);
+        SetChecked(GetDlgItem(state->pane[0], ID_PLATE_LOCK), FALSE);
+        SetChecked(GetDlgItem(state->pane[2], ID_WEATHER_LOCK), FALSE);
+        SetChecked(GetDlgItem(state->pane[2], ID_GAME_FEEDBACK), FALSE);
+    } else {
+        SetChecked(GetDlgItem(state->pane[0], ID_PLAYER_DAMAGE_LOCK), FALSE);
+        SetChecked(GetDlgItem(state->pane[0], ID_CHEAT_FIRE_LOCK), FALSE);
+        SetChecked(GetDlgItem(state->pane[2], ID_CHEAT_FIRE_LOCK), FALSE);
+        SetChecked(GetDlgItem(state->pane[1], ID_LOADED_LOCK), FALSE);
+        SetChecked(GetDlgItem(state->pane[1], ID_BRASS_KNUCKLES), FALSE);
+        for (slot = 0; slot < WEAPON_SLOT_COUNT; ++slot)
+            SetChecked(GetDlgItem(state->pane[1], ID_WEAPON_FIRST + slot * 5 + 3), FALSE);
+        for (slot = 0; slot < CHEAT_COUNT; ++slot) {
+            if (slot != 13)
+                SetChecked(GetDlgItem(state->pane[2], ID_CHEAT_FIRST + slot * 2 + 1), FALSE);
+        }
+    }
+}
+
+static BOOL LiveStatEvent(UiPage *page, DenseState *state, const GameEvent *event, int value)
+{
+    int slot;
+    for (slot = 0; slot < STAT_SLOT_COUNT; ++slot) {
+        const GameBinding *binding = &gameStats[page->index][slot];
+        HWND pane;
+        int controlValue;
+        if (binding->field != event->field || binding->index != event->index)
+            continue;
+        pane = StatPane(page->index, slot);
+        if (event->result == GAME_OK) {
+            if ((event->request != GAME_REQ_LOCK_FIELD || event->mode != 0) &&
+                (event->request != GAME_REQ_GIRLFRIEND || event->mode != 0)) {
+                controlValue = page->index == 0 && slot == VEH_WEIGHT ? (int)(event->value * 10.0 + 0.5) : value;
+                if (GetFocus() != GetDlgItem(pane, StatId(slot) + 1))
+                    SetStat(pane, slot, controlValue);
+                if (page->index == 0 && slot == WORLD_MONEY)
+                    state->money = value;
+            }
+        } else if (event->request == GAME_REQ_LOCK_FIELD || event->request == GAME_REQ_GIRLFRIEND) {
+            SetChecked(GetDlgItem(pane, StatId(slot) + 3), event->mode == 0);
+        }
+        return TRUE;
+    }
+    return FALSE;
+}
+
+static BOOL LiveFlagEvent(UiPage *page, DenseState *state, const GameEvent *event)
+{
+    const FlagBinding *flags = page->index == 0 ? vehicleFlags : playerFlags;
+    int count = page->index == 0 ? (int)ARRAYSIZE(vehicleFlags) : (int)ARRAYSIZE(playerFlags);
+    int index;
+    for (index = 0; index < count; ++index) {
+        const FlagBinding *binding = &flags[index];
+        if (binding->field == event->field && binding->index == event->index) {
+            HWND pane = state->pane[0], control = GetDlgItem(pane, binding->id);
+            if (event->result == GAME_OK) {
+                if (event->request != GAME_REQ_LOCK_FIELD || event->mode != 0)
+                    SetChecked(control, event->value != 0.0);
+                if (binding->id == ID_DONT_BURN)
+                    EnableWindow(GetDlgItem(pane, ID_DONT_EXPLODE), event->value == 0.0);
+                if (binding->id == ID_DONT_EXPLODE && !Checked(GetDlgItem(pane, ID_DONT_BURN)))
+                    state->preventExplosion = event->value != 0.0;
+            } else if (event->request == GAME_REQ_SET_FIELD) {
+                SetChecked(control, event->value == 0.0);
+            } else if (event->request == GAME_REQ_LOCK_FIELD) {
+                SetChecked(GetDlgItem(pane, page->index == 0 ? ID_VEHICLE_DAMAGE_LOCK : ID_PLAYER_DAMAGE_LOCK),
+                           event->mode == 0);
+            }
+            return TRUE;
+        }
+    }
+    return FALSE;
+}
+
+static void UpdateLiveWeaponField(DenseState *state, GameField field, int index, int value)
+{
+    HWND pane = state->pane[1], control;
+    int id;
+    WeaponSetting *setting;
+    if (field == GAME_WEAPON_SLOT) {
+        SendDlgItemMessageW(pane, ID_CURRENT_SLOT, CB_SETCURSEL, value, 0);
+    } else if (field == GAME_WEAPON_SKILL) {
+        if (index >= 0 && index < UI_WEAPON_SKILLS) {
+            state->proficiency[index] = value;
+            UpdateWeaponAverage(pane, state);
+        }
+    } else if (field == GAME_WEAPON_TYPE && index == -1) {
+        SetChecked(GetDlgItem(pane, ID_BRASS_KNUCKLES), value != 0);
+    } else if (index >= 0 && index < WEAPON_SLOT_COUNT) {
+        id = ID_WEAPON_FIRST + index * 5;
+        setting = &state->weapons[index];
+        if (field == GAME_WEAPON_TYPE) {
+            HWND combo = GetDlgItem(pane, id);
+            SetModelSelection(combo, value);
+            setting->selection = (int)SendMessageW(combo, CB_GETCURSEL, 0, 0);
+        } else if (field == GAME_WEAPON_TOTAL) {
+            setting->total = value;
+            control = GetDlgItem(pane, id + 1);
+            if (GetFocus() != control)
+                SetNumber(control, value);
+        } else if (field == GAME_WEAPON_LOADED) {
+            setting->loaded = value;
+            control = GetDlgItem(pane, id + 2);
+            if (GetFocus() != control)
+                SetNumber(control, value);
+        }
+    }
+}
+
+static void ShowLiveCheat(DenseState *state, int index, BOOL checked, BOOL lock)
+{
+    if (index == 13) {
+        int id = lock ? ID_CHEAT_FIRE_LOCK : ID_CHEAT_FIRE;
+        SetChecked(GetDlgItem(state->pane[0], id), checked);
+        SetChecked(GetDlgItem(state->pane[2], id), checked);
+    } else if (index >= 0 && index < CHEAT_COUNT) {
+        SetChecked(GetDlgItem(state->pane[2], ID_CHEAT_FIRST + index * 2 + (lock ? 1 : 0)), checked);
+    }
+}
+
+static BOOL ReadPlayerEvent(DenseState *state, const GameEvent *event, int value)
+{
+    if (event->field == GAME_PLAYER_COFFEE) {
+        if (event->result == GAME_OK)
+            SetChecked(GetDlgItem(state->pane[2], ID_COFFEE), value != 0);
+        return TRUE;
+    }
+    if (event->field == GAME_PLAYER_CHEAT) {
+        if (event->result == GAME_OK) {
+            if (event->request != GAME_REQ_LOCK_FIELD || event->mode)
+                ShowLiveCheat(state, event->index, value != 0, FALSE);
+        } else if (event->request == GAME_REQ_LOCK_FIELD) {
+            ShowLiveCheat(state, event->index, event->mode == 0, TRUE);
+        } else if (event->request == GAME_REQ_SET_FIELD) {
+            ShowLiveCheat(state, event->index, value == 0, FALSE);
+        }
+        if (event->request == GAME_REQ_SET_FIELD && event->result == GAME_OK && value &&
+            Checked(GetDlgItem(state->pane[2], ID_SAFE_CHEATS)))
+            GameSetField(GAME_PLAYER_CHEATED, 0, 0);
+        return TRUE;
+    }
+    if (event->field == GAME_WEAPON_SLOT || event->field == GAME_WEAPON_SKILL || event->field == GAME_WEAPON_TYPE ||
+        event->field == GAME_WEAPON_TOTAL || event->field == GAME_WEAPON_LOADED) {
+        if (event->result == GAME_OK && (event->request != GAME_REQ_LOCK_FIELD || event->mode) &&
+            !(event->field == GAME_WEAPON_TYPE && event->index == -1 && event->request == GAME_REQ_READ_FIELD)) {
+            UpdateLiveWeaponField(state, event->field, event->index, value);
+            UpdateCurrentWeapon(state->pane[1], state);
+        }
+        if (event->result != GAME_OK && event->request == GAME_REQ_LOCK_FIELD) {
+            if (event->index == -1) {
+                SetChecked(GetDlgItem(state->pane[1], ID_BRASS_KNUCKLES), event->mode == 0);
+            } else if (event->index >= 0 && event->index < WEAPON_SLOT_COUNT) {
+                SetChecked(GetDlgItem(state->pane[1], ID_WEAPON_FIRST + event->index * 5 + 3), event->mode == 0);
+            }
+        }
+        if (event->field == GAME_WEAPON_LOADED && event->request == GAME_REQ_LOCK_FIELD &&
+            state->loadedLockSlot == event->index) {
+            HWND loaded = GetDlgItem(state->pane[1], ID_LOADED_LOCK);
+            if (event->result == GAME_OK) {
+                if (!event->mode)
+                    state->loadedLockSlot = -1;
+            } else if (Checked(loaded) == (event->mode != 0)) {
+                SetChecked(loaded, !event->mode);
+                if (event->mode)
+                    state->loadedLockSlot = -1;
+            }
+        }
+        return TRUE;
+    }
+    if (event->field == GAME_PLAYER_SPEED && event->index == GAME_AXIS_ALL) {
+        if (event->result == GAME_OK)
+            SetTriple(state->pane[0], PED_SPEED_X, value, value, value);
+        return TRUE;
+    }
+    if (event->field == GAME_PLAYER_HEADING || event->field == GAME_PLAYER_KICK) {
+        if (event->result == GAME_OK) {
+            state->heading = event->field == GAME_PLAYER_KICK ? event->index : value;
+            SendDlgItemMessageW(state->pane[0], ID_PED_DIRECTION, CB_SETCURSEL, (state->heading + 22) / 45 % 8, 0);
+            if (event->field == GAME_PLAYER_KICK) {
+                ReadLiveField(GAME_PLAYER_SPEED, GAME_AXIS_X);
+                ReadLiveField(GAME_PLAYER_SPEED, GAME_AXIS_Y);
+                ReadLiveField(GAME_PLAYER_SPEED, GAME_AXIS_Z);
+            }
+        }
+        return TRUE;
+    }
+    return FALSE;
+}
+
+static BOOL ReadVehicleWorldEvent(DenseState *state, const GameEvent *event, int value)
+{
+    HWND vehiclePane = state->pane[0], worldPane = state->pane[2];
+    if (event->result != GAME_OK) {
+        if (event->request == GAME_REQ_LOCK_FIELD && event->field == GAME_VEHICLE_DOORS)
+            SetChecked(GetDlgItem(vehiclePane, ID_VEHICLE_DOOR_LOCK), event->mode == 0);
+        if (event->request == GAME_REQ_LOCK_FIELD && event->field == GAME_WEATHER)
+            SetChecked(GetDlgItem(worldPane, ID_WEATHER_LOCK), event->mode == 0);
+    }
+    switch (event->field) {
+    case GAME_VEHICLE_MODEL:
+        if (event->result == GAME_OK) {
+            state->model = value;
+            if (value == 0)
+                SetDlgItemTextW(vehiclePane, ID_CURRENT_MODEL, L"当前载具：无");
+            else
+                UpdateCurrentModel(vehiclePane, value);
+        } else if (event->request == GAME_REQ_READ_FIELD) {
+            SetDlgItemTextW(vehiclePane, ID_CURRENT_MODEL, L"当前载具：不可用");
+        }
+        return TRUE;
+    case GAME_VEHICLE_PRIMARY:
+    case GAME_VEHICLE_SECONDARY:
+        if (event->result == GAME_OK && (event->request != GAME_REQ_LOCK_FIELD || event->mode)) {
+            state->colors[event->field == GAME_VEHICLE_PRIMARY ? 0 : 1] = value;
+            UpdateColorLabels(vehiclePane, state);
+        }
+        return TRUE;
+    case GAME_VEHICLE_DOORS:
+        if (event->result == GAME_OK && (event->request != GAME_REQ_LOCK_FIELD || event->mode))
+            SendDlgItemMessageW(vehiclePane, ID_VEHICLE_DOORS, CB_SETCURSEL, value != 0, 0);
+        return TRUE;
+    case GAME_VEHICLE_SPEED:
+    case GAME_VEHICLE_SPIN:
+        if (event->index != GAME_AXIS_ALL)
+            return FALSE;
+        if (event->result == GAME_OK)
+            SetTriple(state->pane[1], event->field == GAME_VEHICLE_SPEED ? VEH_SPEED_X : VEH_SPIN_X, value, value, value);
+        return TRUE;
+    case GAME_VEHICLE_HEADING:
+    case GAME_VEHICLE_KICK:
+        if (event->result == GAME_OK) {
+            state->heading = event->field == GAME_VEHICLE_KICK ? event->index : value;
+            SendDlgItemMessageW(state->pane[1], ID_VEHICLE_DIRECTION, CB_SETCURSEL,
+                               (state->heading + 22) / 45 % 8, 0);
+            if (event->field == GAME_VEHICLE_KICK) {
+                ReadLiveField(GAME_VEHICLE_SPEED, GAME_AXIS_X);
+                ReadLiveField(GAME_VEHICLE_SPEED, GAME_AXIS_Y);
+                ReadLiveField(GAME_VEHICLE_SPEED, GAME_AXIS_Z);
+            }
+        }
+        return TRUE;
+    case GAME_VEHICLE_SPAWNER:
+        if (event->result == GAME_OK) {
+            state->spawnerReady = value != 0;
+            SetDlgItemTextW(vehiclePane, ID_SPAWNER_READY, state->spawnerReady ?
+                            L"生成器状态：已就绪" : L"生成器状态：未就绪");
+        }
+        return TRUE;
+    case GAME_VEHICLE_SPAWN:
+        if (event->result == GAME_OK) {
+            ReadLiveField(GAME_VEHICLE_MODEL, 0);
+            ReadLiveField(GAME_VEHICLE_PRIMARY, 0);
+            ReadLiveField(GAME_VEHICLE_SECONDARY, 0);
+        }
+        return TRUE;
+    case GAME_VEHICLE_FLIP:
+        return TRUE;
+    case GAME_WEATHER:
+        if (event->result == GAME_OK && (event->request != GAME_REQ_LOCK_FIELD || event->mode)) {
+            state->weather = value;
+            if (value >= 0 && value < (int)ARRAYSIZE(weatherNames))
+                SendDlgItemMessageW(worldPane, ID_WEATHER, CB_SETCURSEL, value, 0);
+        }
+        return TRUE;
+    case GAME_CLOCK_DAY:
+        if (event->result == GAME_OK) {
+            state->gameDay = value;
+            if (GetFocus() != GetDlgItem(worldPane, ID_WORLD_DAY))
+                SetNumber(GetDlgItem(worldPane, ID_WORLD_DAY), value);
+            UpdateClockLabel(worldPane, (int)SendDlgItemMessageW(worldPane, StatId(WORLD_TIME), TBM_GETPOS, 0, 0));
+        }
+        return TRUE;
+    case GAME_PLAYER_CHEATED:
+        if (event->result == GAME_OK) {
+            state->cheatsUsed = value;
+            UpdateCheatStatus(value);
+        }
+        return TRUE;
+    }
+    return FALSE;
+}
+
+void DensePageGameEvent(UiPage *page, const GameEvent *event)
+{
+    DenseState *state = &states[page->index];
+    BOOL handled = FALSE;
+    int value = 0;
+
+    if (event->value >= -2147483647.0 && event->value <= 2147483646.0)
+        value = (int)(event->value < 0 ? event->value - 0.5 : event->value + 0.5);
+    if (event->request == GAME_REQ_SESSION) {
+        BOOL connected = event->result == GAME_OK && value != 0;
+        if (connected == state->liveSession)
+            return;
+        state->liveSession = connected;
+        state->liveFailure = FALSE;
+        state->loadedLockSlot = -1;
+        ClearLiveLocks(page, state);
+        if (page->index == 0) {
+            SetDlgItemTextW(state->pane[2], ID_GAME_VERSION, connected ? L"Steam 版（已连接）" : L"Steam 版（离线）");
+            SetDlgItemTextW(state->pane[0], ID_SPAWNER_READY, connected ?
+                            L"生成器状态：等待可用性确认" : L"生成器状态：就绪（离线）");
+        }
+        if (connected)
+            ReadDensePage(page);
+        return;
+    }
+    if (!GameIsConnected())
+        return;
+    switch (event->request) {
+    case GAME_REQ_READ_FIELD:
+    case GAME_REQ_SET_FIELD:
+    case GAME_REQ_LOCK_FIELD:
+        if (event->field != GAME_FIELD_NONE) {
+            handled = LiveStatEvent(page, state, event, value) || LiveFlagEvent(page, state, event);
+            if (!handled)
+                handled = page->index == 0 ? ReadVehicleWorldEvent(state, event, value) :
+                                             ReadPlayerEvent(state, event, value);
+        }
+        break;
+    case GAME_REQ_GIRLFRIEND:
+        if (page->index == 0) {
+            GameEvent normalized = *event;
+            normalized.field = GAME_RELATIONSHIP;
+            handled = LiveStatEvent(page, state, &normalized, value);
+        }
+        break;
+    case GAME_REQ_FEATURE:
+        if (page->index == 1) {
+            ShowLiveCheat(state, event->index + 20, event->result == GAME_OK ? value != 0 : value == 0, FALSE);
+            handled = TRUE;
+        }
+        break;
+    case GAME_REQ_COFFEE:
+        if (page->index == 1) {
+            SetChecked(GetDlgItem(state->pane[2], ID_COFFEE), event->result == GAME_OK ? value != 0 : value == 0);
+            handled = TRUE;
+        }
+        break;
+    case GAME_REQ_FEEDBACK:
+        if (page->index == 0) {
+            SetChecked(GetDlgItem(state->pane[2], ID_GAME_FEEDBACK), event->result == GAME_OK ? value != 0 : value == 0);
+            handled = TRUE;
+        }
+        break;
+    case GAME_REQ_PLATE:
+        if (page->index == 0) {
+            if (event->mode != 0 && event->result != GAME_QUEUED) {
+                BOOL enabled = event->result == GAME_OK ? event->mode == 1 : event->mode == 2;
+                SetChecked(GetDlgItem(state->pane[0], ID_PLATE_LOCK), enabled);
+            }
+            handled = TRUE;
+        }
+        break;
+    case GAME_REQ_WEAPON:
+        if (page->index == 1 && event->index >= 0 && event->index < WEAPON_SLOT_COUNT) {
+            int slot = event->index;
+            if (event->result == GAME_OK) {
+                UpdateLiveWeaponField(state, GAME_WEAPON_TYPE, slot, (int)event->weapon.type);
+                UpdateLiveWeaponField(state, GAME_WEAPON_TOTAL, slot, (int)event->weapon.total);
+                UpdateLiveWeaponField(state, GAME_WEAPON_LOADED, slot, (int)event->weapon.loaded);
+                UpdateCurrentWeapon(state->pane[1], state);
+            } else if (event->result != GAME_QUEUED) {
+                ReadLiveField(GAME_WEAPON_TYPE, slot);
+                if (weaponSpecs[slot].hasAmmo) {
+                    ReadLiveField(GAME_WEAPON_TOTAL, slot);
+                    ReadLiveField(GAME_WEAPON_LOADED, slot);
+                }
+            }
+            handled = TRUE;
+        }
+        break;
+    }
+    if (handled && event->request != GAME_REQ_READ_FIELD) {
+        if (event->result != GAME_OK && event->result != GAME_QUEUED) {
+            state->liveFailure = TRUE;
+            if (event->request == GAME_REQ_SET_FIELD || event->request == GAME_REQ_LOCK_FIELD)
+                ReadLiveField(event->field, event->index);
+        }
+        if (event->result != GAME_OK || !state->liveFailure)
+            UiSetStatus(page, GameResultText(event->result));
+    }
 }

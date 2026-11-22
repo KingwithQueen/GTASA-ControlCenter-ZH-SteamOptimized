@@ -6,6 +6,7 @@
 #include <commctrl.h>
 
 #include "resources.h"
+#include "trainer.h"
 
 enum { UI_PAGE_COUNT = 6, UI_PAGE_WIDTH = 920, UI_PAGE_HEIGHT = 530 };
 
@@ -29,9 +30,13 @@ void UiFreeTranslations(void);
 void BuildDensePage(UiPage *page);
 BOOL DensePageCommand(UiPage *page, int id, int code, HWND control);
 void DensePageScroll(HWND control);
+void DensePageGameEvent(UiPage *page, const GameEvent *event);
+void DensePageGameRefresh(UiPage *page);
 
 void BuildListPage(UiPage *page);
 BOOL ListPageCommand(UiPage *page, int id, int code, HWND control);
 LRESULT ListPageNotify(UiPage *page, NMHDR *notification);
+void ListPageGameEvent(UiPage *page, const GameEvent *event);
+void ListPageGameTick(UiPage *page);
 
 #endif

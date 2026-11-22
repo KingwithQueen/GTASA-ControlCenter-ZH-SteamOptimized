@@ -2,7 +2,7 @@
 
 本项目基于GTA SA Control Center开源代码，汉化了修改器文本，适配了steam版GTASA。工程入口为 `GTASAConsole/GTASAConsole.vbp`，采用 VB6 工程格式，以 twinBASIC BETA 991 编译 Win32。源文件取自正式 release；Steam 后端取自对应的旧版 C++ 后端。
 
-原生 C/Win32 界面原型位于 [win32-ui](win32-ui/README.md)。它有独立的 VS 2026 解决方案，提供六个中文标签页、原版界面对照和切页测试。
+原生 C/Win32 版位于 [win32-ui](win32-ui/README.md)。VS 2026 解决方案可构建六页中文界面和配套的经典 Steam 后端。可复制的测试包及实机检查步骤见 [Steam 版实机验收](win32-ui/STEAM-ACCEPTANCE.md)。
 
 20261006 开发分支补全了 17 个车库存车编辑和锁定、一击必杀、任务显示计时冻结、六位女友统计和脚本进度同步、Hot Coffee 脚本开关、游戏内反馈、原版驾驶快捷键及遥控载具识别；同时修正 Steam 整数统计表起点。编译、原生夹具和旧版界面联调通过，真实游戏验收仍待进行。实现与使用边界见 `开发记录20261006.md`。
 

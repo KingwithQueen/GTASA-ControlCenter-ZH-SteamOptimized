@@ -1,5 +1,6 @@
 ﻿#include "ui.h"
 #include "dialogs.h"
+#include "trainer.h"
 #include "legacy_list_data.h"
 #include "location_map.h"
 
@@ -9,6 +10,7 @@ enum {
     ID_GROUP_ENABLE, ID_GROUP_DISABLE, ID_CHEAT_COPY,
     ID_GARAGE_SLOT, ID_GARAGE_VEHICLE, ID_GARAGE_COLORS, ID_GARAGE_MODS, ID_GARAGE_CLEAR_MODS,
     ID_GARAGE_READ_PREVIEW, ID_GARAGE_WRITE_PREVIEW, ID_GARAGE_PROTECTION,
+    ID_CHEAT_USE = 1034,
     ID_SHORTCUT_CATEGORY = 1040, ID_SHORTCUT_COMMAND, ID_SHORTCUT_KEY, ID_SHORTCUT_CTRL, ID_SHORTCUT_ALT,
     ID_SHORTCUT_INTERVAL, ID_SHORTCUT_ORIGINAL, ID_SHORTCUT_FEEDBACK, ID_SHORTCUT_VERSION,
     ID_SHORTCUT_PARAMETER_HELP, ID_SHORTCUT_TEST, ID_SHORTCUT_PARAMETER_PICK, ID_SHORTCUT_FOLDER_MOVE,
@@ -35,6 +37,24 @@ static ListState listStates[4];
 static int collectionRevision[3];
 static int commandRevision;
 static WCHAR previewPosition[4][FIELD_LENGTH] = { L"2495.33", L"-1687.60", L"13.52", L"90" };
+static BOOL garageDirty[GARAGE_COUNT];
+static BOOL gameGarageLocked[GARAGE_COUNT];
+static BOOL positionFromEditor, teleportFromEditor;
+static GamePosition editorTeleportTarget;
+static int pendingMarkup = -1;
+
+typedef enum {
+    GARAGE_BATCH_NONE,
+    GARAGE_BATCH_READ,
+    GARAGE_BATCH_WRITE
+} GarageBatchKind;
+
+static struct {
+    GarageBatchKind kind;
+    int index, completed, lockIndex;
+    BOOL applyingLock;
+    Garage readback[GARAGE_COUNT];
+} garageBatch = { GARAGE_BATCH_NONE, -1, 0, -1 };
 
 static const GarageRegion garageRegions[] = {
     { L"洛圣都", 0, 5 }, { L"圣辉洛", 13, 4 }, { L"拉斯文加斯", 5, 4 }, { L"骨郡", 9, 4 }
@@ -73,6 +93,11 @@ static ListState *StateFor(UiPage *page)
 static void Feedback(ListState *state, LPCWSTR text)
 {
     SetWindowTextW(state->feedback, text);
+}
+
+static void GameFeedback(UiPage *page, GameResult result)
+{
+    Feedback(StateFor(page), GameResultText(result));
 }
 
 static HWND Label(UiPage *page, LPCWSTR text, int x, int y, int width)
@@ -534,6 +559,7 @@ static void BuildCheats(UiPage *page)
     Edit(page, L"分组（可编辑路径）", 1, 529, 110, 366);
     Edit(page, L"秘籍代码（可组合多个连续代码）", 2, 529, 167, 366);
     Button(page, L"复制秘籍代码", ID_CHEAT_COPY, 529, 217, 145);
+    EnableWindow(Button(page, L"向游戏输入秘籍", ID_CHEAT_USE, 682, 217, 159), FALSE);
     SharedRecordButtons(page, 529, 261, 118);
     state->feedback = FeedbackLabel(page, 529, 370, 366);
 }
@@ -836,6 +862,18 @@ static BOOL CopyCheat(UiPage *page)
     return FALSE;
 }
 
+static void QueueCheatFromEditor(UiPage *page)
+{
+    WCHAR code[FIELD_LENGTH];
+    GameResult result;
+    GetWindowTextW(StateFor(page)->field[2], code, ARRAYSIZE(code));
+    result = code[0] ? GameQueueCheat(code) : GAME_INVALID;
+    if (result == GAME_QUEUED)
+        Feedback(StateFor(page), L"已排队，请切回游戏窗口。");
+    else
+        GameFeedback(page, result);
+}
+
 static BOOL CaptureLocationInputs(ListState *state, WCHAR position[4][FIELD_LENGTH], POINT *point)
 {
     int index;
@@ -862,6 +900,8 @@ static BOOL HandleLocation(UiPage *page, int id, int code, HWND control)
     ListState *state = StateFor(page);
     POINT coordinate = { 0, 0 };
     WCHAR positions[4][FIELD_LENGTH];
+    GamePosition target;
+    GameResult result;
     int i;
     if (code == CBN_SELCHANGE && id == ID_ZOOM) {
         SetMapZoom(ComboValue(control), NULL);
@@ -895,18 +935,46 @@ static BOOL HandleLocation(UiPage *page, int id, int code, HWND control)
         }
     } else if (id == ID_TELEPORT) {
         if (CaptureLocationInputs(state, positions, &coordinate)) {
-            memcpy(previewPosition, positions, sizeof(previewPosition));
-            mapView.player = coordinate;
-            mapView.hasPlayer = TRUE;
-            CenterLocationMap(coordinate);
-            Feedback(state, L"已更新红色预览位置。");
+            if (GameIsConnected()) {
+                if (teleportFromEditor) {
+                    GameFeedback(page, GAME_BUSY);
+                    return TRUE;
+                }
+                target.x = wcstod(positions[0], NULL);
+                target.y = wcstod(positions[1], NULL);
+                target.z = wcstod(positions[2], NULL);
+                target.heading = wcstod(positions[3], NULL);
+                result = GameTeleport(&target);
+                if (result == GAME_QUEUED) {
+                    teleportFromEditor = TRUE;
+                    editorTeleportTarget = target;
+                }
+                GameFeedback(page, result);
+            } else {
+                memcpy(previewPosition, positions, sizeof(previewPosition));
+                mapView.player = coordinate;
+                mapView.hasPlayer = TRUE;
+                CenterLocationMap(coordinate);
+                Feedback(state, L"已更新红色预览位置。");
+            }
         } else {
             Feedback(state, L"请填写有效的坐标和朝向。");
         }
     } else if (id == ID_READ_PLAYER) {
-        for (i = 0; i < 4; ++i)
-            SetWindowTextW(state->field[i + 2], previewPosition[i]);
-        Feedback(state, L"已读取预览位置和朝向。");
+        if (GameIsConnected()) {
+            if (positionFromEditor || pendingMarkup >= 0) {
+                GameFeedback(page, GAME_BUSY);
+                return TRUE;
+            }
+            result = GameReadPosition();
+            if (result == GAME_QUEUED)
+                positionFromEditor = TRUE;
+            GameFeedback(page, result);
+        } else {
+            for (i = 0; i < 4; ++i)
+                SetWindowTextW(state->field[i + 2], previewPosition[i]);
+            Feedback(state, L"已读取预览位置和朝向。");
+        }
     } else {
         return FALSE;
     }
@@ -929,7 +997,11 @@ static void BrowseConfiguration(UiPage *page, BOOL save)
                                               : LoadRecords(page->index, data, FALSE);
         free(data);
         if (success) {
-            if (page->index != PAGE_GARAGES) {
+            if (page->index == PAGE_GARAGES) {
+                int index;
+                for (index = 0; index < GARAGE_COUNT; ++index)
+                    garageDirty[index] = TRUE;
+            } else {
                 ++collectionRevision[page->index - PAGE_CHEATS];
                 state->folderCount = 0;
                 RefreshFolders(page, NULL);
@@ -950,6 +1022,211 @@ static void ResetMods(GarageSlot *slot)
     slot->field[30] = 0xFF;
 }
 
+static const unsigned garageProofBits[] = { 4, 8, 1, 2 };
+
+static void MakeGameGarageSlots(const Garage *garage, GameGarageSlot slots[SLOT_COUNT])
+{
+    const GarageSlot *source;
+    GameGarageSlot *destination;
+    int slot, field;
+
+    ZeroMemory(slots, sizeof(*slots) * SLOT_COUNT);
+    for (slot = 0; slot < SLOT_COUNT; ++slot) {
+        source = &garage->slots[slot];
+        destination = &slots[slot];
+        destination->model = source->field[1];
+        for (field = 0; field < (int)ARRAYSIZE(garageProofBits); ++field)
+            if (source->field[field + 2])
+                destination->protection |= garageProofBits[field];
+        destination->primary = source->field[6];
+        destination->secondary = source->field[7];
+        destination->angle = source->field[8];
+        for (field = 0; field < (int)ARRAYSIZE(destination->mods); ++field)
+            destination->mods[field] = source->field[field + 9] ? source->field[field + 9] : 0xFFFF;
+        for (field = 0; field < (int)ARRAYSIZE(destination->tuning); ++field)
+            destination->tuning[field] = source->field[field + 24];
+    }
+}
+
+static void ReadGameGarageSlots(Garage *garage, const GameGarageSlot slots[SLOT_COUNT])
+{
+    GarageSlot *destination;
+    const GameGarageSlot *source;
+    int slot, field;
+
+    for (slot = 0; slot < SLOT_COUNT; ++slot) {
+        source = &slots[slot];
+        destination = &garage->slots[slot];
+        destination->field[1] = source->model;
+        for (field = 0; field < (int)ARRAYSIZE(garageProofBits); ++field)
+            destination->field[field + 2] = (source->protection & garageProofBits[field]) != 0;
+        destination->field[6] = source->primary;
+        destination->field[7] = source->secondary;
+        destination->field[8] = source->angle;
+        for (field = 0; field < (int)ARRAYSIZE(source->mods); ++field)
+            destination->field[field + 9] = source->mods[field];
+        for (field = 0; field < (int)ARRAYSIZE(source->tuning); ++field)
+            destination->field[field + 24] = source->tuning[field];
+    }
+}
+
+static BOOL GarageBusy(void)
+{
+    return garageBatch.kind != GARAGE_BATCH_NONE || garageBatch.lockIndex >= 0;
+}
+
+static void EnableGarageEditor(UiPage *page, BOOL enabled)
+{
+    static const int controls[] = {
+        ID_LIST, ID_GROUP, ID_GARAGE_SLOT, ID_GARAGE_VEHICLE, ID_GARAGE_COLORS,
+        ID_GARAGE_MODS, ID_GARAGE_CLEAR_MODS, ID_GARAGE_READ_PREVIEW, ID_GARAGE_WRITE_PREVIEW,
+        ID_IMPORT, ID_EXPORT, ID_ENABLED, ID_GARAGE_PROTECTION, ID_GARAGE_PROTECTION + 1,
+        ID_GARAGE_PROTECTION + 2, ID_GARAGE_PROTECTION + 3
+    };
+    unsigned index;
+    for (index = 0; index < ARRAYSIZE(controls); ++index)
+        EnableWindow(GetDlgItem(page->window, controls[index]), enabled);
+    if (enabled)
+        GarageStatus(page);
+}
+
+static void FinishGarageBatch(UiPage *page, GameResult result)
+{
+    WCHAR text[FIELD_LENGTH];
+    int selected = SelectedSource(StateFor(page));
+    GarageBatchKind kind = garageBatch.kind;
+
+    if (result == GAME_OK && kind == GARAGE_BATCH_READ) {
+        memcpy(garageData, garageBatch.readback, sizeof(garageData));
+        ZeroMemory(garageDirty, sizeof(garageDirty));
+    }
+    garageBatch.kind = GARAGE_BATCH_NONE;
+    garageBatch.lockIndex = -1;
+    garageBatch.applyingLock = FALSE;
+    EnableGarageEditor(page, TRUE);
+    RefreshRows(page, selected);
+    if (result == GAME_OK && kind == GARAGE_BATCH_WRITE && !garageBatch.completed) {
+        StringCchCopyW(text, ARRAYSIZE(text), L"没有要写入的车库修改。");
+    } else if (result == GAME_OK) {
+        StringCchPrintfW(text, ARRAYSIZE(text), kind == GARAGE_BATCH_READ ? L"已读取 %d 座车库。"
+                         : L"已写入 %d 座修改过的车库。", garageBatch.completed);
+    } else if (kind == GARAGE_BATCH_WRITE && garageBatch.completed) {
+        StringCchPrintfW(text, ARRAYSIZE(text), L"已写入 %d 座；其余操作未完成。%ls",
+                         garageBatch.completed, GameResultText(result));
+    } else {
+        StringCchCopyW(text, ARRAYSIZE(text), GameResultText(result));
+    }
+    Feedback(StateFor(page), text);
+}
+
+static void QueueNextGarage(UiPage *page)
+{
+    GameResult result;
+    GameGarageSlot slots[SLOT_COUNT];
+    int index = garageBatch.index + 1;
+    if (garageBatch.kind == GARAGE_BATCH_WRITE) {
+        while (index < GARAGE_COUNT && !garageDirty[index])
+            ++index;
+    }
+    if (index >= GARAGE_COUNT) {
+        FinishGarageBatch(page, GAME_OK);
+        return;
+    }
+    garageBatch.index = index;
+    if (garageBatch.kind == GARAGE_BATCH_READ) {
+        result = GameGarageRead(index);
+    } else {
+        MakeGameGarageSlots(&garageData[index], slots);
+        result = GameGarageWrite(index, slots);
+    }
+    if (result != GAME_QUEUED)
+        FinishGarageBatch(page, result);
+}
+
+static void StartGarageBatch(UiPage *page, GarageBatchKind kind)
+{
+    garageBatch.kind = kind;
+    garageBatch.index = -1;
+    garageBatch.completed = 0;
+    if (kind == GARAGE_BATCH_READ)
+        memcpy(garageBatch.readback, garageData, sizeof(garageData));
+    EnableGarageEditor(page, FALSE);
+    Feedback(StateFor(page), kind == GARAGE_BATCH_READ ? L"正在读取游戏车库…" : L"正在写入游戏车库…");
+    QueueNextGarage(page);
+}
+
+static GameResult ArmGameGarage(int garage, BOOL armed)
+{
+    GameGarageSlot slots[SLOT_COUNT];
+    GameResult result;
+
+    MakeGameGarageSlots(&garageData[garage], slots);
+    result = GameGarageLock(garage, armed, slots);
+    if (result == GAME_QUEUED)
+        garageBatch.lockIndex = garage;
+    return result;
+}
+
+static void HandleGarageEvent(UiPage *page, const GameEvent *event)
+{
+    int index = event->index;
+    int selected = SelectedSource(StateFor(page));
+    GameResult lockResult;
+    if (index < 0 || index >= GARAGE_COUNT)
+        return;
+    if (event->request == GAME_REQ_GARAGE_READ && garageBatch.kind == GARAGE_BATCH_READ
+        && index == garageBatch.index) {
+        if (event->result != GAME_OK) {
+            FinishGarageBatch(page, event->result);
+            return;
+        }
+        ReadGameGarageSlots(&garageBatch.readback[index], event->slots);
+        garageBatch.readback[index].locked = gameGarageLocked[index];
+        ++garageBatch.completed;
+        QueueNextGarage(page);
+    } else if (event->request == GAME_REQ_GARAGE_WRITE && garageBatch.kind == GARAGE_BATCH_WRITE
+               && index == garageBatch.index) {
+        if (event->result != GAME_OK) {
+            FinishGarageBatch(page, event->result);
+            return;
+        }
+        garageDirty[index] = FALSE;
+        ++garageBatch.completed;
+        if (gameGarageLocked[index] || garageData[index].locked) {
+            lockResult = ArmGameGarage(index, garageData[index].locked);
+            if (lockResult == GAME_QUEUED) {
+                garageBatch.applyingLock = TRUE;
+                return;
+            }
+            garageDirty[index] = TRUE;
+            FinishGarageBatch(page, lockResult);
+            return;
+        }
+        QueueNextGarage(page);
+    } else if (event->request == GAME_REQ_GARAGE_LOCK && index == garageBatch.lockIndex) {
+        garageBatch.lockIndex = -1;
+        if (event->result == GAME_OK)
+            gameGarageLocked[index] = event->mode != 0;
+        if (garageBatch.applyingLock) {
+            garageBatch.applyingLock = FALSE;
+            if (event->result == GAME_OK) {
+                QueueNextGarage(page);
+            } else {
+                garageDirty[index] = TRUE;
+                FinishGarageBatch(page, event->result);
+            }
+        } else {
+            garageData[index].locked = gameGarageLocked[index];
+            EnableGarageEditor(page, TRUE);
+            RefreshRows(page, selected);
+            if (event->result == GAME_OK)
+                Feedback(StateFor(page), event->mode ? L"游戏车库已锁定。" : L"游戏车库已解除锁定。");
+            else
+                GameFeedback(page, event->result);
+        }
+    }
+}
+
 static BOOL HandleGarage(UiPage *page, int id, int code, HWND control)
 {
     ListState *state = StateFor(page);
@@ -958,6 +1235,10 @@ static BOOL HandleGarage(UiPage *page, int id, int code, HWND control)
     WCHAR name[FIELD_LENGTH];
     GarageSlot *slot;
     HWND owner = GetAncestor(page->window, GA_ROOT);
+    BOOL changed = FALSE;
+    GameResult result;
+    if (GarageBusy())
+        return TRUE;
     if (garage < 0)
         return FALSE;
     slot = &garageData[garage].slots[state->garageSlot];
@@ -973,6 +1254,7 @@ static BOOL HandleGarage(UiPage *page, int id, int code, HWND control)
         if (UiChooseVehicle(owner, &model, name, ARRAYSIZE(name))) {
             slot->field[1] = model;
             if (model != previous) {
+                changed = TRUE;
                 if (UiVehicleDefaultColors(model, &primary, &secondary)) {
                     slot->field[6] = primary;
                     slot->field[7] = secondary;
@@ -984,6 +1266,7 @@ static BOOL HandleGarage(UiPage *page, int id, int code, HWND control)
         if (UiChooseVehicleColors(owner, &primary, &secondary)) {
             slot->field[6] = primary;
             slot->field[7] = secondary;
+            changed = TRUE;
         }
     } else if (id == ID_GARAGE_MODS) {
         if (slot->field[30] < 4)
@@ -995,22 +1278,47 @@ static BOOL HandleGarage(UiPage *page, int id, int code, HWND control)
             slot->field[30] = mods[0] ? mods[0] - 1 : 0xFF;
             for (index = 0; index < 15; ++index)
                 slot->field[index + 9] = mods[index + 1] ? (DWORD)mods[index + 1] : 0xFFFF;
+            changed = TRUE;
         }
     } else if (id == ID_GARAGE_CLEAR_MODS) {
         ResetMods(slot);
+        changed = TRUE;
     } else if (id == ID_ENABLED) {
+        if (GameIsConnected()) {
+            result = ArmGameGarage(garage, Checked(control));
+            if (result == GAME_QUEUED)
+                EnableGarageEditor(page, FALSE);
+            else
+                SetChecked(control, gameGarageLocked[garage]);
+            GameFeedback(page, result);
+            return TRUE;
+        }
         garageData[garage].locked = Checked(control);
+        changed = TRUE;
     } else if (id >= ID_GARAGE_PROTECTION && id < ID_GARAGE_PROTECTION + 4) {
         slot->field[id - ID_GARAGE_PROTECTION + 2] = Checked(control);
+        changed = TRUE;
     } else if (id == ID_GARAGE_READ_PREVIEW) {
+        if (GameIsConnected()) {
+            StartGarageBatch(page, GARAGE_BATCH_READ);
+            return TRUE;
+        }
         memcpy(garageData, mockGarages, sizeof(garageData));
+        for (index = 0; index < GARAGE_COUNT; ++index)
+            garageDirty[index] = TRUE;
         Feedback(state, L"已从离线预览读取 17 座车库。");
     } else if (id == ID_GARAGE_WRITE_PREVIEW) {
+        if (GameIsConnected()) {
+            StartGarageBatch(page, GARAGE_BATCH_WRITE);
+            return TRUE;
+        }
         memcpy(mockGarages, garageData, sizeof(mockGarages));
         Feedback(state, L"已将 17 座车库写入离线预览。");
     } else {
         return FALSE;
     }
+    if (changed)
+        garageDirty[garage] = TRUE;
     GarageStatus(page);
     if (state->count)
         ListView_RedrawItems(state->list, 0, state->count - 1);
@@ -1220,6 +1528,7 @@ static void ToggleShortcutGroup(UiPage *page, BOOL enabled)
     int source = SelectedSource(state), index;
     for (index = 0; index < state->count; ++index)
         set->rows[state->sourceRows[index]].enabled = enabled;
+    ++collectionRevision[page->index - PAGE_CHEATS];
     RefreshRows(page, source);
     Feedback(state, enabled ? L"已启用当前视图中的全部快捷键。" : L"已停用当前视图中的全部快捷键。");
 }
@@ -1252,11 +1561,26 @@ static void ShortcutParameters(UiPage *page)
     }
 }
 
+#include "shortcut_game.h"
+
 static void PreviewShortcut(UiPage *page)
 {
     const ListState *state = StateFor(page);
     WCHAR command[FIELD_LENGTH], key[32], message[FIELD_LENGTH + 48], binding[32];
-    int selected = (int)SendMessageW(state->command, CB_GETCURSEL, 0, 0);
+    Record definition = { 0 };
+    GameResult result;
+    int selected;
+    if (GameIsConnected()) {
+        if (RecordFromInputs(page, &definition)) {
+            result = RunShortcutRecord(&definition);
+            if (result == GAME_QUEUED && definition.category == 1)
+                Feedback(StateFor(page), L"秘籍已排队，请切回游戏窗口。");
+            else
+                GameFeedback(page, result);
+        }
+        return;
+    }
+    selected = (int)SendMessageW(state->command, CB_GETCURSEL, 0, 0);
     if (selected < 0 || ComboValue(state->key) < 0
         || SendMessageW(state->command, CB_GETLBTEXTLEN, selected, 0) >= ARRAYSIZE(command)) {
         Feedback(StateFor(page), L"请先选择命令与按键。");
@@ -1296,6 +1620,8 @@ static BOOL HandleShortcut(UiPage *page, int id, int code)
         PreviewShortcut(page);
     } else if (id == ID_SHORTCUT_PARAMETER_PICK) {
         ShortcutParameters(page);
+    } else if (id == ID_SHORTCUT_FEEDBACK && GameIsConnected()) {
+        GameFeedback(page, GameSetFeedback(Checked(GetDlgItem(page->window, ID_SHORTCUT_FEEDBACK))));
     } else {
         return FALSE;
     }
@@ -1305,6 +1631,8 @@ static BOOL HandleShortcut(UiPage *page, int id, int code)
 BOOL ListPageCommand(UiPage *page, int id, int code, HWND control)
 {
     ListState *state = StateFor(page);
+    if (page->index == PAGE_GARAGES && GarageBusy())
+        return TRUE;
     if (id == ID_GROUP && code == CBN_SELCHANGE) {
         state->garageSlot = 0;
         RefreshRows(page, -1);
@@ -1342,7 +1670,120 @@ BOOL ListPageCommand(UiPage *page, int id, int code, HWND control)
     case ID_CHEAT_COPY:
         Feedback(state, CopyCheat(page) ? L"已复制秘籍代码。" : L"没有可复制的代码，或剪贴板正忙。");
         return TRUE;
+    case ID_CHEAT_USE:
+        QueueCheatFromEditor(page);
+        return TRUE;
     default:
         return FALSE;
+    }
+}
+
+static void ApplyGamePosition(UiPage *page, const GamePosition *position, BOOL updateFields, BOOL center)
+{
+    ListState *state = StateFor(page);
+    WCHAR values[4][48];
+    int index;
+
+    StringCchPrintfW(values[0], ARRAYSIZE(values[0]), L"%.6f", position->x);
+    StringCchPrintfW(values[1], ARRAYSIZE(values[1]), L"%.6f", position->y);
+    StringCchPrintfW(values[2], ARRAYSIZE(values[2]), L"%.6f", position->z);
+    StringCchPrintfW(values[3], ARRAYSIZE(values[3]), L"%.6f", position->heading);
+    if (updateFields)
+        for (index = 0; index < 4; ++index)
+            SetWindowTextW(state->field[index + 2], values[index]);
+    mapView.hasPlayer = ReadPoint(values[0], values[1], &mapView.player);
+    if (center && mapView.hasPlayer)
+        CenterLocationMap(mapView.player);
+    else
+        InvalidateRect(mapView.window, NULL, FALSE);
+}
+
+static void RefreshListSession(UiPage *page, BOOL connected)
+{
+    switch (page->index) {
+    case PAGE_GARAGES:
+        SetWindowTextW(GetDlgItem(page->window, ID_GARAGE_READ_PREVIEW),
+                       connected ? L"读取游戏车库" : L"读取预览车库");
+        SetWindowTextW(GetDlgItem(page->window, ID_GARAGE_WRITE_PREVIEW),
+                       connected ? L"写入游戏车库" : L"写入预览车库");
+        if (!connected) {
+            ZeroMemory(gameGarageLocked, sizeof(gameGarageLocked));
+            if (GarageBusy())
+                FinishGarageBatch(page, GAME_OFFLINE);
+        }
+        break;
+    case PAGE_CHEATS:
+        EnableWindow(GetDlgItem(page->window, ID_CHEAT_USE), connected);
+        break;
+    case PAGE_LOCATIONS:
+        SetWindowTextW(GetDlgItem(page->window, ID_TELEPORT), connected ? L"传送到坐标" : L"传送预览");
+        SetWindowTextW(GetDlgItem(page->window, ID_READ_PLAYER), connected ? L"读取游戏位置" : L"读取预览位置");
+        positionFromEditor = FALSE;
+        teleportFromEditor = FALSE;
+        ResetGameLocations();
+        if (connected)
+            mapView.hasPlayer = FALSE;
+        else
+            mapView.hasPlayer = ReadPoint(previewPosition[0], previewPosition[1], &mapView.player);
+        InvalidateRect(mapView.window, NULL, FALSE);
+        break;
+    case PAGE_SHORTCUTS:
+        SetWindowTextW(GetDlgItem(page->window, ID_SHORTCUT_TEST),
+                       connected ? L"执行所选命令" : L"预览执行信息");
+        break;
+    }
+}
+
+static BOOL IsEditorTeleport(const GamePosition *position)
+{
+    return teleportFromEditor && position->x == editorTeleportTarget.x
+        && position->y == editorTeleportTarget.y && position->z == editorTeleportTarget.z
+        && position->heading == editorTeleportTarget.heading;
+}
+
+void ListPageGameEvent(UiPage *page, const GameEvent *event)
+{
+    BOOL editorResult;
+    if (event->request == GAME_REQ_SESSION) {
+        RefreshListSession(page, event->result == GAME_OK && event->value != 0);
+        return;
+    }
+    if (page->index == PAGE_GARAGES) {
+        HandleGarageEvent(page, event);
+    } else if (page->index == PAGE_CHEATS && event->request == GAME_REQ_CHEAT) {
+        if (event->result == GAME_OK)
+            Feedback(StateFor(page), L"已向游戏发送秘籍按键。");
+        else
+            GameFeedback(page, event->result);
+    } else if (page->index == PAGE_LOCATIONS && event->request == GAME_REQ_POSITION) {
+        if (event->result == GAME_OK && GameIsConnected()) {
+            ApplyGamePosition(page, &event->position, positionFromEditor, positionFromEditor);
+            if (pendingMarkup >= 0 && pendingMarkup < MARKUP_LOCATION_COUNT) {
+                markedPositions[pendingMarkup] = event->position;
+                markedPositionValid[pendingMarkup] = TRUE;
+            }
+        }
+        if (positionFromEditor) {
+            if (event->result == GAME_OK)
+                Feedback(StateFor(page), L"已读取游戏位置和朝向。");
+            else
+                GameFeedback(page, event->result);
+        }
+        positionFromEditor = FALSE;
+        pendingMarkup = -1;
+    } else if (page->index == PAGE_LOCATIONS && event->request == GAME_REQ_TELEPORT) {
+        editorResult = IsEditorTeleport(&event->position);
+        if (event->result == GAME_OK && GameIsConnected())
+            ApplyGamePosition(page, &event->position, FALSE, editorResult);
+        if (editorResult) {
+            if (event->result == GAME_OK)
+                Feedback(StateFor(page), L"已传送到指定坐标。");
+            else
+                GameFeedback(page, event->result);
+            teleportFromEditor = FALSE;
+        }
+    } else if (page->index == PAGE_SHORTCUTS && (event->request == GAME_REQ_COMMAND
+               || event->request == GAME_REQ_FEEDBACK)) {
+        GameFeedback(page, event->result);
     }
 }

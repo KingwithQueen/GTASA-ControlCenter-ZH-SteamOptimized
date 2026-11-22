@@ -4,6 +4,8 @@ VisualStudioVersion = 18.0.0.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{BC8A1FFA-BEE3-4634-8014-F334798102B3}") = "GTASAControlCenterUI", "GTASAControlCenterUI.vcxproj", "{5BF2E0D3-7A6C-43E1-99C4-8E6A368EA834}"
 EndProject
+Project("{BC8A1FFA-BEE3-4634-8014-F334798102B3}") = "GTASASteam", "GTASASteam.vcxproj", "{1DD12229-431A-44B6-8BD7-A4C715B96C60}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -14,5 +16,9 @@ Global
 		{5BF2E0D3-7A6C-43E1-99C4-8E6A368EA834}.Debug|Win32.Build.0 = Debug|Win32
 		{5BF2E0D3-7A6C-43E1-99C4-8E6A368EA834}.Release|Win32.ActiveCfg = Release|Win32
 		{5BF2E0D3-7A6C-43E1-99C4-8E6A368EA834}.Release|Win32.Build.0 = Release|Win32
+		{1DD12229-431A-44B6-8BD7-A4C715B96C60}.Debug|Win32.ActiveCfg = Debug|Win32
+		{1DD12229-431A-44B6-8BD7-A4C715B96C60}.Debug|Win32.Build.0 = Debug|Win32
+		{1DD12229-431A-44B6-8BD7-A4C715B96C60}.Release|Win32.ActiveCfg = Release|Win32
+		{1DD12229-431A-44B6-8BD7-A4C715B96C60}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 EndGlobal
