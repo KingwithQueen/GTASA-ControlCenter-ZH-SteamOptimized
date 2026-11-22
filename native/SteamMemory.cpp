@@ -225,6 +225,9 @@ extern "C" BOOL __stdcall TrainerWriteMemory(HANDLE process,DWORD address,const 
 BOOL WINAPI DllMain(HINSTANCE,DWORD reason,LPVOID){
  if(reason==DLL_PROCESS_DETACH)stopRuntime();return TRUE;
 }
+#ifdef WIN32_UI_BACKEND
+#include "Win32TrainerApi.h"
+#endif
 #include "OfflineUiFixture.h"
 #ifdef UNIT_TEST
 #include <cassert>

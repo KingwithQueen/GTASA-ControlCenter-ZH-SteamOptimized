@@ -1,0 +1,11 @@
+#include <windows.h>
+#include "resources.h"
+
+ID_DATA_VEHICLES RCDATA "../GTASAConsole/GTASAData.dat"
+ID_DATA_VEHICLE_CATEGORIES RCDATA "../GTASAConsole/GTASACarPics.dat"
+ID_DATA_VEHICLE_MODS RCDATA "../GTASAConsole/Help/modlist.html"
+ID_DATA_TRANSLATIONS RCDATA "../localization/zh-CN.master.tsv"
+ID_DATA_CHEATS RCDATA "../GTASAConsole/GTASACheats.dat"
+ID_DATA_LOCATIONS RCDATA "../GTASAConsole/GTASALocs.dat"
+ID_DATA_SHORTCUTS RCDATA "../resources/defaults/GTASAConfig.default.dat"
+ID_DATA_GARAGES RCDATA "../resources/defaults/GTASAConsole.default.ini"
